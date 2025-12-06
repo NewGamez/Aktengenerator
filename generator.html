@@ -630,6 +630,96 @@
   </main>
 
   <script>
+const officerMap = {
+  // ---------- TEAM RED ----------
+  "XXX": { name: "Lukas Lutz", dienstnummer: "PD-01", rang: "Chief of Police" },
+  "XXX": { name: "Alev Sunal", dienstnummer: "PD-02", rang: "Assistant Chief of Police" },
+  "XXX": { name: "Pau Sunal", dienstnummer: "PD-03", rang: "Deputy Chief" },
+  "XXX": { name: "Peter Klumb", dienstnummer: "PD-04", rang: "Deputy Chief" },
+  "XXX": { name: "Steve McGarret", dienstnummer: "PD-05", rang: "Bureau Chief" },
+
+  // ---------- TEAM BLUE ----------
+  "XXX": { name: "Tayo Backa", dienstnummer: "PD-09", rang: "Watch Commander" },
+  "XXX": { name: "Walter Waldmeister", dienstnummer: "PD-16", rang: "Inspector" },
+  "XXX": { name: "Morata Soler", dienstnummer: "PD-17", rang: "Inspector" },
+  "XXX": { name: "Ben Morisson", dienstnummer: "PD-18", rang: "Inspector" },
+  "XXX": { name: "Vito Ramirez", dienstnummer: "PD-19", rang: "Deputy Inspector" },
+
+  // ---------- TEAM GOLD ----------
+  "XXX": { name: "Jule Waldmeister", dienstnummer: "PD-21", rang: "Master Lieutenant" },
+  "XXX": { name: "Blaze Redman", dienstnummer: "PD-22", rang: "Master Lieutenant" },
+
+  "XXX": { name: "Zane Blackwood", dienstnummer: "PD-24", rang: "Lieutenant III" },
+  "XXX": { name: "Toni Deluca", dienstnummer: "PD-25", rang: "Lieutenant III" },
+
+  "XXX": { name: "Daniel Waldmeister", dienstnummer: "PD-27", rang: "Lieutenant II" },
+
+  "XXX": { name: "Andreas Hackl", dienstnummer: "PD-32", rang: "Lieutenant I" },
+  "XXX": { name: "Anton Horvath", dienstnummer: "PD-33", rang: "Lieutenant I" },
+  "XXX": { name: "Mira Campbell", dienstnummer: "PD-34", rang: "Lieutenant I" },
+
+  // ---------- TEAM SILVER ----------
+  "XXX": { name: "Felix Miller", dienstnummer: "PD-40", rang: "Specialist" },
+  "XXX": { name: "Andreas Graham", dienstnummer: "PD-41", rang: "Staff Sergeant" },
+  "XXX": { name: "Luke Dijk", dienstnummer: "PD-42", rang: "Specialist" },
+  "XXX": { name: "Reiner Hirsch", dienstnummer: "PD-43", rang: "Staff Sergeant" },
+  "XXX": { name: "Jackson Dayne", dienstnummer: "PD-44", rang: "Specialist" },
+  "XXX": { name: "Max Koslowski", dienstnummer: "PD-45", rang: "Specialist" },
+
+  "XXX": { name: "Ottmar Zittlau", dienstnummer: "PD-46", rang: "Sergeant III" },
+  "XXX": { name: "Ian Miller", dienstnummer: "PD-47", rang: "Sergeant III" },
+  "XXX": { name: "Panther Nova", dienstnummer: "PD-48", rang: "Staff Sergeant" },
+  "XXX": { name: "Max Lockheed", dienstnummer: "PD-49", rang: "Specialist" },
+
+  "XXX": { name: "Alejandro Rodriguez", dienstnummer: "PD-50", rang: "Specialist" },
+  "XXX": { name: "Antonio Moretti", dienstnummer: "PD-51", rang: "Specialist" },
+  "XXX": { name: "Keystone Brown", dienstnummer: "PD-52", rang: "Specialist" },
+  "XXX": { name: "David Baum", dienstnummer: "PD-53", rang: "Sergeant I" },
+
+  "XXX": { name: "Jason Shaw", dienstnummer: "PD-56", rang: "Specialist" },
+  "XXX": { name: "Harald Hernandez", dienstnummer: "PD-57", rang: "Sergeant III" },
+  "XXX": { name: "Lucius Lich", dienstnummer: "PD-58", rang: "Sergeant II" },
+  "XXX": { name: "Joey Reed", dienstnummer: "PD-59", rang: "Specialist" },
+
+  "XXX": { name: "Ali Coban", dienstnummer: "PD-60", rang: "Staff Sergeant" },
+  "XXX": { name: "Elina Thompson", dienstnummer: "PD-62", rang: "Sergeant II" },
+  "XXX": { name: "Enrique Vegas", dienstnummer: "PD-63", rang: "Sergeant I" },
+  "XXX": { name: "Alvaro Reinh", dienstnummer: "PD-64", rang: "Sergeant III" },
+
+  "XXX": { name: "Peter Maier", dienstnummer: "PD-66", rang: "Specialist" },
+  "XXX": { name: "Sultan Can", dienstnummer: "PD-67", rang: "Staff Sergeant" },
+  "XXX": { name: "Dario Ramirez", dienstnummer: "PD-68", rang: "Specialist" },
+
+  "XXX": { name: "Diego Santos", dienstnummer: "PD-70", rang: "Staff Sergeant" },
+  "XXX": { name: "Nosa Holy", dienstnummer: "PD-71", rang: "Sergeant II" },
+  "XXX": { name: "Lamar Kasim", dienstnummer: "PD-72", rang: "Specialist" },
+  "XXX": { name: "Efe Voga", dienstnummer: "PD-73", rang: "Specialist" },
+  "XXX": { name: "Beton Tapi", dienstnummer: "PD-74", rang: "Specialist" },
+  "XXX": { name: "Joanna Smith", dienstnummer: "PD-75", rang: "Specialist" },
+
+  "XXX": { name: "Tom Black", dienstnummer: "PD-77", rang: "Sergeant II" },
+  "XXX": { name: "Michael Korczak", dienstnummer: "PD-78", rang: "Specialist" },
+
+  // ---------- TEAM GREEN ----------
+  "XXX": { name: "Salva Sol", dienstnummer: "PA-52", rang: "Rekrut" },
+  "XXX": { name: "Ben Stein", dienstnummer: "PA-53", rang: "Rekrut" },
+  "XXX": { name: "Ludovico Greco", dienstnummer: "PA-56", rang: "Rekrut" },
+  "XXX": { name: "Nico Bublich", dienstnummer: "PA-57", rang: "Rekrut" },
+  "XXX": { name: "Mehmet Aklubat", dienstnummer: "PA-59", rang: "Rekrut" },
+  "XXX": { name: "Roman Schlag", dienstnummer: "PA-61", rang: "Rekrut" },
+
+  "XXX": { name: "Eduardo Sanchez", dienstnummer: "PA-65", rang: "Rekrut" },
+  "XXX": { name: "Max Aklubat", dienstnummer: "PA-69", rang: "Rekrut" },
+  "XXX": { name: "Lukas Denzel", dienstnummer: "PA-70", rang: "Rekrut" },
+  "XXX": { name: "Lukas Rothe", dienstnummer: "PA-71", rang: "Rekrut" },
+  "XXX": { name: "Noah Schlotter", dienstnummer: "PA-73", rang: "Rekrut" },
+  "XXX": { name: "Pascal Luke", dienstnummer: "PA-74", rang: "Rekrut" },
+  "XXX": { name: "Max Brechtelsbauer", dienstnummer: "PA-75", rang: "Rekrut" },
+  "XXX": { name: "Abusa Hanco", dienstnummer: "PA-77", rang: "Rekrut" },
+  "XXX": { name: "Michael Johnson", dienstnummer: "PA-79", rang: "Rekrut" }
+
+};
+    
     document.querySelectorAll(".tab-btn").forEach(btn => {
       btn.addEventListener("click", () => {
         document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
