@@ -5,7 +5,6 @@
   <title>NCPD Aktengenerator</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-  <!-- gleiche Schrift wie Login -->
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
 
   <style>
@@ -24,7 +23,6 @@
       flex-direction: column;
     }
 
-    /* Topbar */
     .topbar {
       display: flex;
       align-items: center;
@@ -80,7 +78,6 @@
       background: rgba(35, 38, 70, 0.95);
     }
 
-    /* Layout */
     .page {
       flex: 1;
       width: 100%;
@@ -229,7 +226,6 @@
       box-shadow: 0 8px 20px rgba(0,0,0,0.4);
     }
 
-    /* Tabs links */
     .tab-buttons {
       display: inline-flex;
       gap: 6px;
@@ -265,7 +261,6 @@
       display: none;
     }
 
-    /* Ausgabe */
     #output {
       width: 100%;
       min-height: 380px;
@@ -308,7 +303,6 @@
 </head>
 <body>
 
-  <!-- TOPBAR -->
   <header class="topbar">
     <div class="topbar-left">
       <div class="logo-icon">N</div>
@@ -321,10 +315,8 @@
     <a class="logout-btn" href="index.html">Logout</a>
   </header>
 
-  <!-- INHALT -->
   <main class="page">
 
-    <!-- LINKES PANEL – EINGABEN -->
     <section class="panel">
       <div class="panel-header">
         <div>
@@ -333,14 +325,12 @@
         </div>
       </div>
 
-      <!-- Tabs -->
       <div class="tab-buttons">
         <button class="tab-btn active" data-tab="strafakte">Strafakte</button>
         <button class="tab-btn" data-tab="schnellakte">Schnellakte</button>
         <button class="tab-btn" data-tab="kollektivakte">Kollektivakte</button>
       </div>
 
-      <!-- STRAFAKTE -->
       <div id="tab-strafakte">
         <div class="row">
           <div>
@@ -436,7 +426,6 @@
         <button class="btn" id="btn-strafakte">Strafakte generieren</button>
       </div>
 
-      <!-- SCHNELLAKTE -->
       <div id="tab-schnellakte" class="hidden">
         <div class="row">
           <div>
@@ -523,7 +512,6 @@
         <button class="btn" id="btn-schnellakte">Schnellakte generieren</button>
       </div>
 
-      <!-- KOLLEKTIVAKTE -->
       <div id="tab-kollektivakte" class="hidden">
         <div class="row">
           <div>
@@ -625,7 +613,6 @@
       </div>
     </section>
 
-    <!-- RECHTES PANEL – AUSGABE + LINKS -->
     <section class="panel">
       <div class="panel-header">
         <div>
@@ -660,9 +647,7 @@
 
   </main>
 
-  <!-- LOGIK -->
   <script>
-    // Tabs umschalten
     document.querySelectorAll(".tab-btn").forEach(btn => {
       btn.addEventListener("click", () => {
         document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
@@ -673,8 +658,6 @@
           .forEach(el => el.classList.add("hidden"));
         document.getElementById("tab-" + tab).classList.remove("hidden");
 
-        // Ausgabe leeren? -> wenn du willst, hier:
-        // document.getElementById("output").value = "";
       });
     });
 
