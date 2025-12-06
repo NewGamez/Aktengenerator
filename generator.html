@@ -5,6 +5,9 @@
   <title>NCPD Aktengenerator</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
+  <!-- gleiche Schrift wie Login -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+
   <style>
     * {
       box-sizing: border-box;
@@ -77,21 +80,72 @@
       background: rgba(35, 38, 70, 0.95);
     }
 
-    /* Hauptinhalt */
-    .generator-container {
+    /* Layout */
+    .page {
+      flex: 1;
       width: 100%;
-      max-width: 1600px;
+      max-width: 1700px;
       margin: 20px auto;
-      padding: 20px;
+      padding: 0 20px 30px;
+      display: grid;
+      grid-template-columns: minmax(0, 2.1fr) minmax(0, 1.4fr);
+      gap: 18px;
     }
 
-    textarea, input, select {
+    @media (max-width: 1100px) {
+      .page {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .panel {
+      background: rgba(10, 12, 25, 0.8);
+      padding: 18px 18px 20px;
+      border-radius: 14px;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      box-shadow: 0 10px 25px rgba(0,0,0,0.4);
+    }
+
+    .panel-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: 12px;
+    }
+
+    .panel-title {
+      font-size: 0.95rem;
+      font-weight: 600;
+    }
+
+    .panel-subtitle {
+      font-size: 0.75rem;
+      opacity: 0.7;
+    }
+
+    label {
+      display: block;
+      margin: 8px 0 3px;
+      font-size: 0.8rem;
+      opacity: 0.9;
+    }
+
+    input, textarea, select {
+      width: 100%;
       background: #0f1122;
       border: 1px solid #2c2e40;
       color: #fff;
-      padding: 8px;
-      border-radius: 6px;
-      width: 100%;
+      padding: 8px 9px;
+      border-radius: 7px;
+      font-size: 0.82rem;
+      outline: none;
+      transition: border 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+    }
+
+    input:focus, textarea:focus, select:focus {
+      border-color: #5865f2;
+      box-shadow: 0 0 0 1px rgba(88, 101, 242, 0.45);
+      background: #10132a;
     }
 
     textarea {
@@ -99,39 +153,162 @@
       resize: vertical;
     }
 
-    label {
-      display: block;
-      margin: 10px 0 4px;
-      opacity: 0.85;
+    .row {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
     }
 
-    .panel {
-      background: rgba(10, 12, 25, 0.6);
-      padding: 18px;
-      border-radius: 12px;
-      border: 1px solid rgba(255, 255, 255, 0.05);
-      box-shadow: 0 10px 25px rgba(0,0,0,0.4);
-      margin-bottom: 20px;
+    @media (max-width: 700px) {
+      .row {
+        grid-template-columns: 1fr;
+      }
     }
 
-    button {
-      background: #5865f2;
-      color: white;
-      padding: 10px 16px;
-      border-radius: 6px;
+    .checkbox-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px 12px;
+      margin: 4px 0 8px;
+      font-size: 0.78rem;
+    }
+
+    .checkbox-row label {
+      margin: 0;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .checkbox-row input[type="checkbox"] {
+      width: 14px;
+      height: 14px;
+      border-radius: 4px;
+      cursor: pointer;
+      padding: 0;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      border-radius: 8px;
+      padding: 9px 14px;
       border: none;
       cursor: pointer;
-      transition: 0.2s;
+      font-size: 0.85rem;
+      font-weight: 500;
+      margin-top: 12px;
+      background: #5865f2;
+      color: #fff;
+      box-shadow: 0 8px 20px rgba(88,101,242,0.45);
+      transition: transform 0.06s ease, box-shadow 0.06s ease, background 0.15s ease;
     }
 
-    button:hover {
-      background: #6f78ff;
+    .btn:hover {
+      background: #6a74ff;
+      transform: translateY(-1px);
+      box-shadow: 0 11px 26px rgba(88,101,242,0.55);
     }
 
+    .btn:active {
+      transform: translateY(0);
+      box-shadow: 0 7px 16px rgba(88,101,242,0.5);
+    }
+
+    .btn-secondary {
+      background: #1e213b;
+      box-shadow: none;
+      border: 1px solid rgba(255,255,255,0.08);
+      margin-left: 6px;
+    }
+
+    .btn-secondary:hover {
+      background: #272b4b;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.4);
+    }
+
+    /* Tabs links */
+    .tab-buttons {
+      display: inline-flex;
+      gap: 6px;
+      background: #080a19;
+      padding: 3px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.06);
+      margin-bottom: 14px;
+    }
+
+    .tab-btn {
+      border-radius: 999px;
+      border: none;
+      padding: 4px 10px;
+      font-size: 0.78rem;
+      cursor: pointer;
+      background: transparent;
+      color: #a4a7d7;
+      transition: 0.15s;
+    }
+
+    .tab-btn.active {
+      background: #5865f2;
+      color: #fff;
+      box-shadow: 0 6px 15px rgba(88,101,242,0.5);
+    }
+
+    .tab-btn:not(.active):hover {
+      background: rgba(255,255,255,0.04);
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    /* Ausgabe */
+    #output {
+      width: 100%;
+      min-height: 380px;
+      background: #050614;
+      border-radius: 10px;
+      border: 1px solid #282a3e;
+      padding: 10px 12px;
+      color: #f9f9ff;
+      font-family: "Consolas", "Fira Code", monospace;
+      font-size: 0.8rem;
+      white-space: pre-wrap;
+      resize: vertical;
+    }
+
+    .section-title {
+      font-size: 0.8rem;
+      font-weight: 600;
+      margin-top: 10px;
+      margin-bottom: 4px;
+      opacity: 0.9;
+    }
+
+    .link-list a {
+      display: inline-block;
+      font-size: 0.78rem;
+      margin: 2px 6px 4px 0;
+      color: #a8b0ff;
+      text-decoration: none;
+      padding: 4px 7px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.06);
+    }
+
+    .link-list a:hover {
+      background: rgba(88,101,242,0.3);
+      border-color: rgba(88,101,242,0.8);
+    }
   </style>
 </head>
 <body>
 
+  <!-- TOPBAR -->
   <header class="topbar">
     <div class="topbar-left">
       <div class="logo-icon">N</div>
@@ -144,16 +321,500 @@
     <a class="logout-btn" href="index.html">Logout</a>
   </header>
 
-  <main class="generator-container">
+  <!-- INHALT -->
+  <main class="page">
 
-    <script src="https://newgamez.github.io/Akte/script.js"></script>
+    <!-- LINKES PANEL – EINGABEN -->
+    <section class="panel">
+      <div class="panel-header">
+        <div>
+          <div class="panel-title">NCPD II Übersicht</div>
+          <div class="panel-subtitle">Strafakte • Schnellakte • Kollektivakte</div>
+        </div>
+      </div>
 
-    <iframe 
-      src="https://newgamez.github.io/Akte/" 
-      style="width:100%; height:85vh; border:none; border-radius:12px; background:transparent;">
-    </iframe>
+      <!-- Tabs -->
+      <div class="tab-buttons">
+        <button class="tab-btn active" data-tab="strafakte">Strafakte</button>
+        <button class="tab-btn" data-tab="schnellakte">Schnellakte</button>
+        <button class="tab-btn" data-tab="kollektivakte">Kollektivakte</button>
+      </div>
+
+      <!-- STRAFAKTE -->
+      <div id="tab-strafakte">
+        <div class="row">
+          <div>
+            <label for="st-officer">Officer</label>
+            <input id="st-officer" type="text" />
+          </div>
+          <div>
+            <label for="st-tatort">Tatort und Tatzeit</label>
+            <input id="st-tatort" type="text" />
+          </div>
+        </div>
+
+        <div class="row">
+          <div>
+            <label for="st-beschuldigte">Beschuldigte Personen</label>
+            <textarea id="st-beschuldigte"></textarea>
+          </div>
+          <div>
+            <label for="st-geschaedigte">Geschädigte Personen</label>
+            <textarea id="st-geschaedigte"></textarea>
+          </div>
+        </div>
+
+        <label for="st-sachverhalt">Sachverhalt aus Sicht des NCPDs</label>
+        <textarea id="st-sachverhalt"></textarea>
+
+        <label>Identitätsfeststellung</label>
+        <div class="checkbox-row">
+          <label><input type="checkbox" id="st-id-pers" /> Personalausweis</label>
+          <label><input type="checkbox" id="st-id-waffe" /> Waffenschein</label>
+          <label><input type="checkbox" id="st-id-fs" /> Führerschein</label>
+          <label><input type="checkbox" id="st-id-finger" /> Fingerabdruckscanner</label>
+        </div>
+
+        <label for="st-zeugen">Weitere beteiligte Einheiten/Zeugen</label>
+        <textarea id="st-zeugen"></textarea>
+
+        <label for="st-gegenstaende">Abgenommene Gegenstände</label>
+        <textarea id="st-gegenstaende"></textarea>
+
+        <div class="row">
+          <div>
+            <label for="st-abgenommen-von">Abgenommen von</label>
+            <input id="st-abgenommen-von" type="text" />
+          </div>
+          <div>
+            <label for="st-verlesen">Verlesen</label>
+            <input id="st-verlesen" type="text" />
+          </div>
+        </div>
+
+        <div class="row">
+          <div>
+            <label for="st-beisein">Beisein</label>
+            <input id="st-beisein" type="text" />
+          </div>
+          <div>
+            <label for="st-rechtsbeistand">Rechtsbeistand</label>
+            <select id="st-rechtsbeistand">
+              <option value="">– bitte wählen –</option>
+              <option value="bestand">bestand</option>
+              <option value="verzichtete">verzichtete</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="row">
+          <div>
+            <label for="st-medizin">Medizinische Versorgung</label>
+            <select id="st-medizin">
+              <option value="">– bitte wählen –</option>
+              <option value="bestand">bestand</option>
+              <option value="verzichtete">verzichtete</option>
+            </select>
+          </div>
+          <div>
+            <label for="st-eilverfahren">Eilverfahren</label>
+            <input id="st-eilverfahren" type="text" placeholder="z. B. abgelehnt durch …" />
+          </div>
+        </div>
+
+        <div class="row">
+          <div>
+            <label for="st-bussgeld">Bußgelddatum</label>
+            <input id="st-bussgeld" type="text" />
+          </div>
+          <div>
+            <label for="st-gezeichnet">Gezeichnet von</label>
+            <input id="st-gezeichnet" type="text" />
+          </div>
+        </div>
+
+        <button class="btn" id="btn-strafakte">Strafakte generieren</button>
+      </div>
+
+      <!-- SCHNELLAKTE -->
+      <div id="tab-schnellakte" class="hidden">
+        <div class="row">
+          <div>
+            <label for="sc-officer">Officer</label>
+            <input id="sc-officer" type="text" />
+          </div>
+          <div>
+            <label for="sc-tatort">Tatort und Tatzeit</label>
+            <input id="sc-tatort" type="text" />
+          </div>
+        </div>
+
+        <div class="row">
+          <div>
+            <label for="sc-beschuldigte">Beschuldigte Personen</label>
+            <textarea id="sc-beschuldigte"></textarea>
+          </div>
+          <div>
+            <label for="sc-geschaedigte">Geschädigte Personen</label>
+            <textarea id="sc-geschaedigte"></textarea>
+          </div>
+        </div>
+
+        <label>Identitätsfeststellung</label>
+        <div class="checkbox-row">
+          <label><input type="checkbox" id="sc-id-pers" /> Personalausweis</label>
+          <label><input type="checkbox" id="sc-id-waffe" /> Waffenschein</label>
+          <label><input type="checkbox" id="sc-id-fs" /> Führerschein</label>
+          <label><input type="checkbox" id="sc-id-finger" /> Fingerabdruckscanner</label>
+        </div>
+
+        <label for="sc-zeugen">Weitere beteiligte Einheiten/Zeugen</label>
+        <textarea id="sc-zeugen"></textarea>
+
+        <label for="sc-gegenstaende">Abgenommene Gegenstände</label>
+        <textarea id="sc-gegenstaende"></textarea>
+
+        <div class="row">
+          <div>
+            <label for="sc-abgenommen-von">Abgenommen von</label>
+            <input id="sc-abgenommen-von" type="text" />
+          </div>
+          <div>
+            <label for="sc-verlesen">Verlesen</label>
+            <input id="sc-verlesen" type="text" />
+          </div>
+        </div>
+
+        <div class="row">
+          <div>
+            <label for="sc-beisein">Beisein</label>
+            <input id="sc-beisein" type="text" />
+          </div>
+          <div>
+            <label for="sc-rechtsbeistand">Rechtsbeistand</label>
+            <select id="sc-rechtsbeistand">
+              <option value="">– bitte wählen –</option>
+              <option value="bestand">bestand</option>
+              <option value="verzichtete">verzichtete</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="row">
+          <div>
+            <label for="sc-medizin">Medizinische Versorgung</label>
+            <select id="sc-medizin">
+              <option value="">– bitte wählen –</option>
+              <option value="bestand">bestand</option>
+              <option value="verzichtete">verzichtete</option>
+            </select>
+          </div>
+          <div>
+            <label for="sc-bussgeld">Bußgelddatum</label>
+            <input id="sc-bussgeld" type="text" />
+          </div>
+        </div>
+
+        <div>
+          <label for="sc-gezeichnet">Gezeichnet von</label>
+          <input id="sc-gezeichnet" type="text" />
+        </div>
+
+        <button class="btn" id="btn-schnellakte">Schnellakte generieren</button>
+      </div>
+
+      <!-- KOLLEKTIVAKTE -->
+      <div id="tab-kollektivakte" class="hidden">
+        <div class="row">
+          <div>
+            <label for="ko-officer">Officer</label>
+            <input id="ko-officer" type="text" />
+          </div>
+          <div>
+            <label for="ko-tatort">Tatort und Tatzeit</label>
+            <input id="ko-tatort" type="text" />
+          </div>
+        </div>
+
+        <div class="row">
+          <div>
+            <label for="ko-beschuldigte">Beschuldigte Personen</label>
+            <textarea id="ko-beschuldigte"></textarea>
+          </div>
+          <div>
+            <label for="ko-geschaedigte">Geschädigte Personen</label>
+            <textarea id="ko-geschaedigte"></textarea>
+          </div>
+        </div>
+
+        <label for="ko-sachverhalt">Sachverhalt aus Sicht des NCPDs</label>
+        <textarea id="ko-sachverhalt"></textarea>
+
+        <label>Identitätsfeststellung</label>
+        <div class="checkbox-row">
+          <label><input type="checkbox" id="ko-id-pers" /> Personalausweis</label>
+          <label><input type="checkbox" id="ko-id-waffe" /> Waffenschein</label>
+          <label><input type="checkbox" id="ko-id-fs" /> Führerschein</label>
+          <label><input type="checkbox" id="ko-id-finger" /> Fingerabdruckscanner</label>
+        </div>
+
+        <label for="ko-zeugen">Weitere beteiligte Einheiten/Zeugen</label>
+        <textarea id="ko-zeugen"></textarea>
+
+        <label for="ko-gegenstaende">Abgenommene Gegenstände</label>
+        <textarea id="ko-gegenstaende"></textarea>
+
+        <div class="row">
+          <div>
+            <label for="ko-abgenommen-von">Abgenommen von</label>
+            <input id="ko-abgenommen-von" type="text" />
+          </div>
+          <div>
+            <label for="ko-verlesen">Verlesen</label>
+            <input id="ko-verlesen" type="text" />
+          </div>
+        </div>
+
+        <div class="row">
+          <div>
+            <label for="ko-beisein">Beisein</label>
+            <input id="ko-beisein" type="text" />
+          </div>
+          <div>
+            <label for="ko-rechtsbeistand">Rechtsbeistand</label>
+            <select id="ko-rechtsbeistand">
+              <option value="">– bitte wählen –</option>
+              <option value="bestand">bestand</option>
+              <option value="verzichtete">verzichtete</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="row">
+          <div>
+            <label for="ko-medizin">Medizinische Versorgung</label>
+            <select id="ko-medizin">
+              <option value="">– bitte wählen –</option>
+              <option value="bestand">bestand</option>
+              <option value="verzichtete">verzichtete</option>
+            </select>
+          </div>
+          <div>
+            <label for="ko-bussgeld">Bußgelddatum</label>
+            <input id="ko-bussgeld" type="text" />
+          </div>
+        </div>
+
+        <div class="row">
+          <div>
+            <label for="ko-bestaetigt-von">Bestätigt von</label>
+            <input id="ko-bestaetigt-von" type="text" />
+          </div>
+          <div>
+            <label for="ko-bestaetigt-zeit">Bestätigt um (Uhrzeit)</label>
+            <input id="ko-bestaetigt-zeit" type="text" />
+          </div>
+        </div>
+
+        <div>
+          <label for="ko-gezeichnet">Gezeichnet von</label>
+          <input id="ko-gezeichnet" type="text" />
+        </div>
+
+        <button class="btn" id="btn-kollektivakte">Kollektivakte generieren</button>
+      </div>
+    </section>
+
+    <!-- RECHTES PANEL – AUSGABE + LINKS -->
+    <section class="panel">
+      <div class="panel-header">
+        <div>
+          <div class="panel-title">Generierte Akte</div>
+          <div class="panel-subtitle">Text kann direkt kopiert werden</div>
+        </div>
+      </div>
+
+      <textarea id="output" readonly></textarea>
+
+      <div style="margin-top: 12px;">
+        <button class="btn-secondary btn" id="btn-copy">In Zwischenablage kopieren</button>
+      </div>
+
+      <div class="section-title">NCPD II Dokumente</div>
+      <div class="link-list">
+        <a href="https://docs.google.com" target="_blank" rel="noopener">Dienstausrüstung</a>
+        <a href="https://docs.google.com" target="_blank" rel="noopener">Dienstfahrzeuge</a>
+        <a href="https://docs.google.com" target="_blank" rel="noopener">Dienstvorschriften</a>
+        <a href="https://docs.google.com" target="_blank" rel="noopener">Kleiderordnung</a>
+        <a href="https://docs.google.com" target="_blank" rel="noopener">Regeldienstbericht</a>
+        <a href="https://docs.google.com" target="_blank" rel="noopener">Sanktionskatalog</a>
+        <a href="https://docs.google.com" target="_blank" rel="noopener">Waffenordnung</a>
+      </div>
+
+      <div class="section-title">NCPD II Weisungen</div>
+      <div class="link-list">
+        <a href="https://docs.google.com" target="_blank" rel="noopener">Parkordnung</a>
+        <a href="https://docs.google.com" target="_blank" rel="noopener">Meldekette</a>
+      </div>
+    </section>
 
   </main>
 
+  <!-- LOGIK -->
+  <script>
+    // Tabs umschalten
+    document.querySelectorAll(".tab-btn").forEach(btn => {
+      btn.addEventListener("click", () => {
+        document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
+        btn.classList.add("active");
+
+        const tab = btn.dataset.tab;
+        document.querySelectorAll("#tab-strafakte, #tab-schnellakte, #tab-kollektivakte")
+          .forEach(el => el.classList.add("hidden"));
+        document.getElementById("tab-" + tab).classList.remove("hidden");
+
+        // Ausgabe leeren? -> wenn du willst, hier:
+        // document.getElementById("output").value = "";
+      });
+    });
+
+    function getIdentitaet(prefix) {
+      const parts = [];
+      if (document.getElementById(prefix + "-id-pers")?.checked)   parts.push("Personalausweis");
+      if (document.getElementById(prefix + "-id-waffe")?.checked)  parts.push("Waffenschein");
+      if (document.getElementById(prefix + "-id-fs")?.checked)     parts.push("Führerschein");
+      if (document.getElementById(prefix + "-id-finger")?.checked) parts.push("Fingerabdruckscanner");
+      if (!parts.length) return "Keine Identitätsfeststellung vermerkt.";
+      return "Die Identität wurde mittels " + parts.join(", ") + " festgestellt.";
+    }
+
+    function genStrafakte() {
+      const off  = document.getElementById("st-officer").value.trim();
+      const tat  = document.getElementById("st-tatort").value.trim();
+      const besch = document.getElementById("st-beschuldigte").value.trim();
+      const ges   = document.getElementById("st-geschaedigte").value.trim();
+      const sach  = document.getElementById("st-sachverhalt").value.trim();
+      const idTxt = getIdentitaet("st");
+      const zeug  = document.getElementById("st-zeugen").value.trim();
+      const geg   = document.getElementById("st-gegenstaende").value.trim();
+      const abn   = document.getElementById("st-abgenommen-von").value.trim();
+      const verlesen = document.getElementById("st-verlesen").value.trim();
+      const beisein  = document.getElementById("st-beisein").value.trim();
+      const rb = document.getElementById("st-rechtsbeistand").value;
+      const med = document.getElementById("st-medizin").value;
+      const eil = document.getElementById("st-eilverfahren").value.trim();
+      const buss = document.getElementById("st-bussgeld").value.trim();
+      const gez  = document.getElementById("st-gezeichnet").value.trim();
+
+      let out = "";
+      out += "| Officer: " + off + "\\n";
+      out += "| Tatort und Tatzeit: " + tat + "\\n";
+      out += "| Beschuldigte Person(en): " + besch + "\\n";
+      out += "| Geschädigte Person(en): " + ges + "\\n\\n";
+      out += "| Sachverhalt aus Sicht des NCPDs: \\n" + sach + "\\n\\n";
+      out += "| Identitätsfeststellung: " + idTxt + "\\n";
+      out += "| Weitere beteiligte Einheiten/Zeugen: " + zeug + "\\n\\n";
+      out += "| Abgenommene Gegenstände: " + geg + "\\n";
+      out += "| Abgenommen von: " + abn + "\\n";
+      out += "| Verlesen: " + verlesen + "\\n";
+      out += "| Beisein: " + beisein + "\\n";
+      if (rb)  out += "| Rechtsbeistand: " + rb + "\\n";
+      if (med) out += "| Medizinische Versorgung: " + med + "\\n";
+      if (eil) out += "| Eilverfahren: " + eil + "\\n";
+      out += "| Bußgelddatum: " + buss + "\\n";
+      out += "| Gezeichnet von: " + gez + "\\n";
+
+      document.getElementById("output").value = out;
+    }
+
+    function genSchnellakte() {
+      const off  = document.getElementById("sc-officer").value.trim();
+      const tat  = document.getElementById("sc-tatort").value.trim();
+      const besch = document.getElementById("sc-beschuldigte").value.trim();
+      const ges   = document.getElementById("sc-geschaedigte").value.trim();
+      const idTxt = getIdentitaet("sc");
+      const zeug  = document.getElementById("sc-zeugen").value.trim();
+      const geg   = document.getElementById("sc-gegenstaende").value.trim();
+      const abn   = document.getElementById("sc-abgenommen-von").value.trim();
+      const verlesen = document.getElementById("sc-verlesen").value.trim();
+      const beisein  = document.getElementById("sc-beisein").value.trim();
+      const rb  = document.getElementById("sc-rechtsbeistand").value;
+      const med = document.getElementById("sc-medizin").value;
+      const buss = document.getElementById("sc-bussgeld").value.trim();
+      const gez  = document.getElementById("sc-gezeichnet").value.trim();
+
+      let out = "";
+      out += "| Officer: " + off + "\\n";
+      out += "| Tatort und Tatzeit: " + tat + "\\n";
+      out += "| Beschuldigte Person(en): " + besch + "\\n";
+      out += "| Geschädigte Person(en): " + ges + "\\n\\n";
+      out += "| Identitätsfeststellung: " + idTxt + "\\n";
+      out += "| Weitere beteiligte Einheiten/Zeugen: " + zeug + "\\n";
+      out += "| Abgenommene Gegenstände: " + geg + "\\n";
+      out += "| Abgenommen von: " + abn + "\\n";
+      out += "| Verlesen: " + verlesen + "\\n";
+      out += "| Beisein: " + beisein + "\\n";
+      if (rb)  out += "| Rechtsbeistand: " + rb + "\\n";
+      if (med) out += "| Medizinische Versorgung: " + med + "\\n";
+      out += "| Bußgelddatum: " + buss + "\\n";
+      out += "| Gezeichnet von: " + gez + "\\n";
+
+      document.getElementById("output").value = out;
+    }
+
+    function genKollektivakte() {
+      const off  = document.getElementById("ko-officer").value.trim();
+      const tat  = document.getElementById("ko-tatort").value.trim();
+      const besch = document.getElementById("ko-beschuldigte").value.trim();
+      const ges   = document.getElementById("ko-geschaedigte").value.trim();
+      const sach  = document.getElementById("ko-sachverhalt").value.trim();
+      const idTxt = getIdentitaet("ko");
+      const zeug  = document.getElementById("ko-zeugen").value.trim();
+      const geg   = document.getElementById("ko-gegenstaende").value.trim();
+      const abn   = document.getElementById("ko-abgenommen-von").value.trim();
+      const verlesen = document.getElementById("ko-verlesen").value.trim();
+      const beisein  = document.getElementById("ko-beisein").value.trim();
+      const rb  = document.getElementById("ko-rechtsbeistand").value;
+      const med = document.getElementById("ko-medizin").value;
+      const buss = document.getElementById("ko-bussgeld").value.trim();
+      const bestaetigtVon   = document.getElementById("ko-bestaetigt-von").value.trim();
+      const bestaetigtZeit  = document.getElementById("ko-bestaetigt-zeit").value.trim();
+      const gez  = document.getElementById("ko-gezeichnet").value.trim();
+
+      let out = "";
+      out += "| Officer: " + off + "\\n";
+      out += "| Tatort und Tatzeit: " + tat + "\\n";
+      out += "| Beschuldigte Person(en): " + besch + "\\n";
+      out += "| Geschädigte Person(en): " + ges + "\\n\\n";
+      out += "| Sachverhalt aus Sicht des NCPDs: \\n" + sach + "\\n\\n";
+      out += "| Identitätsfeststellung: " + idTxt + "\\n";
+      out += "| Weitere beteiligte Einheiten/Zeugen: " + zeug + "\\n";
+      out += "| Abgenommene Gegenstände: " + geg + "\\n";
+      out += "| Abgenommen von: " + abn + "\\n";
+      out += "| Verlesen: " + verlesen + "\\n";
+      out += "| Beisein: " + beisein + "\\n";
+      if (rb)  out += "| Rechtsbeistand: " + rb + "\\n";
+      if (med) out += "| Medizinische Versorgung: " + med + "\\n";
+      out += "| Bußgelddatum: " + buss + "\\n";
+      out += "| Bestätigt von: " + bestaetigtVon + "\\n";
+      out += "| Bestätigt um (Uhrzeit): " + bestaetigtZeit + "\\n";
+      out += "| Gezeichnet von: " + gez + "\\n";
+
+      document.getElementById("output").value = out;
+    }
+
+    document.getElementById("btn-strafakte").addEventListener("click", genStrafakte);
+    document.getElementById("btn-schnellakte").addEventListener("click", genSchnellakte);
+    document.getElementById("btn-kollektivakte").addEventListener("click", genKollektivakte);
+
+    document.getElementById("btn-copy").addEventListener("click", () => {
+      const out = document.getElementById("output");
+      out.select();
+      out.setSelectionRange(0, 99999);
+      try {
+        document.execCommand("copy");
+      } catch (e) {}
+    });
+  </script>
 </body>
 </html>
