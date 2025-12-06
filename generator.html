@@ -654,119 +654,184 @@
     }
 
     function genStrafakte() {
-      const off  = document.getElementById("st-officer").value.trim();
-      const tat  = document.getElementById("st-tatort").value.trim();
-      const besch = document.getElementById("st-beschuldigte").value.trim();
-      const ges   = document.getElementById("st-geschaedigte").value.trim();
-      const sach  = document.getElementById("st-sachverhalt").value.trim();
-      const idTxt = getIdentitaet("st");
-      const zeug  = document.getElementById("st-zeugen").value.trim();
-      const geg   = document.getElementById("st-gegenstaende").value.trim();
-      const abn   = document.getElementById("st-abgenommen-von").value.trim();
-      const verlesen = document.getElementById("st-verlesen").value.trim();
-      const beisein  = document.getElementById("st-beisein").value.trim();
-      const rb = document.getElementById("st-rechtsbeistand").value;
-      const med = document.getElementById("st-medizin").value;
-      const eil = document.getElementById("st-eilverfahren").value.trim();
-      const buss = document.getElementById("st-bussgeld").value.trim();
-      const gez  = document.getElementById("st-gezeichnet").value.trim();
+  const officer = document.getElementById("st-officer").value.trim();
+  const tatort = document.getElementById("st-tatort").value.trim();
+  const besch = document.getElementById("st-beschuldigte").value.trim();
+  const ges = document.getElementById("st-geschaedigte").value.trim();
+  const sach = document.getElementById("st-sachverhalt").value.trim();
+  const idTxt = getIdentitaet("st");
+  const zeugen = document.getElementById("st-zeugen").value.trim();
+  const geg = document.getElementById("st-gegenstaende").value.trim();
+  const abn = document.getElementById("st-abgenommen-von").value.trim();
+  const verlesen = document.getElementById("st-verlesen").value.trim();
+  const beisein = document.getElementById("st-beisein").value.trim();
+  const rb = document.getElementById("st-rechtsbeistand").value;
+  const med = document.getElementById("st-medizin").value;
+  const eil = document.getElementById("st-eilverfahren").value.trim();
+  const buss = document.getElementById("st-bussgeld").value.trim();
+  const gezeichnet = document.getElementById("st-gezeichnet").value.trim();
 
-      let out = "";
-      out += "| Officer: " + off + "\\n";
-      out += "| Tatort und Tatzeit: " + tat + "\\n";
-      out += "| Beschuldigte Person(en): " + besch + "\\n";
-      out += "| Geschädigte Person(en): " + ges + "\\n\\n";
-      out += "| Sachverhalt aus Sicht des NCPDs: \\n" + sach + "\\n\\n";
-      out += "| Identitätsfeststellung: " + idTxt + "\\n";
-      out += "| Weitere beteiligte Einheiten/Zeugen: " + zeug + "\\n\\n";
-      out += "| Abgenommene Gegenstände: " + geg + "\\n";
-      out += "| Abgenommen von: " + abn + "\\n";
-      out += "| Verlesen: " + verlesen + "\\n";
-      out += "| Beisein: " + beisein + "\\n";
-      if (rb)  out += "| Rechtsbeistand: " + rb + "\\n";
-      if (med) out += "| Medizinische Versorgung: " + med + "\\n";
-      if (eil) out += "| Eilverfahren: " + eil + "\\n";
-      out += "| Bußgelddatum: " + buss + "\\n";
-      out += "| Gezeichnet von: " + gez + "\\n";
+  let out = "";
 
-      document.getElementById("output").value = out;
-    }
+  out += "| - Strafakte - |\n\n";
+  out += "Narco City Police Department\n";
+  out += officer + "\n\n";
+
+  out += "| Tatort und Zeitraum: |\n";
+  out += tatort + "\n\n";
+
+  out += "| Beschuldigte Person(en): |\n";
+  out += besch + "\n\n";
+
+  out += "| Geschädigte Person(en): |\n";
+  out += ges + "\n\n";
+
+  out += "| Sachverhalt aus Sicht des NCPDs: |\n";
+  out += sach + "\n\n";
+  out += idTxt + "\n\n";
+
+  out += "| Weitere beteiligte Einheiten/Zeugen: |\n";
+  out += zeugen + "\n\n";
+
+  out += "| Abgenommene Gegenstände: |  Abgenommen von: " + abn + "\n";
+  out += geg + "\n\n";
+
+  out += "| Bemerkungen: |\n";
+  out += "Die Rechte wurden dem Beschuldigten durch " + verlesen + " im Beisein von " + beisein + " verlesen und verstanden.\n";
+
+  if (rb === "bestand") out += "Dieser bestand auf einen Rechtsbeistand.\n";
+  if (rb === "verzichtete") out += "Dieser verzichtete auf einen Rechtsbeistand.\n";
+
+  if (med === "bestand") out += "Der TV bestand auf medizinische Versorgung.\n";
+  if (med === "verzichtete") out += "Der TV verzichtete auf medizinische Versorgung.\n";
+
+  out += "Das Bußgeld ist bis zum " + buss + " [+7 Tage] zu bezahlen.\n";
+  out += "Die dem Tatverdächtigen abgenommenen Gegenstände wurden in seinen persönlichen Spind gelegt.\n";
+
+  if (eil !== "") out += "Das Eilverfahren wurde durch " + eil + " abgelehnt.\n";
+
+  out += "\n| Gezeichnet von: |\n";
+  out += gezeichnet + "\n";
+
+  document.getElementById("output").value = out;
+}
 
     function genSchnellakte() {
-      const off  = document.getElementById("sc-officer").value.trim();
-      const tat  = document.getElementById("sc-tatort").value.trim();
-      const besch = document.getElementById("sc-beschuldigte").value.trim();
-      const ges   = document.getElementById("sc-geschaedigte").value.trim();
-      const idTxt = getIdentitaet("sc");
-      const zeug  = document.getElementById("sc-zeugen").value.trim();
-      const geg   = document.getElementById("sc-gegenstaende").value.trim();
-      const abn   = document.getElementById("sc-abgenommen-von").value.trim();
-      const verlesen = document.getElementById("sc-verlesen").value.trim();
-      const beisein  = document.getElementById("sc-beisein").value.trim();
-      const rb  = document.getElementById("sc-rechtsbeistand").value;
-      const med = document.getElementById("sc-medizin").value;
-      const buss = document.getElementById("sc-bussgeld").value.trim();
-      const gez  = document.getElementById("sc-gezeichnet").value.trim();
+  const officer = document.getElementById("sc-officer").value.trim();
+  const tatort = document.getElementById("sc-tatort").value.trim();
+  const besch = document.getElementById("sc-beschuldigte").value.trim();
+  const ges = document.getElementById("sc-geschaedigte").value.trim();
+  const idTxt = getIdentitaet("sc");
+  const zeugen = document.getElementById("sc-zeugen").value.trim();
+  const geg = document.getElementById("sc-gegenstaende").value.trim();
+  const abn = document.getElementById("sc-abgenommen-von").value.trim();
+  const verlesen = document.getElementById("sc-verlesen").value.trim();
+  const beisein = document.getElementById("sc-beisein").value.trim();
+  const rb = document.getElementById("sc-rechtsbeistand").value;
+  const med = document.getElementById("sc-medizin").value;
+  const buss = document.getElementById("sc-bussgeld").value.trim();
+  const gezeichnet = document.getElementById("sc-gezeichnet").value.trim();
 
-      let out = "";
-      out += "| Officer: " + off + "\\n";
-      out += "| Tatort und Tatzeit: " + tat + "\\n";
-      out += "| Beschuldigte Person(en): " + besch + "\\n";
-      out += "| Geschädigte Person(en): " + ges + "\\n\\n";
-      out += "| Identitätsfeststellung: " + idTxt + "\\n";
-      out += "| Weitere beteiligte Einheiten/Zeugen: " + zeug + "\\n";
-      out += "| Abgenommene Gegenstände: " + geg + "\\n";
-      out += "| Abgenommen von: " + abn + "\\n";
-      out += "| Verlesen: " + verlesen + "\\n";
-      out += "| Beisein: " + beisein + "\\n";
-      if (rb)  out += "| Rechtsbeistand: " + rb + "\\n";
-      if (med) out += "| Medizinische Versorgung: " + med + "\\n";
-      out += "| Bußgelddatum: " + buss + "\\n";
-      out += "| Gezeichnet von: " + gez + "\\n";
+  let out = "";
 
-      document.getElementById("output").value = out;
-    }
+  out += "| - Schnellakte - |\n\n";
+  out += "Narco City Police Department\n";
+  out += officer + "\n\n";
+
+  out += "| Tatort und Zeitraum: |\n";
+  out += tatort + "\n\n";
+
+  out += "| Beschuldigte Person(en): |\n";
+  out += besch + "\n\n";
+
+  out += "| Geschädigte Person(en): |\n";
+  out += ges + "\n\n";
+
+  out += "| Weitere beteiligte Einheiten/Zeugen: |\n";
+  out += zeugen + "\n\n";
+
+  out += "| Abgenommene Gegenstände: |  Abgenommen von: " + abn + "\n";
+  out += geg + "\n\n";
+
+  out += "| Bemerkungen: |\n";
+  out += "Die Rechte wurden dem Beschuldigten durch " + verlesen + " im Beisein von " + beisein + " verlesen und verstanden.\n";
+
+  if (rb === "bestand") out += "Dieser bestand auf einen Rechtsbeistand.\n";
+  if (rb === "verzichtete") out += "Dieser verzichtete auf einen Rechtsbeistand.\n";
+
+  if (med === "bestand") out += "Der TV bestand auf medizinische Versorgung.\n";
+  if (med === "verzichtete") out += "Der TV verzichtete auf medizinische Versorgung.\n";
+
+  out += "Das Bußgeld ist bis zum " + buss + " [+7 Tage] zu bezahlen.\n";
+  out += "Die dem Tatverdächtigen abgenommenen Gegenstände wurden in seinen persönlichen Spind gelegt.\n\n";
+
+  out += "| Gezeichnet von: |\n";
+  out += gezeichnet + "\n";
+
+  document.getElementById("output").value = out;
+}
 
     function genKollektivakte() {
-      const off  = document.getElementById("ko-officer").value.trim();
-      const tat  = document.getElementById("ko-tatort").value.trim();
-      const besch = document.getElementById("ko-beschuldigte").value.trim();
-      const ges   = document.getElementById("ko-geschaedigte").value.trim();
-      const sach  = document.getElementById("ko-sachverhalt").value.trim();
-      const idTxt = getIdentitaet("ko");
-      const zeug  = document.getElementById("ko-zeugen").value.trim();
-      const geg   = document.getElementById("ko-gegenstaende").value.trim();
-      const abn   = document.getElementById("ko-abgenommen-von").value.trim();
-      const verlesen = document.getElementById("ko-verlesen").value.trim();
-      const beisein  = document.getElementById("ko-beisein").value.trim();
-      const rb  = document.getElementById("ko-rechtsbeistand").value;
-      const med = document.getElementById("ko-medizin").value;
-      const buss = document.getElementById("ko-bussgeld").value.trim();
-      const bestaetigtVon   = document.getElementById("ko-bestaetigt-von").value.trim();
-      const bestaetigtZeit  = document.getElementById("ko-bestaetigt-zeit").value.trim();
-      const gez  = document.getElementById("ko-gezeichnet").value.trim();
+  const officer = document.getElementById("ko-officer").value.trim();
+  const tatort = document.getElementById("ko-tatort").value.trim();
+  const besch = document.getElementById("ko-beschuldigte").value.trim();
+  const ges = document.getElementById("ko-geschaedigte").value.trim();
+  const sach = document.getElementById("ko-sachverhalt").value.trim();
+  const idTxt = getIdentitaet("ko");
+  const zeugen = document.getElementById("ko-zeugen").value.trim();
+  const geg = document.getElementById("ko-gegenstaende").value.trim();
+  const abn = document.getElementById("ko-abgenommen-von").value.trim();
+  const verlesen = document.getElementById("ko-verlesen").value.trim();
+  const beisein = document.getElementById("ko-beisein").value.trim();
+  const rb = document.getElementById("ko-rechtsbeistand").value;
+  const med = document.getElementById("ko-medizin").value;
+  const buss = document.getElementById("ko-bussgeld").value.trim();
+  const bestaetigtVon = document.getElementById("ko-bestaetigt-von").value.trim();
+  const bestaetigtZeit = document.getElementById("ko-bestaetigt-zeit").value.trim();
+  const gezeichnet = document.getElementById("ko-gezeichnet").value.trim();
 
-      let out = "";
-      out += "| Officer: " + off + "\\n";
-      out += "| Tatort und Tatzeit: " + tat + "\\n";
-      out += "| Beschuldigte Person(en): " + besch + "\\n";
-      out += "| Geschädigte Person(en): " + ges + "\\n\\n";
-      out += "| Sachverhalt aus Sicht des NCPDs: \\n" + sach + "\\n\\n";
-      out += "| Identitätsfeststellung: " + idTxt + "\\n";
-      out += "| Weitere beteiligte Einheiten/Zeugen: " + zeug + "\\n";
-      out += "| Abgenommene Gegenstände: " + geg + "\\n";
-      out += "| Abgenommen von: " + abn + "\\n";
-      out += "| Verlesen: " + verlesen + "\\n";
-      out += "| Beisein: " + beisein + "\\n";
-      if (rb)  out += "| Rechtsbeistand: " + rb + "\\n";
-      if (med) out += "| Medizinische Versorgung: " + med + "\\n";
-      out += "| Bußgelddatum: " + buss + "\\n";
-      out += "| Bestätigt von: " + bestaetigtVon + "\\n";
-      out += "| Bestätigt um (Uhrzeit): " + bestaetigtZeit + "\\n";
-      out += "| Gezeichnet von: " + gez + "\\n";
+  let out = "";
 
-      document.getElementById("output").value = out;
-    }
+  out += "| - Kollektivakte - |\n";
+  out += "Narco City Police Department\n";
+  out += officer + "\n";
+  out += "Kollektivakte wurde von " + bestaetigtVon + " um " + bestaetigtZeit + " genehmigt\n\n";
+
+  out += "| Tatort und Zeitraum: |\n";
+  out += tatort + "\n\n";
+
+  out += "| Beschuldigte Personen: |\n";
+  out += besch + "\n\n";
+
+  out += "| Geschädigte Person(en): |\n";
+  out += ges + "\n\n";
+
+  out += "| Sachverhalt aus Sicht des NCPDs: |\n";
+  out += sach + "\n\n";
+  out += idTxt + "\n\n";
+
+  out += "| Weitere beteiligte Einheiten/Zeugen: |\n";
+  out += zeugen + "\n\n";
+
+  out += "| Abgenommene Gegenstände: |  Abgenommen von: " + abn + "\n";
+  out += geg + "\n\n";
+
+  out += "| Bemerkungen: |\n";
+  out += "Die Rechte wurden dem Beschuldigten durch " + verlesen + " im Beisein von " + beisein + " verlesen und verstanden.\n";
+
+  if (rb === "bestand") out += "Diese bestand auf einen Rechtsbeistand.\n";
+  if (rb === "verzichtete") out += "Diese verzichtete auf einen Rechtsbeistand.\n";
+
+  if (med === "bestand") out += "Die TV´s bestanden auf medizinische Versorgung.\n";
+  if (med === "verzichtete") out += "Die TV´s verzichteten auf medizinische Versorgung.\n";
+
+  out += "Das Bußgeld ist bis zum " + buss + " zu bezahlen. (+ 7 Tage)\n\n";
+
+  out += "| Gezeichnet von: |\n";
+  out += gezeichnet + "\n";
+
+  document.getElementById("output").value = out;
+}
 
     document.getElementById("btn-strafakte").addEventListener("click", genStrafakte);
     document.getElementById("btn-schnellakte").addEventListener("click", genSchnellakte);
