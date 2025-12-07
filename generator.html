@@ -705,6 +705,74 @@ const officerMap = {
   "530031383007985665": { name: "Michael Johnson", dienstnummer: "PA-79", rang: "Anwärter" }
 
 };
+
+function getDiscordAccessToken() {
+  const hash = window.location.hash.substring(1);
+  if (!hash) return null;
+
+  const params = new URLSearchParams(hash);
+  const token = params.get("access_token");
+
+  if (token) {
+    history.replaceState(null, "", window.location.pathname + window.location.search);
+  }
+
+  return token;
+}
+
+function fillOfficerFromDiscord(discordId) {
+  const o = officerMap[discordId];
+  if (!o) return;
+
+  const full = `${o.name} | ${o.dienstnummer} | ${o.rang}`;
+  const unterschrift = `${o.name}\n${o.name} | ${o.dienstnummer} | ${o.rang}`;
+
+  const officerFields = [
+    "st-officer",
+    "sc-officer",
+    "ko-officer"
+  ];
+  officerFields.forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.value = full;
+  });
+
+  const signedFields = [
+    "st-gezeichnet",
+    "sc-gezeichnet",
+    "ko-gezeichnet"
+  ];
+  signedFields.forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.value = unterschrift;
+  });
+}
+
+async function initDiscordUser() {
+  const token = getDiscordAccessToken();
+  if (!token) return;
+
+  try {
+    const res = await fetch("https://discord.com/api/users/@me", {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    });
+
+    if (!res.ok) {
+      console.error("Discord API Fehler", res.status);
+      return;
+    }
+
+    const user = await res.json();
+    console.log("Discord User:", user);
+
+    fillOfficerFromDiscord(user.id);
+  } catch (err) {
+    console.error("Discord Request fehlgeschlagen:", err);
+  }
+}
+
     
     document.querySelectorAll(".tab-btn").forEach(btn => {
       btn.addEventListener("click", () => {
