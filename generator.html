@@ -43,12 +43,13 @@
     }
 
     .hero-logo {
-      width: 32px;
-      height: 32px;
+      width: 36px;
+      height: 36px;
       object-fit: cover;
       border-radius: 50%;
       display: block;
-      margin-right: 10px;
+      margin-right: 8px;
+      opacity: 0.95;
     }
     
     .topbar-title-main {
@@ -329,6 +330,7 @@
         <button class="tab-btn" data-tab="kollektivakte">Kollektivakte</button>
       </div>
 
+      <!-- STRAFAKTE -->
       <div id="tab-strafakte">
         <div class="row">
           <div>
@@ -424,6 +426,7 @@
         <button class="btn" id="btn-strafakte">Strafakte generieren</button>
       </div>
 
+      <!-- SCHNELLAKTE -->
       <div id="tab-schnellakte" class="hidden">
         <div class="row">
           <div>
@@ -510,6 +513,7 @@
         <button class="btn" id="btn-schnellakte">Schnellakte generieren</button>
       </div>
 
+      <!-- KOLLEKTIVAKTE -->
       <div id="tab-kollektivakte" class="hidden">
         <div class="row">
           <div>
@@ -612,19 +616,19 @@
     </section>
 
     <section class="panel">
-  <div class="panel-header">
-    <div>
-      <div class="panel-title">Generierte Akte</div>
-      <div class="panel-subtitle">Text kann direkt kopiert werden</div>
-    </div>
-  </div>
+      <div class="panel-header">
+        <div>
+          <div class="panel-title">Generierte Akte</div>
+          <div class="panel-subtitle">Text kann direkt kopiert werden</div>
+        </div>
+      </div>
 
-  <textarea id="output" readonly></textarea>
+      <textarea id="output" readonly></textarea>
 
-  <div style="margin-top: 12px;">
-    <button class="btn-secondary btn" id="btn-copy">In Zwischenablage kopieren</button>
-  </div>
-</section>
+      <div style="margin-top: 12px;">
+        <button class="btn-secondary btn" id="btn-copy">In Zwischenablage kopieren</button>
+      </div>
+    </section>
   </main>
 
   <script>
@@ -694,7 +698,7 @@ const officerMap = {
   "935269358098321418": { name: "Nico Bublich", dienstnummer: "PA-57", rang: "Anwärter" },
   "508666139333623808": { name: "Mehmet Aklubat", dienstnummer: "PA-61", rang: "Anwärter" },
   "1069361772324200478": { name: "Roman Schlag", dienstnummer: "PA-61", rang: "Anwärter" },
-  "764520163633922060": {name: "Alejandro Rodriguez", dienstnummer: "PA-54", rang: "Anwärter" },
+  "764520163633922060": { name: "Alejandro Rodriguez", dienstnummer: "PA-54", rang: "Anwärter" },
   "161210739174932481": { name: "Eduardo Sanchez", dienstnummer: "PA-66", rang: "Anwärter" },
   "730909080649990204": { name: "Max Aklubat", dienstnummer: "PA-69", rang: "Anwärter" },
   "966711299419537468": { name: "Lukas Denzel", dienstnummer: "PA-71", rang: "Anwärter" },
@@ -703,9 +707,11 @@ const officerMap = {
   "526132485101191203": { name: "Max Brechtelsbauer", dienstnummer: "PA-76", rang: "Anwärter" },
   "508377615241969674": { name: "Abusa Hanco", dienstnummer: "PA-78", rang: "Anwärter" },
   "530031383007985665": { name: "Michael Johnson", dienstnummer: "PA-79", rang: "Anwärter" }
-
 };
 
+// ---- Discord Login Auswertung ----
+
+// Access Token aus URL-Hash holen (#access_token=...)
 function getDiscordAccessToken() {
   const hash = window.location.hash.substring(1);
   if (!hash) return null;
@@ -713,6 +719,7 @@ function getDiscordAccessToken() {
   const params = new URLSearchParams(hash);
   const token = params.get("access_token");
 
+  // Hash aufräumen (schönerer Link)
   if (token) {
     history.replaceState(null, "", window.location.pathname + window.location.search);
   }
@@ -720,34 +727,30 @@ function getDiscordAccessToken() {
   return token;
 }
 
+// Officer-Felder anhand der officerMap füllen
 function fillOfficerFromDiscord(discordId) {
   const o = officerMap[discordId];
-  if (!o) return;
+  if (!o) return; // Discord-ID nicht in Tabelle
 
   const full = `${o.name} | ${o.dienstnummer} | ${o.rang}`;
   const unterschrift = `${o.name}\n${o.name} | ${o.dienstnummer} | ${o.rang}`;
 
-  const officerFields = [
-    "st-officer",
-    "sc-officer",
-    "ko-officer"
-  ];
+  // Officer-Felder in allen Tabs
+  const officerFields = ["st-officer", "sc-officer", "ko-officer"];
   officerFields.forEach(id => {
     const el = document.getElementById(id);
     if (el) el.value = full;
   });
 
-  const signedFields = [
-    "st-gezeichnet",
-    "sc-gezeichnet",
-    "ko-gezeichnet"
-  ];
+  // Gezeichnet von in allen Akten
+  const signedFields = ["st-gezeichnet", "sc-gezeichnet", "ko-gezeichnet"];
   signedFields.forEach(id => {
     const el = document.getElementById(id);
     if (el) el.value = unterschrift;
   });
 }
 
+// Discord-API aufrufen und ID holen
 async function initDiscordUser() {
   const token = getDiscordAccessToken();
   if (!token) return;
@@ -772,32 +775,30 @@ async function initDiscordUser() {
     console.error("Discord Request fehlgeschlagen:", err);
   }
 }
-
     
-    document.querySelectorAll(".tab-btn").forEach(btn => {
-      btn.addEventListener("click", () => {
-        document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
-        btn.classList.add("active");
+document.querySelectorAll(".tab-btn").forEach(btn => {
+  btn.addEventListener("click", () => {
+    document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
+    btn.classList.add("active");
 
-        const tab = btn.dataset.tab;
-        document.querySelectorAll("#tab-strafakte, #tab-schnellakte, #tab-kollektivakte")
-          .forEach(el => el.classList.add("hidden"));
-        document.getElementById("tab-" + tab).classList.remove("hidden");
+    const tab = btn.dataset.tab;
+    document.querySelectorAll("#tab-strafakte, #tab-schnellakte, #tab-kollektivakte")
+      .forEach(el => el.classList.add("hidden"));
+    document.getElementById("tab-" + tab).classList.remove("hidden");
+  });
+});
 
-      });
-    });
+function getIdentitaet(prefix) {
+  const parts = [];
+  if (document.getElementById(prefix + "-id-pers")?.checked)   parts.push("Personalausweis");
+  if (document.getElementById(prefix + "-id-waffe")?.checked)  parts.push("Waffenschein");
+  if (document.getElementById(prefix + "-id-fs")?.checked)     parts.push("Führerschein");
+  if (document.getElementById(prefix + "-id-finger")?.checked) parts.push("Fingerabdruckscanner");
+  if (!parts.length) return "Keine Identitätsfeststellung vermerkt.";
+  return "Die Identität wurde mittels " + parts.join(", ") + " festgestellt.";
+}
 
-    function getIdentitaet(prefix) {
-      const parts = [];
-      if (document.getElementById(prefix + "-id-pers")?.checked)   parts.push("Personalausweis");
-      if (document.getElementById(prefix + "-id-waffe")?.checked)  parts.push("Waffenschein");
-      if (document.getElementById(prefix + "-id-fs")?.checked)     parts.push("Führerschein");
-      if (document.getElementById(prefix + "-id-finger")?.checked) parts.push("Fingerabdruckscanner");
-      if (!parts.length) return "Keine Identitätsfeststellung vermerkt.";
-      return "Die Identität wurde mittels " + parts.join(", ") + " festgestellt.";
-    }
-
-    function genStrafakte() {
+function genStrafakte() {
   const officer = document.getElementById("st-officer").value.trim();
   const tatort = document.getElementById("st-tatort").value.trim();
   const besch = document.getElementById("st-beschuldigte").value.trim();
@@ -860,7 +861,7 @@ async function initDiscordUser() {
   document.getElementById("output").value = out;
 }
 
-    function genSchnellakte() {
+function genSchnellakte() {
   const officer = document.getElementById("sc-officer").value.trim();
   const tatort = document.getElementById("sc-tatort").value.trim();
   const besch = document.getElementById("sc-beschuldigte").value.trim();
@@ -915,7 +916,7 @@ async function initDiscordUser() {
   document.getElementById("output").value = out;
 }
 
-    function genKollektivakte() {
+function genKollektivakte() {
   const officer = document.getElementById("ko-officer").value.trim();
   const tatort = document.getElementById("ko-tatort").value.trim();
   const besch = document.getElementById("ko-beschuldigte").value.trim();
@@ -977,18 +978,21 @@ async function initDiscordUser() {
   document.getElementById("output").value = out;
 }
 
-    document.getElementById("btn-strafakte").addEventListener("click", genStrafakte);
-    document.getElementById("btn-schnellakte").addEventListener("click", genSchnellakte);
-    document.getElementById("btn-kollektivakte").addEventListener("click", genKollektivakte);
+document.getElementById("btn-strafakte").addEventListener("click", genStrafakte);
+document.getElementById("btn-schnellakte").addEventListener("click", genSchnellakte);
+document.getElementById("btn-kollektivakte").addEventListener("click", genKollektivakte);
 
-    document.getElementById("btn-copy").addEventListener("click", () => {
-      const out = document.getElementById("output");
-      out.select();
-      out.setSelectionRange(0, 99999);
-      try {
-        document.execCommand("copy");
-      } catch (e) {}
-    });
+document.getElementById("btn-copy").addEventListener("click", () => {
+  const out = document.getElementById("output");
+  out.select();
+  out.setSelectionRange(0, 99999);
+  try {
+    document.execCommand("copy");
+  } catch (e) {}
+});
+
+// Discord-User initialisieren
+initDiscordUser();
   </script>
 </body>
 </html>
