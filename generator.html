@@ -850,7 +850,7 @@ function genStrafakte() {
   if (eil !== "") out += "Das Eilverfahren wurde durch " + eil + " abgelehnt.\n";
 
   out += "\n| Gezeichnet von: |\n";
-  out += gezeichnet + "\n";
+  out += gezeichnet + "\n\n";
 
   document.getElementById("output").value = out;
 }
@@ -905,7 +905,7 @@ function genSchnellakte() {
   out += "Die dem Tatverdächtigen abgenommenen Gegenstände wurden in seinen persönlichen Spind gelegt.\n\n";
 
   out += "| Gezeichnet von: |\n";
-  out += gezeichnet + "\n";
+  out += gezeichnet + "\n\n";
 
   document.getElementById("output").value = out;
 }
@@ -967,7 +967,7 @@ function genKollektivakte() {
   out += "Das Bußgeld ist bis zum " + buss + " zu bezahlen. (+ 7 Tage)\n\n";
 
   out += "| Gezeichnet von: |\n";
-  out += gezeichnet + "\n";
+  out += gezeichnet + "\n\n";
 
   document.getElementById("output").value = out;
 }
