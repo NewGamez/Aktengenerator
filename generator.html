@@ -709,9 +709,6 @@ const officerMap = {
   "530031383007985665": { name: "Michael Johnson", dienstnummer: "PA-79", rang: "Anwärter" }
 };
 
-// ---- Discord Login Auswertung ----
-
-// Access Token aus URL-Hash holen (#access_token=...)
 function getDiscordAccessToken() {
   const hash = window.location.hash.substring(1);
   if (!hash) return null;
@@ -719,7 +716,6 @@ function getDiscordAccessToken() {
   const params = new URLSearchParams(hash);
   const token = params.get("access_token");
 
-  // Hash aufräumen (schönerer Link)
   if (token) {
     history.replaceState(null, "", window.location.pathname + window.location.search);
   }
@@ -727,30 +723,28 @@ function getDiscordAccessToken() {
   return token;
 }
 
-// Officer-Felder anhand der officerMap füllen
 function fillOfficerFromDiscord(discordId) {
   const o = officerMap[discordId];
-  if (!o) return; // Discord-ID nicht in Tabelle
+  if (!o) return;
 
   const full = `${o.name} | ${o.dienstnummer} | ${o.rang}`;
-  const unterschrift = `${o.name}\n${o.name} | ${o.dienstnummer} | ${o.rang}`;
 
-  // Officer-Felder in allen Tabs
-  const officerFields = ["st-officer", "sc-officer", "ko-officer"];
-  officerFields.forEach(id => {
+  const [vorname, nachname] = o.name.split(" ");
+  const kuerzel = `${vorname.charAt(0)}. ${nachname}`;
+
+  const unterschrift = `${kuerzel}\n${o.name} | ${o.dienstnummer} | ${o.rang}`;
+
+  ["st-officer","sc-officer","ko-officer"].forEach(id => {
     const el = document.getElementById(id);
     if (el) el.value = full;
   });
 
-  // Gezeichnet von in allen Akten
-  const signedFields = ["st-gezeichnet", "sc-gezeichnet", "ko-gezeichnet"];
-  signedFields.forEach(id => {
+  ["st-gezeichnet","sc-gezeichnet","ko-gezeichnet"].forEach(id => {
     const el = document.getElementById(id);
     if (el) el.value = unterschrift;
   });
 }
-
-// Discord-API aufrufen und ID holen
+ 
 async function initDiscordUser() {
   const token = getDiscordAccessToken();
   if (!token) return;
