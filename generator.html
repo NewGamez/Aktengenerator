@@ -331,17 +331,17 @@
       </div>
 
       <!-- STRAFAKTE -->
-      <div id="tab-strafakte">
-        <div class="row">
-          <div>
-            <label for="st-gezeichnet">Gezeichnet von</label>
-              <textarea id="st-gezeichnet" rows="2"></textarea>
-          </div>
-          <div>
-            <label for="st-tatort">Tatort und Tatzeit</label>
-            <input id="st-tatort" type="text" />
-          </div>
+      <div class="row">
+        <div>
+          <label for="st-officer">Officer</label>
+          <input id="st-officer" type="text" />
         </div>
+        <div>
+          <label for="st-tatort">Tatort und Tatzeit</label>
+          <input id="st-tatort" type="text" />
+        </div>
+      </div>
+
 
         <div class="row">
           <div>
@@ -408,7 +408,7 @@
           </div>
           <div>
             <label for="st-eilverfahren">Eilverfahren</label>
-            <input id="st-eilverfahren" type="text" placeholder="z. B. abgelehnt durch …" />
+            <input id="st-eilverfahren" type="text" placeholder="z. B. abgelehnt durch DOJ-XX" />
           </div>
         </div>
 
@@ -419,9 +419,10 @@
           </div>
           <div>
             <label for="st-gezeichnet">Gezeichnet von</label>
-            <input id="st-gezeichnet" type="text" />
+            <textarea id="st-gezeichnet" rows="2"></textarea>
           </div>
         </div>
+
 
         <button class="btn" id="btn-strafakte">Strafakte generieren</button>
       </div>
