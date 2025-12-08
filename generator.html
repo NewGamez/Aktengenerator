@@ -830,6 +830,16 @@ function fillOfficerFromDiscord(discordId, userObj) {
     if (el) el.value = unterschrift;
   });
 
+  ["fa-officer"].forEach(id => {
+  const el = document.getElementById(id);
+  if (el) el.value = full;
+});
+
+["fa-gezeichnet"].forEach(id => {
+  const el = document.getElementById(id);
+  if (el) el.value = unterschrift;
+});
+
   const circle = getTeamCircle(o.dienstnummer);
 
   if (mainEl && subEl) {
@@ -1104,6 +1114,42 @@ function genKollektivakte() {
   document.getElementById("output").value = out;
 }
 
+function genFahndung() {
+  const officer = document.getElementById("fa-officer").value.trim();
+  const datum = document.getElementById("fa-datum").value.trim();
+  const person = document.getElementById("fa-person").value.trim();
+  const grund = document.getElementById("fa-grund").value.trim();
+  const hinweise = document.getElementById("fa-hinweise").value.trim();
+  const einheiten = document.getElementById("fa-einheiten").value.trim();
+  const gezeichnet = document.getElementById("fa-gezeichnet").value.trim();
+
+  let out = "";
+
+  out += "| - Fahndungsakte - |\n\n";
+  out += "Narco City Police Department\n";
+  out += officer + "\n\n";
+
+  out += "| Datum / Uhrzeit: |\n";
+  out += datum + "\n\n";
+
+  out += "| Gesuchte Person: |\n";
+  out += person + "\n\n";
+
+  out += "| Grund der Fahndung: |\n";
+  out += grund + "\n\n";
+
+  out += "| Besondere Hinweise: |\n";
+  out += hinweise + "\n\n";
+
+  out += "| Beteiligte Einheiten: |\n";
+  out += einheiten + "\n\n";
+
+  out += "| Gezeichnet von: |\n";
+  out += gezeichnet + "\n\n";
+
+  document.getElementById("output").value = out;
+}
+
 // ---------- Reset ----------
 
 function resetForm() {
@@ -1135,6 +1181,7 @@ function resetForm() {
 document.getElementById("btn-strafakte").addEventListener("click", genStrafakte);
 document.getElementById("btn-schnellakte").addEventListener("click", genSchnellakte);
 document.getElementById("btn-kollektivakte").addEventListener("click", genKollektivakte);
+document.getElementById("btn-fahndung").addEventListener("click", genFahndung);
 
 document.getElementById("btn-copy").addEventListener("click", () => {
   const out = document.getElementById("output");
