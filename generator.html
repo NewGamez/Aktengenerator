@@ -625,8 +625,9 @@
 
       <textarea id="output" readonly></textarea>
 
-      <div style="margin-top: 12px;">
-        <button class="btn-secondary btn" id="btn-copy">In Zwischenablage kopieren</button>
+      <div style="margin-top: 12px; display: flex; gap: 8px;">
+        <button class="btn-secondary btn" id="btn-copy">Kopieren</button>
+        <button class="btn-secondary btn" id="btn-reset">Zurücksetzen</button>
       </div>
     </section>
   </main>
@@ -995,8 +996,10 @@ function genKollektivakte() {
 }
 
 document.getElementById("btn-strafakte").addEventListener("click", genStrafakte);
+document.getElementById("btn-strafakte").addEventListener("click", genStrafakte);
 document.getElementById("btn-schnellakte").addEventListener("click", genSchnellakte);
 document.getElementById("btn-kollektivakte").addEventListener("click", genKollektivakte);
+
 document.getElementById("btn-copy").addEventListener("click", () => {
   const out = document.getElementById("output");
   out.select();
@@ -1004,11 +1007,36 @@ document.getElementById("btn-copy").addEventListener("click", () => {
   try { document.execCommand("copy"); } catch (e) {}
 });
 
-// Discord-User holen
+document.getElementById("btn-reset").addEventListener("click", resetForm);
+
+function resetForm() {
+  const fields = document.querySelectorAll("input, textarea");
+
+  fields.forEach(el => {
+    const id = el.id;
+
+    if (
+      id === "st-officer" || id === "sc-officer" || id === "ko-officer" ||
+      id === "st-gezeichnet" || id === "sc-gezeichnet" || id === "ko-gezeichnet" ||
+      id === "st-bussgeld" || id === "sc-bussgeld" || id === "ko-bussgeld"
+    ) {
+      return;
+    }
+
+    if (el.type === "checkbox") {
+      el.checked = false;
+    }
+    else {
+      el.value = "";
+    }
+  });
+
+  document.getElementById("output").value = "";
+}
+
 initDiscordUser();
 
-// Bußgelddatum automatisch setzen
 setDefaultBussgeldDatum();
-  </script>
+</script>
 </body>
 </html>
