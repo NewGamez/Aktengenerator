@@ -633,6 +633,10 @@
   </main>
 
   <script>
+  if (window.location.hash.includes("access_token")) {
+    window.location.href = window.location.href.split("#")[0];
+  }
+
 const officerMap = {
   // ---------- TEAM RED ----------
   "361115973203525633": { name: "Lukas Lutz", dienstnummer: "PD-01", rang: "Chief of Police" },
