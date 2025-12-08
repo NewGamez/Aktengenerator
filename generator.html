@@ -311,7 +311,14 @@
       </div>
     </div>
 
-    <a class="logout-btn" href="index.html">Logout</a>
+    <div style="display:flex; align-items:center; gap:10px;">
+      <div style="text-align:right; font-size:0.78rem;">
+        <div id="login-main">Nicht mit Discord verbunden</div>
+        <div id="login-sub" style="opacity:0.7;">Bitte über das Portal einloggen.</div>
+        <div id="login-officer-info" style="opacity:0.8; margin-top:2px;"></div>
+      </div>
+      <a class="logout-btn" href="index.html">Logout</a>
+    </div>
   </header>
 
   <main class="page">
@@ -425,8 +432,8 @@
 
         <button class="btn" id="btn-strafakte">Strafakte generieren</button>
       </div>
-      <!-- SCHNELLAKTE -->
       
+      <!-- SCHNELLAKTE -->
       <div id="tab-schnellakte" class="hidden">
         <div class="row">
           <div>
@@ -633,10 +640,6 @@
   </main>
 
   <script>
-  if (window.location.hash.includes("access_token")) {
-    window.location.href = window.location.href.split("#")[0];
-  }
-
 const officerMap = {
   // ---------- TEAM RED ----------
   "361115973203525633": { name: "Lukas Lutz", dienstnummer: "PD-01", rang: "Chief of Police" },
@@ -714,6 +717,21 @@ const officerMap = {
   "530031383007985665": { name: "Michael Johnson", dienstnummer: "PA-79", rang: "Anwärter" }
 };
 
+// ---------- Login-Status ----------
+
+function setLoginStatus(mainText, subText, isGood = false) {
+  const mainEl = document.getElementById("login-main");
+  const subEl = document.getElementById("login-sub");
+  if (!mainEl || !subEl) return;
+
+  mainEl.textContent = mainText || "";
+  subEl.textContent = subText || "";
+
+  mainEl.style.color = isGood ? "#a5ffb5" : "#ffffff";
+}
+
+// ---------- Discord OAuth ----------
+
 function getDiscordAccessToken() {
   const hash = window.location.hash.substring(1);
   if (!hash) return null;
@@ -722,6 +740,7 @@ function getDiscordAccessToken() {
   const token = params.get("access_token");
 
   if (token) {
+    // URL aufräumen, aber Seite nicht neu laden
     history.replaceState(null, "", window.location.pathname + window.location.search);
   }
 
@@ -730,51 +749,70 @@ function getDiscordAccessToken() {
 
 function fillOfficerFromDiscord(discordId) {
   const o = officerMap[discordId];
-  if (!o) return;
+  const infoEl = document.getElementById("login-officer-info");
+
+  if (!o) {
+    setLoginStatus("Eingeloggt (unbekannter Officer)", "Discord-ID nicht in der NCPD-Liste.", false);
+    if (infoEl) infoEl.textContent = "";
+    return;
+  }
 
   const full = `${o.name} | ${o.dienstnummer} | ${o.rang}`;
-
   const [vorname, nachname] = o.name.split(" ");
   const kuerzel = `${vorname.charAt(0)}. ${nachname}`;
-
   const unterschrift = `${kuerzel}\n${o.name} | ${o.dienstnummer} | ${o.rang}`;
 
-  ["st-officer","sc-officer","ko-officer"].forEach(id => {
+  ["st-officer", "sc-officer", "ko-officer"].forEach(id => {
     const el = document.getElementById(id);
     if (el) el.value = full;
   });
 
-  ["st-gezeichnet","sc-gezeichnet","ko-gezeichnet"].forEach(id => {
+  ["st-gezeichnet", "sc-gezeichnet", "ko-gezeichnet"].forEach(id => {
     const el = document.getElementById(id);
     if (el) el.value = unterschrift;
   });
+
+  if (infoEl) {
+    infoEl.textContent = `${o.name} (${o.dienstnummer} • ${o.rang})`;
+  }
 }
- 
+
 async function initDiscordUser() {
   const token = getDiscordAccessToken();
-  if (!token) return;
+  if (!token) {
+    setLoginStatus("Nicht mit Discord verbunden", "Bitte über das Portal einloggen.");
+    return;
+  }
 
   try {
+    setLoginStatus("Verbinde mit Discord …", "Bitte einen Moment warten.");
+
     const res = await fetch("https://discord.com/api/users/@me", {
-      headers: {
-        Authorization: `Bearer ${token}`
-      }
+      headers: { Authorization: `Bearer ${token}` }
     });
 
     if (!res.ok) {
       console.error("Discord API Fehler", res.status);
+      setLoginStatus("Discord-Fehler", "Benutzerdaten konnten nicht geladen werden.");
       return;
     }
 
     const user = await res.json();
-    console.log("Discord User:", user);
+    setLoginStatus(
+      `Eingeloggt als ${user.username}${user.discriminator ? "#" + user.discriminator : ""}`,
+      "Zuordnung zum NCPD-Profil erfolgt.",
+      true
+    );
 
     fillOfficerFromDiscord(user.id);
   } catch (err) {
     console.error("Discord Request fehlgeschlagen:", err);
+    setLoginStatus("Verbindungsfehler", "Discord konnte nicht erreicht werden.");
   }
 }
-    
+
+// ---------- Tabs ----------
+
 document.querySelectorAll(".tab-btn").forEach(btn => {
   btn.addEventListener("click", () => {
     document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
@@ -787,6 +825,8 @@ document.querySelectorAll(".tab-btn").forEach(btn => {
   });
 });
 
+// ---------- Identitätsfeststellung ----------
+
 function getIdentitaet(prefix) {
   const parts = [];
   if (document.getElementById(prefix + "-id-pers")?.checked)   parts.push("Personalausweis");
@@ -796,8 +836,10 @@ function getIdentitaet(prefix) {
   if (!parts.length) return "Keine Identitätsfeststellung vermerkt.";
   return "Die Identität wurde mittels " + parts.join(", ") + " festgestellt.";
 }
-    
-    function setDefaultBussgeldDatum() {
+
+// ---------- Bußgeld-Datum ----------
+
+function setDefaultBussgeldDatum() {
   const d = new Date();
   d.setDate(d.getDate() + 7); // +7 Tage
 
@@ -814,7 +856,9 @@ function getIdentitaet(prefix) {
     }
   });
 }
-    
+
+// ---------- Generatoren ----------
+
 function genStrafakte() {
   const officer = document.getElementById("st-officer").value.trim();
   const tatort = document.getElementById("st-tatort").value.trim();
@@ -999,7 +1043,34 @@ function genKollektivakte() {
   document.getElementById("output").value = out;
 }
 
-document.getElementById("btn-strafakte").addEventListener("click", genStrafakte);
+// ---------- Reset ----------
+
+function resetForm() {
+  const keepIds = new Set([
+    "st-officer","sc-officer","ko-officer",
+    "st-gezeichnet","sc-gezeichnet","ko-gezeichnet",
+    "st-bussgeld","sc-bussgeld","ko-bussgeld"
+  ]);
+
+  document.querySelectorAll("input, textarea, select").forEach(el => {
+    if (!el.id) return;
+    if (keepIds.has(el.id)) return;
+
+    if (el.type === "checkbox") {
+      el.checked = false;
+    } else if (el.tagName === "SELECT") {
+      el.value = "";
+    } else {
+      el.value = "";
+    }
+  });
+
+  const out = document.getElementById("output");
+  if (out) out.value = "";
+}
+
+// ---------- Buttons ----------
+
 document.getElementById("btn-strafakte").addEventListener("click", genStrafakte);
 document.getElementById("btn-schnellakte").addEventListener("click", genSchnellakte);
 document.getElementById("btn-kollektivakte").addEventListener("click", genKollektivakte);
@@ -1013,34 +1084,10 @@ document.getElementById("btn-copy").addEventListener("click", () => {
 
 document.getElementById("btn-reset").addEventListener("click", resetForm);
 
-function resetForm() {
-  const fields = document.querySelectorAll("input, textarea");
-
-  fields.forEach(el => {
-    const id = el.id;
-
-    if (
-      id === "st-officer" || id === "sc-officer" || id === "ko-officer" ||
-      id === "st-gezeichnet" || id === "sc-gezeichnet" || id === "ko-gezeichnet" ||
-      id === "st-bussgeld" || id === "sc-bussgeld" || id === "ko-bussgeld"
-    ) {
-      return;
-    }
-
-    if (el.type === "checkbox") {
-      el.checked = false;
-    }
-    else {
-      el.value = "";
-    }
-  });
-
-  document.getElementById("output").value = "";
-}
+// ---------- Init ----------
 
 initDiscordUser();
-
 setDefaultBussgeldDatum();
-</script>
+  </script>
 </body>
 </html>
