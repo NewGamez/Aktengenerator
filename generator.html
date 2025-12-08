@@ -614,6 +614,40 @@
           <textarea id="ko-gezeichnet" rows="2"></textarea>
         </div>
 
+        <!-- FAHNDUNGSAKTE -->
+        <div id="tab-fahndung" class="hidden">
+
+          <div class="row">
+            <div>
+              <label for="fa-officer">Officer</label>
+              <input id="fa-officer" type="text" />
+            </div>
+            <div>
+              <label for="fa-datum">Datum / Uhrzeit</label>
+              <input id="fa-datum" type="text" placeholder="z. B. 05.12.2025 14:30 Uhr" />
+            </div>
+          </div>
+
+          <label for="fa-person">Gesuchte Person</label>
+          <textarea id="fa-person" placeholder="Name, Geburtsdatum, Beschreibung"></textarea>
+
+          <label for="fa-grund">Grund der Fahndung</label>
+          <textarea id="fa-grund" placeholder="Sachverhalt / Ermittlungsstand"></textarea>
+
+          <label for="fa-hinweise">Besondere Hinweise</label>
+          <textarea id="fa-hinweise" placeholder="Bewaffnung, Gefährlichkeit, letzte Sichtung"></textarea>
+
+          <label for="fa-einheiten">Beteiligte Einheiten</label>
+          <textarea id="fa-einheiten" placeholder="PD-XX, FIB-XX, USM-XX …"></textarea>
+
+          <div>
+            <label for="fa-gezeichnet">Gezeichnet von</label>
+            <textarea id="fa-gezeichnet" rows="2"></textarea>
+          </div>
+
+          <button class="btn" id="btn-fahndung">Fahndungsakte generieren</button>
+        </div>
+
         <button class="btn" id="btn-kollektivakte">Kollektivakte generieren</button>
       </div>
     </section>
