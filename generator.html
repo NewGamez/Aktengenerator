@@ -77,6 +77,26 @@
       background: rgba(35, 38, 70, 0.95);
     }
 
+    .login-status {
+      text-align: right;
+      font-size: 0.78rem;
+      line-height: 1.25;
+    }
+
+    .login-status-main {
+      font-weight: 500;
+    }
+
+    .login-status-sub {
+      opacity: 0.8;
+    }
+
+    .login-status-officer {
+      opacity: 0.8;
+      margin-top: 2px;
+      font-size: 0.76rem;
+    }
+
     .page {
       flex: 1;
       width: 100%;
@@ -273,31 +293,6 @@
       white-space: pre-wrap;
       resize: vertical;
     }
-
-    .section-title {
-      font-size: 0.8rem;
-      font-weight: 600;
-      margin-top: 10px;
-      margin-bottom: 4px;
-      opacity: 0.9;
-    }
-
-    .link-list a {
-      display: inline-block;
-      font-size: 0.78rem;
-      margin: 2px 6px 4px 0;
-      color: #a8b0ff;
-      text-decoration: none;
-      padding: 4px 7px;
-      border-radius: 999px;
-      background: rgba(255,255,255,0.04);
-      border: 1px solid rgba(255,255,255,0.06);
-    }
-
-    .link-list a:hover {
-      background: rgba(88,101,242,0.3);
-      border-color: rgba(88,101,242,0.8);
-    }
   </style>
 </head>
 <body>
@@ -312,10 +307,10 @@
     </div>
 
     <div style="display:flex; align-items:center; gap:10px;">
-      <div style="text-align:right; font-size:0.78rem;">
-        <div id="login-main">Nicht mit Discord verbunden</div>
-        <div id="login-sub" style="opacity:0.7;">Bitte über das Portal einloggen.</div>
-        <div id="login-officer-info" style="opacity:0.8; margin-top:2px;"></div>
+      <div class="login-status">
+        <div id="login-main" class="login-status-main">Nicht mit Discord verbunden</div>
+        <div id="login-sub" class="login-status-sub">Bitte über das Portal einloggen.</div>
+        <div id="login-officer-info" class="login-status-officer"></div>
       </div>
       <a class="logout-btn" href="index.html">Logout</a>
     </div>
@@ -717,17 +712,40 @@ const officerMap = {
   "530031383007985665": { name: "Michael Johnson", dienstnummer: "PA-79", rang: "Anwärter" }
 };
 
-// ---------- Login-Status ----------
+// ---------- Login-Status Helfer ----------
 
 function setLoginStatus(mainText, subText, isGood = false) {
   const mainEl = document.getElementById("login-main");
   const subEl = document.getElementById("login-sub");
+  const infoEl = document.getElementById("login-officer-info");
   if (!mainEl || !subEl) return;
 
   mainEl.textContent = mainText || "";
   subEl.textContent = subText || "";
+  if (infoEl) infoEl.textContent = "";
 
   mainEl.style.color = isGood ? "#a5ffb5" : "#ffffff";
+}
+
+// ---------- Team / Kreis aus Dienstnummer ----------
+
+function getTeamCircle(dienstnummer) {
+  if (!dienstnummer) return "⚪";
+
+  if (dienstnummer.startsWith("PA-")) {
+    return "🟢"; // Team Green
+  }
+
+  if (!dienstnummer.startsWith("PD-")) return "⚪";
+
+  const num = parseInt(dienstnummer.split("-")[1], 10);
+  if (Number.isNaN(num)) return "⚪";
+
+  if (num >= 1 && num <= 5) return "🔴";                        // Team Red
+  if ([9, 16, 17, 18, 19].includes(num)) return "🔵";          // Team Blue
+  if ([21, 22, 24, 26, 29, 34, 35, 36].includes(num)) return "🟡"; // Team Gold
+
+  return "⚪"; // Default: Team Silver / sonstige
 }
 
 // ---------- Discord OAuth ----------
@@ -740,19 +758,24 @@ function getDiscordAccessToken() {
   const token = params.get("access_token");
 
   if (token) {
-    // URL aufräumen, aber Seite nicht neu laden
+    // Hash aus der URL entfernen, Seite aber nicht neu laden
     history.replaceState(null, "", window.location.pathname + window.location.search);
   }
 
   return token;
 }
 
-function fillOfficerFromDiscord(discordId) {
+function fillOfficerFromDiscord(discordId, userObj) {
   const o = officerMap[discordId];
+  const mainEl = document.getElementById("login-main");
+  const subEl = document.getElementById("login-sub");
   const infoEl = document.getElementById("login-officer-info");
 
   if (!o) {
-    setLoginStatus("Eingeloggt (unbekannter Officer)", "Discord-ID nicht in der NCPD-Liste.", false);
+    const uname = userObj
+      ? userObj.username + (userObj.discriminator ? "#" + userObj.discriminator : "")
+      : "Unbekannt";
+    setLoginStatus("Eingeloggt (unbekannter Officer)", uname, false);
     if (infoEl) infoEl.textContent = "";
     return;
   }
@@ -762,18 +785,26 @@ function fillOfficerFromDiscord(discordId) {
   const kuerzel = `${vorname.charAt(0)}. ${nachname}`;
   const unterschrift = `${kuerzel}\n${o.name} | ${o.dienstnummer} | ${o.rang}`;
 
-  ["st-officer", "sc-officer", "ko-officer"].forEach(id => {
+  ["st-officer","sc-officer","ko-officer"].forEach(id => {
     const el = document.getElementById(id);
     if (el) el.value = full;
   });
 
-  ["st-gezeichnet", "sc-gezeichnet", "ko-gezeichnet"].forEach(id => {
+  ["st-gezeichnet","sc-gezeichnet","ko-gezeichnet"].forEach(id => {
     const el = document.getElementById(id);
     if (el) el.value = unterschrift;
   });
 
+  const circle = getTeamCircle(o.dienstnummer);
+
+  if (mainEl && subEl) {
+    mainEl.textContent = "Eingeloggt als:";
+    mainEl.style.color = "#a5ffb5";
+    subEl.textContent = `Team ${circle} [${o.dienstnummer}] ${o.name}`;
+  }
+
   if (infoEl) {
-    infoEl.textContent = `${o.name} (${o.dienstnummer} • ${o.rang})`;
+    infoEl.textContent = o.rang;
   }
 }
 
@@ -798,13 +829,8 @@ async function initDiscordUser() {
     }
 
     const user = await res.json();
-    setLoginStatus(
-      `Eingeloggt als ${user.username}${user.discriminator ? "#" + user.discriminator : ""}`,
-      "Zuordnung zum NCPD-Profil erfolgt.",
-      true
-    );
-
-    fillOfficerFromDiscord(user.id);
+    // Officer zuordnen und Anzeige im gewünschten Format setzen
+    fillOfficerFromDiscord(user.id, user);
   } catch (err) {
     console.error("Discord Request fehlgeschlagen:", err);
     setLoginStatus("Verbindungsfehler", "Discord konnte nicht erreicht werden.");
