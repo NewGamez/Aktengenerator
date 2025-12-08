@@ -23,22 +23,40 @@
       display: flex;
       align-items: center;
       justify-content: center;
+      padding: 20px;
     }
 
     .login-wrapper {
-      background: #111322;
+      background: rgba(10, 12, 30, 0.96);
       border-radius: 20px;
-      padding: 45px 50px 40px;
-      width: 440px;
-      box-shadow: 0 28px 70px rgba(0, 0, 0, 0.65);
-      border: 1px solid rgba(255, 255, 255, 0.05);
+      padding: 32px 30px 26px;
+      width: 420px;
+      max-width: 100%;
+      box-shadow: 0 28px 70px rgba(0, 0, 0, 0.75);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .login-wrapper::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at top left, rgba(88,101,242,0.18), transparent 60%);
+      opacity: 0.7;
+      pointer-events: none;
+    }
+
+    .login-inner {
+      position: relative;
+      z-index: 1;
     }
 
     .login-header {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 26px;
+      margin-bottom: 18px;
     }
 
     .login-title-left {
@@ -46,21 +64,42 @@
       font-weight: 600;
       display: flex;
       align-items: center;
-      gap: 8px;
-      color: #a9b3ff;
+      gap: 10px;
+      color: #c3c8ff;
+    }
+
+    .login-title-sub {
+      font-size: 0.72rem;
+      opacity: 0.7;
     }
 
     .login-title-right {
-      font-size: 1rem;
-      font-weight: 600;
+      font-size: 0.9rem;
+      font-weight: 500;
       color: #ffffff;
+      padding: 4px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.08);
+      background: rgba(5,6,20,0.9);
     }
 
     .logo-img {
-      width: 22px;
-      height: 22px;
+      width: 26px;
+      height: 26px;
       object-fit: cover;
       border-radius: 50%;
+    }
+
+    .headline {
+      font-size: 1.05rem;
+      font-weight: 600;
+      margin-bottom: 6px;
+    }
+
+    .headline-sub {
+      font-size: 0.8rem;
+      color: #a6a8c7;
+      margin-bottom: 18px;
     }
 
     .field-group {
@@ -70,7 +109,7 @@
     .field-label {
       font-size: 0.8rem;
       color: #a6a8c7;
-      margin-bottom: 6px;
+      margin-bottom: 5px;
     }
 
     .input {
@@ -85,10 +124,14 @@
       transition: border 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
     }
 
+    .input::placeholder {
+      color: #5f6280;
+    }
+
     .input:focus {
       border-color: #5865f2;
       box-shadow: 0 0 0 1px rgba(88, 101, 242, 0.4);
-      background: #080a20;
+      background: #090b23;
     }
 
     .remember-row {
@@ -98,6 +141,8 @@
       margin: 6px 0 18px;
       font-size: 0.8rem;
       color: #a6a8c7;
+      cursor: pointer;
+      user-select: none;
     }
 
     .checkbox {
@@ -129,7 +174,7 @@
     .btn {
       width: 100%;
       border-radius: 7px;
-      padding: 9px 10px;
+      padding: 10px 10px;
       border: none;
       cursor: pointer;
       font-size: 0.9rem;
@@ -138,16 +183,16 @@
     }
 
     .btn-main {
-      background: #4b31f5;
+      background: linear-gradient(135deg, #4b31f5, #7b5bff);
       color: #ffffff;
       margin-bottom: 10px;
       box-shadow: 0 10px 22px rgba(88, 101, 242, 0.5);
     }
 
     .btn-main:hover {
-      background: #5a3fff;
+      background: linear-gradient(135deg, #5a3fff, #8b6aff);
       transform: translateY(-1px);
-      box-shadow: 0 14px 30px rgba(88, 101, 242, 0.6);
+      box-shadow: 0 14px 30px rgba(88, 101, 242, 0.65);
     }
 
     .btn-discord {
@@ -172,51 +217,65 @@
     }
 
     .bottom-text {
-      margin-top: 18px;
+      margin-top: 14px;
       font-size: 0.78rem;
       text-align: center;
       color: #7f82a8;
+    }
+
+    .bottom-text span {
+      color: #c3c8ff;
     }
   </style>
 </head>
 <body>
   <div class="login-wrapper">
-    <div class="login-header">
-      <div class="login-title-left">
-        <img src="ncpd-logo.png" class="logo-img" alt="NCPD Logo">
-        <span>NCPD Aktengenerator</span>
-      </div>
-      <div class="login-title-right">Login</div>
-    </div>
-
-    <form onsubmit="window.location.href='generator.html'; return false;">
-      <div class="field-group">
-        <div class="field-label">Benutzer</div>
-        <input type="text" class="input" placeholder="Benutzername" />
+    <div class="login-inner">
+      <div class="login-header">
+        <div>
+          <div class="login-title-left">
+            <img src="ncpd-logo.png" class="logo-img" alt="NCPD Logo">
+            <span>Narco City Police Department</span>
+          </div>
+          <div class="login-title-sub">Aktengenerator • Interner Dienstzugang</div>
+        </div>
+        <div class="login-title-right">Login</div>
       </div>
 
-      <div class="field-group">
-        <div class="field-label">Passwort</div>
-        <input type="password" class="input" placeholder="Passwort" />
+      <div class="headline">Willkommen im NCPD Aktengenerator</div>
+      <div class="headline-sub">
+        Melde dich mit deinem Dienstzugang oder direkt über Discord an.
       </div>
 
-      <label class="remember-row">
-        <input type="checkbox" class="checkbox" />
-        <span>Gerät merken</span>
-      </label>
+      <form onsubmit="window.location.href='generator.html'; return false;">
+        <div class="field-group">
+          <div class="field-label">Benutzer</div>
+          <input type="text" class="input" placeholder="Benutzername" />
+        </div>
 
-      <button type="submit" class="btn btn-main">Anmelden</button>
-    </form>
+        <div class="field-group">
+          <div class="field-label">Passwort</div>
+          <input type="password" class="input" placeholder="Passwort" />
+        </div>
 
-    <a
-      class="btn btn-discord"
-      href="https://discord.com/api/oauth2/authorize?client_id=1447191138825142323&redirect_uri=https%3A%2F%2Fnewgamez.github.io%2FAktengenerator%2Fgenerator.html&response_type=token&scope=identify">
-      <i class="fa-brands fa-discord discord-icon"></i>
-      <span>Mit Discord einloggen</span>
-    </a>
+        <label class="remember-row">
+          <input type="checkbox" class="checkbox" />
+          <span>Gerät merken</span>
+        </label>
 
-    <div class="bottom-text">
-      Noch keinen Account? Dann melde dich jetzt mit Discord an!
+        <button type="submit" class="btn btn-main">Mit Dienstzugang anmelden</button>
+      </form>
+
+      <a
+        class="btn btn-discord"
+        href="https://discord.com/api/oauth2/authorize?client_id=1447191138825142323&redirect_uri=https%3A%2F%2Fnewgamez.github.io%2FAktengenerator%2Fgenerator.html&response_type=token&scope=identify">
+        <i class="fa-brands fa-discord discord-icon"></i>
+        <span>Mit Discord einloggen</span>
+      </a>
+
+      <div class="bottom-text">
+        Kein separater Dienstzugang? <span>Nutze einfach den Discord-Login.</span>
+      </div>
     </div>
   </div>
 </body>
