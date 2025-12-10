@@ -615,20 +615,20 @@
 
           <button class="btn" id="btn-kollektivakte">Kollektivakte generieren</button>
         </div>
-
+      </div>
         <!-- FAHNDUNGSAKTE -->
-        <div id="tab-fahndung" class="hidden">
+      <div id="tab-fahndung" class="hidden">
 
-          <div class="row">
-            <div>
-              <label for="fa-officer">Officer</label>
-              <input id="fa-officer" type="text" />
-            </div>
-            <div>
-              <label for="fa-datum">Datum / Uhrzeit</label>
-              <input id="fa-datum" type="text" placeholder="z. B. 05.12.2025 14:30 Uhr" />
-            </div>
+        <div class="row">
+          <div>
+            <label for="fa-officer">Officer</label>
+            <input id="fa-officer" type="text" />
+           </div>
+           <div>
+            <label for="fa-datum">Datum / Uhrzeit</label>
+             <input id="fa-datum" type="text" placeholder="z. B. 05.12.2025 14:30 Uhr" />
           </div>
+         </div>
 
           <label for="fa-person">Gesuchte Person</label>
           <textarea id="fa-person" placeholder="Name, Geburtsdatum, Beschreibung"></textarea>
@@ -727,14 +727,12 @@ const officerMap = {
   "831635399679017002": { name: "Tom Black", dienstnummer: "PD-77", rang: "Sergeant II" },
   "966081394310783006": { name: "Michael Korczak", dienstnummer: "PD-78", rang: "Specialist" },
   "1215412476359737366": { name: "Lukas Rothe", dienstnummer: "PD-52", rang: "Specialist" },
-  "764520163633922060": { name: "Alejandro Rodriguez", dienstnummer: "PD-54", rang: "Specialist" },
   "677541121383202817": { name: "Ben Stein", dienstnummer: "PD-55", rang: "Specialist" },
   // ---------- TEAM GREEN ----------
   "877241505016844328": { name: "Salva Sol", dienstnummer: "PA-52", rang: "Anwärter" },
   "624039199028543499": { name: "Ludovico Greco", dienstnummer: "PA-56", rang: "Anwärter" },
   "935269358098321418": { name: "Nico Bublich", dienstnummer: "PA-57", rang: "Anwärter" },
-  "508666139333623808": { name: "Mehmet Aklubat", dienstnummer: "PA-61", rang: "Anwärter" },
-  "1069361772324200478": { name: "Roman Schlag", dienstnummer: "PA-61", rang: "Anwärter" },
+  "1069361772324200478": { name: "Roman Schlag", dienstnummer: "PA-62", rang: "Anwärter" },
   "161210739174932481": { name: "Eduardo Sanchez", dienstnummer: "PA-66", rang: "Anwärter" },
   "730909080649990204": { name: "Max Aklubat", dienstnummer: "PA-69", rang: "Anwärter" },
   "966711299419537468": { name: "Lukas Denzel", dienstnummer: "PA-71", rang: "Anwärter" },
@@ -773,11 +771,11 @@ function getTeamCircle(dienstnummer) {
   const num = parseInt(dienstnummer.split("-")[1], 10);
   if (Number.isNaN(num)) return "⚪";
 
-  if (num >= 1 && num <= 5) return "🔴";                        // Team Red
-  if ([9, 16, 17, 18, 19].includes(num)) return "🔵";          // Team Blue
-  if ([21, 22, 24, 26, 29, 34, 35, 36].includes(num)) return "🟡"; // Team Gold
+  if (num >= 1 && num <= 5) return "🔴";     // Team Red
+  if (num >= 7 && num <= 19) return "🔵";   // Team Blue
+  if (num >= 20 && num <= 39) return "🟡"; // Team Gold
 
-  return "⚪"; // Default: Team Silver / sonstige
+  return "⚪"; // Default: Team Silver
 }
 
 // ---------- Discord OAuth ----------
@@ -887,7 +885,7 @@ document.querySelectorAll(".tab-btn").forEach(btn => {
     btn.classList.add("active");
 
     const tab = btn.dataset.tab;
-    document.querySelectorAll("#tab-strafakte, #tab-schnellakte, #tab-kollektivakte")
+    document.querySelectorAll("#tab-strafakte, #tab-schnellakte, #tab-kollektivakte, #tab-fahndung")
       .forEach(el => el.classList.add("hidden"));
     document.getElementById("tab-" + tab).classList.remove("hidden");
   });
@@ -1151,8 +1149,8 @@ function genFahndung() {
 
 function resetForm() {
   const keepIds = new Set([
-    "st-officer","sc-officer","ko-officer",
-    "st-gezeichnet","sc-gezeichnet","ko-gezeichnet",
+    "st-officer","sc-officer","ko-officer","fa-officer",
+     "st-gezeichnet","sc-gezeichnet","ko-gezeichnet","fa-gezeichnet",
     "st-bussgeld","sc-bussgeld","ko-bussgeld"
   ]);
 
