@@ -309,7 +309,7 @@
     <div style="display:flex; align-items:center; gap:10px;">
       <div class="login-status">
         <div id="login-main" class="login-status-main">Nicht mit Discord verbunden</div>
-        <div id="login-sub" class="login-status-sub">Bitte über das Portal einloggen.</div>
+        <div id="login-sub" class="login-status-sub">Bitte über das Login einloggen.</div>
         <div id="login-officer-info" class="login-status-officer"></div>
       </div>
       <a class="logout-btn" href="index.html">Logout</a>
@@ -322,7 +322,7 @@
       <div class="panel-header">
         <div>
           <div class="panel-title">NCPD II Übersicht</div>
-          <div class="panel-subtitle">Strafakte • Schnellakte • Kollektivakte</div>
+          <div class="panel-subtitle">Strafakte • Schnellakte • Kollektivakte • Fahndungsakte</div>
         </div>
       </div>
 
@@ -790,7 +790,7 @@ function getDiscordAccessToken() {
   const token = params.get("access_token");
 
   if (token) {
-    // Hash aus der URL entfernen, Seite aber nicht neu laden
+    
     history.replaceState(null, "", window.location.pathname + window.location.search);
   }
 
@@ -871,7 +871,7 @@ async function initDiscordUser() {
     }
 
     const user = await res.json();
-    // Officer zuordnen und Anzeige im gewünschten Format setzen
+    
     fillOfficerFromDiscord(user.id, user);
   } catch (err) {
     console.error("Discord Request fehlgeschlagen:", err);
