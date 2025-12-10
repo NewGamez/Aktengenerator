@@ -247,6 +247,7 @@
 
     .tab-buttons {
       display: inline-flex;
+      flex-wrap: wrap;
       gap: 6px;
       background: #080a19;
       padding: 3px;
@@ -293,6 +294,59 @@
       white-space: pre-wrap;
       resize: vertical;
     }
+
+    /* Verzeichnis-Styles */
+    #tab-verzeichnis h3 {
+      margin-top: 12px;
+      margin-bottom: 6px;
+      font-size: 0.9rem;
+      font-weight: 600;
+    }
+
+    .verz-hinweis {
+      font-size: 0.78rem;
+      opacity: 0.7;
+      margin-bottom: 10px;
+    }
+
+    .verz-list {
+      margin-bottom: 6px;
+    }
+
+    .verz-item {
+      padding: 7px 9px;
+      background: #0f1122;
+      border: 1px solid #262943;
+      border-radius: 7px;
+      margin-bottom: 4px;
+      cursor: pointer;
+      font-size: 0.78rem;
+      display: flex;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    .verz-item:hover {
+      background: #171a33;
+    }
+
+    .verz-item-title {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 230px;
+    }
+
+    .verz-item-date {
+      opacity: 0.6;
+      font-size: 0.74rem;
+    }
+
+    .verz-empty {
+      font-size: 0.78rem;
+      opacity: 0.65;
+      padding: 6px 2px 10px;
+    }
   </style>
 </head>
 <body>
@@ -322,7 +376,7 @@
       <div class="panel-header">
         <div>
           <div class="panel-title">NCPD II Übersicht</div>
-          <div class="panel-subtitle">Strafakte • Schnellakte • Kollektivakte • Fahndungsakte</div>
+          <div class="panel-subtitle">Strafakte • Schnellakte • Kollektivakte • Fahndungsakte • Verzeichnis</div>
         </div>
       </div>
 
@@ -331,6 +385,7 @@
         <button class="tab-btn" data-tab="schnellakte">Schnellakte</button>
         <button class="tab-btn" data-tab="kollektivakte">Kollektivakte</button>
         <button class="tab-btn" data-tab="fahndung">Fahndungsakte</button>
+        <button class="tab-btn" data-tab="verzeichnis">Verzeichnis</button>
       </div>
 
       <!-- STRAFAKTE -->
@@ -615,9 +670,9 @@
 
           <button class="btn" id="btn-kollektivakte">Kollektivakte generieren</button>
         </div>
-        </div>
+      </div>
       
-        <!-- FAHNDUNGSAKTE -->
+      <!-- FAHNDUNGSAKTE -->
       <div id="tab-fahndung" class="hidden">
 
         <div class="row">
@@ -629,34 +684,60 @@
             <label for="fa-datum">Datum / Uhrzeit</label>
              <input id="fa-datum" type="text" placeholder="z. B. 05.12.2025 14:30 Uhr" />
           </div>
-         </div>
-
-          <label for="fa-person">Gesuchte Person</label>
-          <textarea id="fa-person" placeholder="Name, Geburtsdatum, Beschreibung"></textarea>
-
-          <label for="fa-grund">Grund der Fahndung</label>
-          <textarea id="fa-grund" placeholder="Sachverhalt / Ermittlungsstand"></textarea>
-
-          <label for="fa-hinweise">Besondere Hinweise</label>
-          <textarea id="fa-hinweise" placeholder="Bewaffnung, Gefährlichkeit, letzte Sichtung"></textarea>
-
-          <label for="fa-einheiten">Beteiligte Einheiten</label>
-          <textarea id="fa-einheiten" placeholder="PD-XX, FIB-XX, USM-XX …"></textarea>
-
-          <div>
-            <label for="fa-gezeichnet">Gezeichnet von</label>
-            <textarea id="fa-gezeichnet" rows="2"></textarea>
-          </div>
-
-          <button class="btn" id="btn-fahndung">Fahndungsakte generieren</button>
         </div>
+
+        <label for="fa-tatort">Tatort und Zeitraum</label>
+        <input id="fa-tatort" type="text" placeholder="z. B. Route 68 Kleidungsladen, Zwischen 5004 und 5000 | 06.12.2025 16:00–16:15 Uhr" />
+
+        <label for="fa-person">Gesuchte Person</label>
+        <textarea id="fa-person" placeholder="Name, Geburtsdatum, Beschreibung"></textarea>
+
+        <label for="fa-paragrafen">Straftatbestände / Paragraphen</label>
+        <textarea id="fa-paragrafen" placeholder="§1 Abs. 01 BtMG&#10;§4 Abs. 03 StGB"></textarea>
+
+        <label for="fa-sachverhalt">Sachverhalt</label>
+        <textarea id="fa-sachverhalt" placeholder="Freitextlicher Sachverhalt, Ermittlungsstand ..."></textarea>
+
+        <label for="fa-hinweise">Besondere Hinweise</label>
+        <textarea id="fa-hinweise" placeholder="Bewaffnung, Gefährlichkeit, letzte Sichtung"></textarea>
+
+        <label for="fa-einheiten">Beteiligte Einheiten</label>
+        <textarea id="fa-einheiten" placeholder="PD-XX, FIB-XX, USM-XX …"></textarea>
+
+        <div>
+          <label for="fa-gezeichnet">Gezeichnet von</label>
+          <textarea id="fa-gezeichnet" rows="2"></textarea>
+        </div>
+
+        <button class="btn" id="btn-fahndung">Fahndungsakte generieren</button>
+      </div>
+
+      <!-- AKTENVERZEICHNIS -->
+      <div id="tab-verzeichnis" class="hidden">
+        <p class="verz-hinweis">
+          Hier werden alle Akten gespeichert, die mit deinem Discord-Account <br>
+          auf diesem Gerät erstellt wurden. Klick auf einen Eintrag, um ihn rechts zu laden.
+        </p>
+
+        <h3>Strafakten</h3>
+        <div id="verzeichnis-straf" class="verz-list"></div>
+
+        <h3>Schnellakten</h3>
+        <div id="verzeichnis-schnell" class="verz-list"></div>
+    
+        <h3>Kollektivakten</h3>
+        <div id="verzeichnis-kollektiv" class="verz-list"></div>
+
+        <h3>Fahndungsakten</h3>
+        <div id="verzeichnis-fahndung" class="verz-list"></div>
+      </div>
     </section>
 
     <section class="panel">
       <div class="panel-header">
         <div>
           <div class="panel-title">Generierte Akte</div>
-          <div class="panel-subtitle">Text kann direkt kopiert werden</div>
+          <div class="panel-subtitle">Text kann direkt kopiert werden • Verzeichnis-Einträge laden die Akte hier</div>
         </div>
       </div>
 
@@ -670,6 +751,8 @@
   </main>
 
   <script>
+let currentDiscordId = null;
+
 const officerMap = {
   // ---------- TEAM RED ----------
   "361115973203525633": { name: "Lukas Lutz", dienstnummer: "PD-01", rang: "Chief of Police" },
@@ -729,6 +812,7 @@ const officerMap = {
   "966081394310783006": { name: "Michael Korczak", dienstnummer: "PD-78", rang: "Specialist" },
   "1215412476359737366": { name: "Lukas Rothe", dienstnummer: "PD-52", rang: "Specialist" },
   "677541121383202817": { name: "Ben Stein", dienstnummer: "PD-55", rang: "Specialist" },
+
   // ---------- TEAM GREEN ----------
   "877241505016844328": { name: "Salva Sol", dienstnummer: "PA-52", rang: "Anwärter" },
   "624039199028543499": { name: "Ludovico Greco", dienstnummer: "PA-56", rang: "Anwärter" },
@@ -789,7 +873,6 @@ function getDiscordAccessToken() {
   const token = params.get("access_token");
 
   if (token) {
-    
     history.replaceState(null, "", window.location.pathname + window.location.search);
   }
 
@@ -797,6 +880,8 @@ function getDiscordAccessToken() {
 }
 
 function fillOfficerFromDiscord(discordId, userObj) {
+  currentDiscordId = discordId || null;
+
   const o = officerMap[discordId];
   const mainEl = document.getElementById("login-main");
   const subEl = document.getElementById("login-sub");
@@ -808,6 +893,7 @@ function fillOfficerFromDiscord(discordId, userObj) {
       : "Unbekannt";
     setLoginStatus("Eingeloggt (unbekannter Officer)", uname, false);
     if (infoEl) infoEl.textContent = "";
+    initVerzeichnis(); // trotzdem Verzeichnis laden (mit "unknown"-Key)
     return;
   }
 
@@ -816,25 +902,15 @@ function fillOfficerFromDiscord(discordId, userObj) {
   const kuerzel = `${vorname.charAt(0)}. ${nachname}`;
   const unterschrift = `${kuerzel}\n${o.name} | ${o.dienstnummer} | ${o.rang}`;
 
-  ["st-officer","sc-officer","ko-officer"].forEach(id => {
+  ["st-officer","sc-officer","ko-officer","fa-officer"].forEach(id => {
     const el = document.getElementById(id);
     if (el) el.value = full;
   });
 
-  ["st-gezeichnet","sc-gezeichnet","ko-gezeichnet"].forEach(id => {
+  ["st-gezeichnet","sc-gezeichnet","ko-gezeichnet","fa-gezeichnet"].forEach(id => {
     const el = document.getElementById(id);
     if (el) el.value = unterschrift;
   });
-
-  ["fa-officer"].forEach(id => {
-  const el = document.getElementById(id);
-  if (el) el.value = full;
-});
-
-["fa-gezeichnet"].forEach(id => {
-  const el = document.getElementById(id);
-  if (el) el.value = unterschrift;
-});
 
   const circle = getTeamCircle(o.dienstnummer);
 
@@ -847,12 +923,15 @@ function fillOfficerFromDiscord(discordId, userObj) {
   if (infoEl) {
     infoEl.textContent = o.rang;
   }
+
+  initVerzeichnis();
 }
 
 async function initDiscordUser() {
   const token = getDiscordAccessToken();
   if (!token) {
     setLoginStatus("Nicht mit Discord verbunden", "Bitte über das Portal einloggen.");
+    initVerzeichnis(); // Verzeichnis für unknown
     return;
   }
 
@@ -866,15 +945,16 @@ async function initDiscordUser() {
     if (!res.ok) {
       console.error("Discord API Fehler", res.status);
       setLoginStatus("Discord-Fehler", "Benutzerdaten konnten nicht geladen werden.");
+      initVerzeichnis();
       return;
     }
 
     const user = await res.json();
-    
     fillOfficerFromDiscord(user.id, user);
   } catch (err) {
     console.error("Discord Request fehlgeschlagen:", err);
     setLoginStatus("Verbindungsfehler", "Discord konnte nicht erreicht werden.");
+    initVerzeichnis();
   }
 }
 
@@ -886,9 +966,10 @@ document.querySelectorAll(".tab-btn").forEach(btn => {
     btn.classList.add("active");
 
     const tab = btn.dataset.tab;
-    document.querySelectorAll("#tab-strafakte, #tab-schnellakte, #tab-kollektivakte, #tab-fahndung")
+    document.querySelectorAll("#tab-strafakte, #tab-schnellakte, #tab-kollektivakte, #tab-fahndung, #tab-verzeichnis")
       .forEach(el => el.classList.add("hidden"));
-    document.getElementById("tab-" + tab).classList.remove("hidden");
+    const activeTab = document.getElementById("tab-" + tab);
+    if (activeTab) activeTab.classList.remove("hidden");
   });
 });
 
@@ -922,6 +1003,84 @@ function setDefaultBussgeldDatum() {
       el.value = s;
     }
   });
+}
+
+// ---------- Verzeichnis / Storage ----------
+
+const verzContainerIds = {
+  straf: "verzeichnis-straf",
+  schnell: "verzeichnis-schnell",
+  kollektiv: "verzeichnis-kollektiv",
+  fahndung: "verzeichnis-fahndung"
+};
+
+function getStorageKey(type) {
+  const id = currentDiscordId || "unknown";
+  return "akten_" + id + "_" + type;
+}
+
+function saveAkte(type, title, text) {
+  try {
+    const key = getStorageKey(type);
+    const list = JSON.parse(localStorage.getItem(key) || "[]");
+    const entry = {
+      id: Date.now(),
+      title: title || "Ohne Titel",
+      createdAt: new Date().toLocaleString("de-DE"),
+      text
+    };
+    list.unshift(entry);
+    localStorage.setItem(key, JSON.stringify(list));
+    renderVerzeichnisListe(type);
+  } catch (e) {
+    console.error("Speichern der Akte fehlgeschlagen:", e);
+  }
+}
+
+function renderVerzeichnisListe(type) {
+  const containerId = verzContainerIds[type];
+  const container = document.getElementById(containerId);
+  if (!container) return;
+
+  const key = getStorageKey(type);
+  const list = JSON.parse(localStorage.getItem(key) || "[]");
+
+  container.innerHTML = "";
+
+  if (!list.length) {
+    const empty = document.createElement("div");
+    empty.className = "verz-empty";
+    empty.textContent = "Noch keine Akten gespeichert.";
+    container.appendChild(empty);
+    return;
+  }
+
+  list.forEach(entry => {
+    const div = document.createElement("div");
+    div.className = "verz-item";
+
+    const spanTitle = document.createElement("span");
+    spanTitle.className = "verz-item-title";
+    spanTitle.textContent = entry.title;
+
+    const spanDate = document.createElement("span");
+    spanDate.className = "verz-item-date";
+    spanDate.textContent = entry.createdAt;
+
+    div.appendChild(spanTitle);
+    div.appendChild(spanDate);
+
+    div.addEventListener("click", () => {
+      const out = document.getElementById("output");
+      if (out) out.value = entry.text;
+    });
+
+    container.appendChild(div);
+  });
+}
+
+function initVerzeichnis() {
+  ["straf","schnell","kollektiv","fahndung"].forEach(renderVerzeichnisListe);
 }
 
 // ---------- Generatoren ----------
@@ -987,6 +1146,9 @@ function genStrafakte() {
   out += gezeichnet + "\n\n";
 
   document.getElementById("output").value = out;
+
+  const titel = tatort || (besch.split("\n")[0] || "Strafakte ohne Titel");
+  saveAkte("straf", titel, out);
 }
 
 function genSchnellakte() {
@@ -1045,6 +1207,9 @@ function genSchnellakte() {
   out += gezeichnet + "\n\n";
 
   document.getElementById("output").value = out;
+
+  const titel = tatort || (besch.split("\n")[0] || "Schnellakte ohne Titel");
+  saveAkte("schnell", titel, out);
 }
 
 function genKollektivakte() {
@@ -1108,15 +1273,20 @@ function genKollektivakte() {
   out += gezeichnet + "\n\n";
 
   document.getElementById("output").value = out;
+
+  const titel = tatort || "Kollektivakte ohne Titel";
+  saveAkte("kollektiv", titel, out);
 }
 
 function genFahndung() {
-  const officer   = document.getElementById("fa-officer").value.trim();
-  const datum     = document.getElementById("fa-datum").value.trim();
-  const tatort    = document.getElementById("fa-person").value.trim();     
-  const besch     = document.getElementById("fa-grund").value.trim();     
-  const sach      = document.getElementById("fa-hinweise").value.trim(); 
-  const zeugen    = document.getElementById("fa-einheiten").value.trim(); 
+  const officer    = document.getElementById("fa-officer").value.trim();
+  const datum      = document.getElementById("fa-datum").value.trim();
+  const tatort     = document.getElementById("fa-tatort").value.trim();
+  const person     = document.getElementById("fa-person").value.trim();
+  const paragrafen = document.getElementById("fa-paragrafen").value.trim();
+  const sach       = document.getElementById("fa-sachverhalt").value.trim();
+  const hinweise   = document.getElementById("fa-hinweise").value.trim();
+  const einheiten  = document.getElementById("fa-einheiten").value.trim();
   const gezeichnet = document.getElementById("fa-gezeichnet").value.trim();
 
   let out = "";
@@ -1126,27 +1296,39 @@ function genFahndung() {
   out += officer + "\n\n";
 
   out += "| Tatort und Zeitraum: |\n";
-  out += datum + "\n\n";
+  out += tatort + "\n";
+  out += "Am " + datum + "\n\n";
 
   out += "| Beschuldigte Person(en): |\n";
-  out += tatort + "\n\n";
+  out += person + "\n\n";
 
-  out += "| Grund der Fahndung: |\n";
-  out += besch + "\n\n";
+  out += "| Geschädigte Person(en): |\n";
+  out += "—-----------------------\n\n";
 
   out += "| Sachverhalt aus Sicht des NCPDs: |\n";
+  if (paragrafen) {
+    out += paragrafen + "\n\n";
+  }
+
+  out += "|Sachverhalt:|\n";
   out += sach + "\n\n";
 
   out += "| Weitere beteiligte Einheiten/Zeugen: |\n";
-  out += zeugen + "\n\n";
+  out += einheiten + "\n\n";
+
+  out += "| Besondere Hinweise: |\n";
+  out += hinweise + "\n\n";
 
   out += "| Bemerkungen: |\n";
-  out += "Die o.g. beschuldigte Person ist flüchtig. Beim Antreffen ist diese festzunehmen, ihre Rechte zu belehren und der gerechten Strafe zuzuführen.\n\n";
+  out += "Die o.g. Beschuldigte ist flüchtig. Beim Antreffen der Beschuldigten ist diese festzunehmen, ihre Rechte zu belehren und der gerechten Strafe zuzuführen.\n\n";
 
   out += "| Gezeichnet von: |\n";
   out += gezeichnet + "\n\n";
 
   document.getElementById("output").value = out;
+
+  const titel = person.split("\n")[0] || "Fahndungsakte ohne Titel";
+  saveAkte("fahndung", titel, out);
 }
 
 // ---------- Reset ----------
@@ -1154,7 +1336,7 @@ function genFahndung() {
 function resetForm() {
   const keepIds = new Set([
     "st-officer","sc-officer","ko-officer","fa-officer",
-     "st-gezeichnet","sc-gezeichnet","ko-gezeichnet","fa-gezeichnet",
+    "st-gezeichnet","sc-gezeichnet","ko-gezeichnet","fa-gezeichnet",
     "st-bussgeld","sc-bussgeld","ko-bussgeld"
   ]);
 
