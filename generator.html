@@ -1111,34 +1111,37 @@ function genKollektivakte() {
 }
 
 function genFahndung() {
-  const officer = document.getElementById("fa-officer").value.trim();
-  const datum = document.getElementById("fa-datum").value.trim();
-  const person = document.getElementById("fa-person").value.trim();
-  const grund = document.getElementById("fa-grund").value.trim();
-  const hinweise = document.getElementById("fa-hinweise").value.trim();
-  const einheiten = document.getElementById("fa-einheiten").value.trim();
+  const officer   = document.getElementById("fa-officer").value.trim();
+  const datum     = document.getElementById("fa-datum").value.trim();
+  const tatort    = document.getElementById("fa-person").value.trim();     
+  const besch     = document.getElementById("fa-grund").value.trim();     
+  const sach      = document.getElementById("fa-hinweise").value.trim(); 
+  const zeugen    = document.getElementById("fa-einheiten").value.trim(); 
   const gezeichnet = document.getElementById("fa-gezeichnet").value.trim();
 
   let out = "";
 
-  out += "| - Fahndungsakte - |\n\n";
+  out += "| - Fahndungsakte - |\n";
   out += "Narco City Police Department\n";
   out += officer + "\n\n";
 
-  out += "| Datum / Uhrzeit: |\n";
+  out += "| Tatort und Zeitraum: |\n";
   out += datum + "\n\n";
 
-  out += "| Gesuchte Person: |\n";
-  out += person + "\n\n";
+  out += "| Beschuldigte Person(en): |\n";
+  out += tatort + "\n\n";
 
   out += "| Grund der Fahndung: |\n";
-  out += grund + "\n\n";
+  out += besch + "\n\n";
 
-  out += "| Besondere Hinweise: |\n";
-  out += hinweise + "\n\n";
+  out += "| Sachverhalt aus Sicht des NCPDs: |\n";
+  out += sach + "\n\n";
 
-  out += "| Beteiligte Einheiten: |\n";
-  out += einheiten + "\n\n";
+  out += "| Weitere beteiligte Einheiten/Zeugen: |\n";
+  out += zeugen + "\n\n";
+
+  out += "| Bemerkungen: |\n";
+  out += "Die o.g. beschuldigte Person ist flüchtig. Beim Antreffen ist diese festzunehmen, ihre Rechte zu belehren und der gerechten Strafe zuzuführen.\n\n";
 
   out += "| Gezeichnet von: |\n";
   out += gezeichnet + "\n\n";
