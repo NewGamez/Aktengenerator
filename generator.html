@@ -755,8 +755,10 @@
   <script>
 let currentDiscordId = null;
 
-const officerMap = {
-  // ---------- TEAM RED ----------
+  const STORAGE_KEY = "ncpd_officerMap_v1";
+
+const defaultOfficerMap = {
+   // ---------- TEAM RED ----------
   "361115973203525633": { name: "Lukas Lutz", dienstnummer: "PD-01", rang: "Chief of Police" },
   "929489098471796756": { name: "Alev Sunal", dienstnummer: "PD-02", rang: "Assistant Chief of Police" },
   "689193377261944853": { name: "Pau Sunal", dienstnummer: "PD-03", rang: "Deputy Chief" },
@@ -829,6 +831,20 @@ const officerMap = {
   "530031383007985665": { name: "Michael Johnson", dienstnummer: "PA-79", rang: "Anwärter" }
 };
 
+function loadOfficerMap() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (!raw) return JSON.parse(JSON.stringify(defaultOfficerMap));
+    const parsed = JSON.parse(raw);
+    if (!parsed || typeof parsed !== "object") return JSON.parse(JSON.stringify(defaultOfficerMap));
+    return parsed;
+  } catch (e) {
+    return JSON.parse(JSON.stringify(defaultOfficerMap));
+  }
+}
+
+const officerMap = loadOfficerMap();
+    
 // ---------- Login-Status Helfer ----------
 
 function setLoginStatus(mainText, subText, isGood = false) {
