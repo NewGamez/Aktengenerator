@@ -9,104 +9,303 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
   <style>
-    *{box-sizing:border-box;margin:0;padding:0;font-family:"Inter",sans-serif}
-    body{
-      min-height:100vh;
-      background:radial-gradient(circle at top,#252542 0,#050511 55%,#050509 100%);
-      color:#f9f9ff;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      padding:20px;
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: "Inter", sans-serif;
     }
-    .login-wrapper{
-      background:rgba(10,12,30,.96);
-      border-radius:20px;
-      padding:32px 30px 26px;
-      width:420px;
-      box-shadow:0 28px 70px rgba(0,0,0,.75);
-      border:1px solid rgba(255,255,255,.06);
+
+    body {
+      min-height: 100vh;
+      background: radial-gradient(circle at top, #252542 0, #050511 55%, #050509 100%);
+      color: #f9f9ff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
     }
-    .headline{font-size:1.05rem;font-weight:600;margin-bottom:6px}
-    .headline-sub{font-size:.8rem;color:#a6a8c7;margin-bottom:18px}
-    .field-group{margin-bottom:12px}
-    .field-label{font-size:.8rem;color:#a6a8c7;margin-bottom:5px}
-    .input{
-      width:100%;
-      background:#050614;
-      border:1px solid #22243a;
-      border-radius:7px;
-      padding:9px 10px;
-      color:#fff;
+
+    .login-wrapper {
+      background: rgba(10, 12, 30, 0.96);
+      border-radius: 20px;
+      padding: 32px 30px 26px;
+      width: 420px;
+      max-width: 100%;
+      box-shadow: 0 28px 70px rgba(0, 0, 0, 0.75);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      position: relative;
+      overflow: hidden;
     }
-    .btn{
-      width:100%;
-      border-radius:7px;
-      padding:10px;
-      border:none;
-      cursor:pointer;
-      font-size:.9rem;
-      font-weight:500;
+
+    .login-wrapper::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at top left, rgba(88,101,242,0.18), transparent 60%);
+      opacity: 0.7;
+      pointer-events: none;
     }
-    .btn-main{
-      background:linear-gradient(135deg,#4b31f5,#7b5bff);
-      color:#fff;
-      margin-bottom:10px;
+
+    .login-inner {
+      position: relative;
+      z-index: 1;
     }
-    .btn-discord{
-      background:#23243a;
-      color:#fff;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      gap:8px;
-      border:1px solid #353757;
-      text-decoration:none;
+
+    .login-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 18px;
+    }
+
+    .login-title-left {
+      font-size: 0.95rem;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: #c3c8ff;
+    }
+
+    .login-title-sub {
+      font-size: 0.72rem;
+      opacity: 0.7;
+    }
+
+    .login-title-right {
+      font-size: 0.9rem;
+      font-weight: 500;
+      color: #ffffff;
+      padding: 4px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.08);
+      background: rgba(5,6,20,0.9);
+    }
+
+    .logo-img {
+      width: 26px;
+      height: 26px;
+      object-fit: cover;
+      border-radius: 50%;
+    }
+
+    .headline {
+      font-size: 1.05rem;
+      font-weight: 600;
+      margin-bottom: 6px;
+    }
+
+    .headline-sub {
+      font-size: 0.8rem;
+      color: #a6a8c7;
+      margin-bottom: 18px;
+    }
+
+    .field-group {
+      margin-bottom: 12px;
+    }
+
+    .field-label {
+      font-size: 0.8rem;
+      color: #a6a8c7;
+      margin-bottom: 5px;
+    }
+
+    .input {
+      width: 100%;
+      background: #050614;
+      border: 1px solid #22243a;
+      border-radius: 7px;
+      padding: 9px 10px;
+      color: #ffffff;
+      font-size: 0.85rem;
+      outline: none;
+      transition: border 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+    }
+
+    .input::placeholder {
+      color: #5f6280;
+    }
+
+    .input:focus {
+      border-color: #5865f2;
+      box-shadow: 0 0 0 1px rgba(88, 101, 242, 0.4);
+      background: #090b23;
+    }
+
+    .remember-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin: 6px 0 18px;
+      font-size: 0.8rem;
+      color: #a6a8c7;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .checkbox {
+      width: 15px;
+      height: 15px;
+      border-radius: 3px;
+      border: 1px solid #3a3c57;
+      background: #050614;
+      cursor: pointer;
+      appearance: none;
+      -webkit-appearance: none;
+      position: relative;
+    }
+
+    .checkbox:checked {
+      background: #5865f2;
+      border-color: #5865f2;
+    }
+
+    .checkbox:checked::after {
+      content: "✓";
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -60%);
+      font-size: 0.7rem;
+    }
+
+    .btn {
+      width: 100%;
+      border-radius: 7px;
+      padding: 10px 10px;
+      border: none;
+      cursor: pointer;
+      font-size: 0.9rem;
+      font-weight: 500;
+      transition: transform 0.06s ease, box-shadow 0.06s ease, background 0.12s ease;
+    }
+
+    .btn-main {
+      background: linear-gradient(135deg, #4b31f5, #7b5bff);
+      color: #ffffff;
+      margin-bottom: 10px;
+      box-shadow: 0 10px 22px rgba(88, 101, 242, 0.5);
+    }
+
+    .btn-main:hover {
+      background: linear-gradient(135deg, #5a3fff, #8b6aff);
+      transform: translateY(-1px);
+      box-shadow: 0 14px 30px rgba(88, 101, 242, 0.65);
+    }
+
+    .btn-discord {
+      background: #23243a;
+      color: #ffffff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      border: 1px solid #353757;
+      text-decoration: none;
+      margin-top: 4px;
+    }
+
+    .btn-discord:hover {
+      background: #2a2d4b;
+      transform: translateY(-1px);
+    }
+
+    .discord-icon {
+      font-size: 1.05rem;
+    }
+
+    .bottom-text {
+      margin-top: 14px;
+      font-size: 0.78rem;
+      text-align: center;
+      color: #7f82a8;
+    }
+
+    .bottom-text span {
+      color: #c3c8ff;
     }
   </style>
 </head>
 <body>
+  <div class="login-wrapper">
+    <div class="login-inner">
+      <div class="login-header">
+        <div>
+          <div class="login-title-left">
+            <img src="ncpd-logo.png" class="logo-img" alt="NCPD Logo">
+            <span>Narco City Police Department</span>
+          </div>
+          <div class="login-title-sub">Aktengenerator • Interner Dienstzugang</div>
+        </div>
+        <div class="login-title-right">Login</div>
+      </div>
 
-<div class="login-wrapper">
-  <div class="headline">Interner Dienstzugang</div>
-  <div class="headline-sub">Einstellungen nur mit Passwort • Generator auch via Discord</div>
+      <div class="headline">Dienstzugang</div>
+      <div class="headline-sub">Einstellungen nur mit Passwort • Generator auch via Discord</div>
 
-  <form id="loginForm">
-    <div class="field-group">
-      <div class="field-label">Benutzer</div>
-      <input id="loginUser" class="input">
+      <form id="serviceLoginForm">
+        <div class="field-group">
+          <div class="field-label">Benutzer</div>
+          <input id="svcUser" type="text" class="input" placeholder="Benutzername" autocomplete="username" />
+        </div>
+
+        <div class="field-group">
+          <div class="field-label">Passwort</div>
+          <input id="svcPass" type="password" class="input" placeholder="Passwort" autocomplete="current-password" />
+        </div>
+
+        <label class="remember-row">
+          <input type="checkbox" class="checkbox" />
+          <span>Gerät merken</span>
+        </label>
+
+        <button type="submit" class="btn btn-main">Zu den Einstellungen</button>
+      </form>
+
+      <a
+        class="btn btn-discord"
+        href="https://discord.com/api/oauth2/authorize?client_id=1447191138825142323&redirect_uri=https%3A%2F%2Fnewgamez.github.io%2FAktengenerator%2Fgenerator.html&response_type=token&scope=identify">
+        <i class="fa-brands fa-discord discord-icon"></i>
+        <span>Mit Discord einloggen</span>
+      </a>
+
+      <div class="bottom-text">
+        Kein separater Dienstzugang?<br>
+        <span>Nutze einfach den Discord-Login.</span>
+      </div>
     </div>
-    <div class="field-group">
-      <div class="field-label">Passwort</div>
-      <input id="loginPass" type="password" class="input">
-    </div>
-    <button class="btn btn-main" type="submit">Zu den Einstellungen</button>
-  </form>
+  </div>
 
-  <a class="btn btn-discord"
-     href="https://discord.com/api/oauth2/authorize?client_id=1447191138825142323&redirect_uri=https%3A%2F%2Fnewgamez.github.io%2FAktengenerator%2Fgenerator.html&response_type=token&scope=identify">
-    <i class="fa-brands fa-discord"></i>
-    <span>Mit Discord in den Generator</span>
-  </a>
-</div>
+  <script>
+    // Kein Klartext im Code: wir vergleichen nur SHA-256("Benni.60:DevBen1798")
+    const ADMIN_FLAG = "ncpd_admin_logged_in";
+    const EXPECTED_SHA256_HEX = "0fc676de54093c878c01faba2414c846e5f79a72753b0d7cb6208f84ecea45d7";
 
-<script>
-const VALID_USER = "Benni.60";
-const VALID_PASS = "DevBen1798";
+    async function sha256Hex(str) {
+      const enc = new TextEncoder().encode(str);
+      const hashBuf = await crypto.subtle.digest("SHA-256", enc);
+      const hashArr = Array.from(new Uint8Array(hashBuf));
+      return hashArr.map(b => b.toString(16).padStart(2, "0")).join("");
+    }
 
-document.getElementById("loginForm").addEventListener("submit", e => {
-  e.preventDefault();
-  const u = loginUser.value.trim();
-  const p = loginPass.value;
+    document.getElementById("serviceLoginForm").addEventListener("submit", async (e) => {
+      e.preventDefault();
 
-  if (u === VALID_USER && p === VALID_PASS) {
-    sessionStorage.setItem("ncpd_admin_logged_in","true");
-    window.location.href = "settings.html";
-  } else {
-    alert("Zugriff verweigert");
-  }
-});
-</script>
+      const user = document.getElementById("svcUser").value.trim();
+      const pass = document.getElementById("svcPass").value;
 
+      // Vergleich über Hash
+      const candidate = await sha256Hex(`${user}:${pass}`);
+
+      if (candidate === EXPECTED_SHA256_HEX) {
+        sessionStorage.setItem(ADMIN_FLAG, "true");
+        window.location.href = "settings.html";
+      } else {
+        alert("❌ Zugriff verweigert\nBenutzername oder Passwort falsch.");
+      }
+    });
+  </script>
 </body>
 </html>
