@@ -1,83 +1,620 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-<meta charset="UTF-8">
-<title>NCPD Einstellungen</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
-<style>
-body{
-  background:radial-gradient(circle at top,#252542 0,#050511 55%,#050509 100%);
-  color:#fff;font-family:Inter;padding:20px
-}
-button{padding:8px 14px;border-radius:8px;border:none;background:#5865f2;color:#fff;cursor:pointer}
-input,select{padding:6px;border-radius:6px;width:100%}
-table{width:100%;border-collapse:collapse}
-td,th{padding:8px;border-bottom:1px solid #333}
-</style>
+  <meta charset="UTF-8" />
+  <title>NCPD – Einstellungen</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+  <style>
+    * { box-sizing:border-box; margin:0; padding:0; font-family:"Inter", system-ui, sans-serif; }
+    body {
+      min-height:100vh;
+      background: radial-gradient(circle at top, #252542 0, #050511 55%, #050509 100%);
+      color:#fff;
+      padding: 20px;
+    }
+
+    .topbar{
+      max-width: 1300px;
+      margin: 0 auto 14px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      padding: 14px 18px;
+      background: rgba(5, 6, 20, 0.92);
+      border: 1px solid rgba(255,255,255,0.05);
+      border-radius: 14px;
+      backdrop-filter: blur(10px);
+    }
+
+    .title { display:flex; flex-direction:column; gap:2px; }
+    .title-main { font-size:1rem; font-weight:600; }
+    .title-sub { font-size:0.8rem; opacity:0.7; }
+
+    .btn {
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      gap:8px;
+      border-radius: 10px;
+      padding: 9px 14px;
+      border: none;
+      cursor:pointer;
+      font-size:0.85rem;
+      font-weight:500;
+      background:#5865f2;
+      color:#fff;
+      box-shadow: 0 8px 20px rgba(88,101,242,0.45);
+      transition: transform 0.06s ease, box-shadow 0.06s ease, background 0.15s ease;
+      text-decoration:none;
+      user-select:none;
+      white-space:nowrap;
+    }
+    .btn:hover { background:#6a74ff; transform: translateY(-1px); box-shadow: 0 11px 26px rgba(88,101,242,0.55); }
+    .btn:active { transform: translateY(0); box-shadow: 0 7px 16px rgba(88,101,242,0.5); }
+
+    .btn-secondary{
+      background:#1e213b;
+      box-shadow:none;
+      border:1px solid rgba(255,255,255,0.08);
+    }
+    .btn-secondary:hover{
+      background:#272b4b;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.4);
+    }
+
+    .wrap{
+      max-width: 1300px;
+      margin: 0 auto;
+      display:grid;
+      grid-template-columns: 1fr;
+      gap: 14px;
+    }
+
+    .panel{
+      background: rgba(10, 12, 25, 0.8);
+      padding: 16px;
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,0.05);
+      box-shadow: 0 10px 25px rgba(0,0,0,0.4);
+    }
+
+    .panel-header{
+      display:flex;
+      align-items:flex-start;
+      justify-content:space-between;
+      gap: 12px;
+      margin-bottom: 10px;
+    }
+
+    .panel-title { font-size:0.95rem; font-weight:600; }
+    .panel-sub  { font-size:0.78rem; opacity:0.7; margin-top:2px; }
+
+    .toolbar{
+      display:flex;
+      gap: 8px;
+      flex-wrap:wrap;
+      align-items:center;
+      justify-content:flex-end;
+    }
+
+    input, select{
+      background:#0f1122;
+      border:1px solid #2c2e40;
+      color:#fff;
+      padding: 8px 9px;
+      border-radius: 8px;
+      font-size:0.82rem;
+      outline:none;
+      transition: border 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+      width:100%;
+    }
+    input:focus, select:focus{
+      border-color:#5865f2;
+      box-shadow: 0 0 0 1px rgba(88,101,242,0.45);
+      background:#10132a;
+    }
+
+    .table{
+      width:100%;
+      border-collapse: collapse;
+      overflow:hidden;
+      border-radius: 12px;
+      border: 1px solid rgba(255,255,255,0.06);
+      background: rgba(5, 6, 20, 0.55);
+    }
+    .table th, .table td{
+      padding: 10px 10px;
+      text-align:left;
+      vertical-align: middle;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+      font-size:0.82rem;
+    }
+    .table th{
+      font-size:0.78rem;
+      opacity:0.85;
+      background: rgba(0,0,0,0.25);
+    }
+
+    .actions{
+      display:flex;
+      gap:6px;
+      flex-wrap:wrap;
+      justify-content:flex-end;
+    }
+
+    .btn-mini{
+      padding: 7px 10px;
+      border-radius: 10px;
+      font-size:0.78rem;
+      box-shadow:none;
+    }
+    .btn-danger{
+      background: #3b1e27;
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+    .btn-danger:hover{ background:#4b2430; }
+
+    .note{
+      font-size:0.78rem;
+      opacity:0.75;
+      margin-top: 6px;
+      line-height: 1.35;
+    }
+
+    .modal-backdrop{
+      position:fixed;
+      inset:0;
+      background: rgba(0,0,0,0.55);
+      display:none;
+      align-items:center;
+      justify-content:center;
+      padding: 18px;
+      z-index: 50;
+    }
+    .modal{
+      width: 720px;
+      max-width: 100%;
+      background: rgba(10, 12, 25, 0.97);
+      border-radius: 16px;
+      border: 1px solid rgba(255,255,255,0.08);
+      box-shadow: 0 28px 70px rgba(0,0,0,0.75);
+      overflow:hidden;
+    }
+    .modal-head{
+      padding: 14px 16px;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+      background: rgba(0,0,0,0.22);
+    }
+    .modal-title{ font-weight:600; font-size:0.92rem; }
+    .modal-body{ padding: 14px 16px 16px; }
+    .grid{
+      display:grid;
+      grid-template-columns: repeat(2, minmax(0,1fr));
+      gap: 10px;
+    }
+    @media (max-width: 720px){
+      .grid{ grid-template-columns: 1fr; }
+      .actions{ justify-content:flex-start; }
+    }
+    .field label{
+      display:block;
+      font-size:0.78rem;
+      opacity:0.8;
+      margin-bottom: 4px;
+    }
+    .footer{
+      display:flex;
+      gap:8px;
+      justify-content:flex-end;
+      padding: 12px 16px 16px;
+    }
+
+    .badge{
+      display:inline-flex;
+      align-items:center;
+      gap:6px;
+      font-size:0.78rem;
+      opacity:0.85;
+      padding: 6px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.10);
+      background: rgba(5,6,20,0.65);
+    }
+  </style>
 </head>
 <body>
 
+  <script>
+    // NUR ADMIN (Passwort) darf Settings öffnen
+    if (sessionStorage.getItem("ncpd_admin_logged_in") !== "true") {
+      window.location.href = "index.html";
+    }
+  </script>
+
+  <div class="topbar">
+    <div class="title">
+      <div class="title-main">NCPD Einstellungen</div>
+      <div class="title-sub">Mitarbeiterliste • Rangsystem • Dienstnummern</div>
+    </div>
+    <div style="display:flex; gap:8px; align-items:center;">
+      <span class="badge" id="statusBadge">Liste: –</span>
+      <a class="btn btn-secondary" href="generator.html">Zum Generator</a>
+      <button class="btn btn-secondary" id="btnLogout">Logout</button>
+    </div>
+  </div>
+
+  <div class="wrap">
+    <div class="panel">
+      <div class="panel-header">
+        <div>
+          <div class="panel-title">Mitarbeiterliste</div>
+          <div class="panel-sub">Name + Rang + Discord-ID • Dienstnummer editierbar • Uprank/Derank/Kündigen</div>
+        </div>
+        <div class="toolbar">
+          <button class="btn btn-secondary" id="btnReset">Auf Default zurück</button>
+          <button class="btn" id="btnAdd">+ Mitarbeiter hinzufügen</button>
+          <button class="btn" id="btnSave">Speichern</button>
+        </div>
+      </div>
+
+      <div style="overflow:auto;">
+        <table class="table" id="empTable">
+          <thead>
+            <tr>
+              <th style="min-width:220px;">Name</th>
+              <th style="min-width:210px;">Rang</th>
+              <th style="min-width:160px;">Dienstnummer</th>
+              <th style="min-width:190px;">Discord-ID (Key)</th>
+              <th style="min-width:260px; text-align:right;">Aktionen</th>
+            </tr>
+          </thead>
+          <tbody id="empTbody"></tbody>
+        </table>
+      </div>
+
+      <div class="note">
+        Hinweis: Generator übernimmt die Liste beim Öffnen automatisch. Wenn der Generator schon offen ist: Seite neu laden.
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-backdrop" id="modalBackdrop">
+    <div class="modal">
+      <div class="modal-head">
+        <div class="modal-title">Mitarbeiter hinzufügen</div>
+        <button class="btn btn-secondary btn-mini" id="btnCloseModal">Schließen</button>
+      </div>
+      <div class="modal-body">
+        <div class="grid">
+          <div class="field">
+            <label>Discord-ID (Pflicht, eindeutig)</label>
+            <input id="newDiscordId" placeholder="z. B. 123456789012345678" />
+          </div>
+          <div class="field">
+            <label>Name</label>
+            <input id="newName" placeholder="Vorname Nachname" />
+          </div>
+          <div class="field">
+            <label>Dienstnummer</label>
+            <input id="newDienstnummer" placeholder="z. B. PD-80 oder PA-80" />
+          </div>
+          <div class="field">
+            <label>Rang</label>
+            <select id="newRang"></select>
+          </div>
+        </div>
+      </div>
+      <div class="footer">
+        <button class="btn btn-secondary" id="btnCancelAdd">Abbrechen</button>
+        <button class="btn" id="btnConfirmAdd">Hinzufügen</button>
+      </div>
+    </div>
+  </div>
+
 <script>
-if (sessionStorage.getItem("ncpd_admin_logged_in") !== "true") {
-  window.location.href = "index.html";
-}
-</script>
+const STORAGE_KEY = "ncpd_officerMap_v1";
 
-<h2>NCPD Mitarbeiterverwaltung</h2>
-<p>Nur mit Passwort erreichbar</p>
-
-<button onclick="add()">+ Mitarbeiter</button>
-<button onclick="save()">Speichern</button>
-<button onclick="location.href='generator.html'">Zum Generator</button>
-
-<table>
-<thead>
-<tr>
-<th>Name</th><th>Rang</th><th>Dienstnr</th><th>Discord ID</th><th>Aktion</th>
-</tr>
-</thead>
-<tbody id="list"></tbody>
-</table>
-
-<script>
-const STORAGE="ncpd_officerMap_v1";
-const RANKS=[
-"President of Police","Chief of Police","Assistant Chief of Police","Deputy Chief","Bureau Chief",
-"Commander","Watch Commander","Captain","Inspector","Deputy Inspector",
-"Master Lieutenant","Lieutenant III","Lieutenant II","Lieutenant I",
-"Staff Sergeant","Sergeant III","Sergeant II","Sergeant I","Specialist","Anwärter"
+const RANKS = [
+  "President of Police",
+  "Chief of Police","Assistant Chief of Police","Deputy Chief","Bureau Chief",
+  "Commander","Watch Commander","Captain","Inspector","Deputy Inspector",
+  "Master Lieutenant","Lieutenant III","Lieutenant II","Lieutenant I",
+  "Staff Sergeant","Sergeant III","Sergeant II","Sergeant I","Specialist",
+  "Anwärter"
 ];
 
-let data=JSON.parse(localStorage.getItem(STORAGE)||"{}");
+// Default Map (deine Liste)
+const DEFAULT_OFFICER_MAP = /* !!! */ (function(){
+  return {
+    "361115973203525633": { name: "Lukas Lutz", dienstnummer: "PD-01", rang: "Chief of Police" },
+    "929489098471796756": { name: "Alev Sunal", dienstnummer: "PD-02", rang: "Assistant Chief of Police" },
+    "689193377261944853": { name: "Pau Sunal", dienstnummer: "PD-03", rang: "Deputy Chief" },
+    "749676361274359869": { name: "Peter Klumb", dienstnummer: "PD-04", rang: "Deputy Chief" },
+    "281504730067369985": { name: "Steve McGarret", dienstnummer: "PD-05", rang: "Bureau Chief" },
+
+    "721476043814207830": { name: "Tayo Backa", dienstnummer: "PD-09", rang: "Watch Commander" },
+    "663782248998502447": { name: "Walter Waldmeister", dienstnummer: "PD-16", rang: "Inspector" },
+    "340137585240440833": { name: "Morata Soler", dienstnummer: "PD-17", rang: "Inspector" },
+    "366609124038934528": { name: "Ben Morisson", dienstnummer: "PD-11", rang: "Captain" },
+    "708062101457076228": { name: "Vito Ramirez", dienstnummer: "PD-19", rang: "Deputy Inspector" },
+    "750431732607483905": { name: "Jule Waldmeister", dienstnummer: "PD-18", rang: "Deputy Inspector" },
+
+    "1142017198718730271": { name: "Blaze Redman", dienstnummer: "PD-22", rang: "Master Lieutenant" },
+    "228380461628391424": { name: "Zane Blackwood", dienstnummer: "PD-23", rang: "Master Lieutenant" },
+    "378598475971166208": { name: "Toni Deluca", dienstnummer: "PD-26", rang: "Lieutenant III" },
+    "1134903991818534942": { name: "Daniel Waldmeister", dienstnummer: "PD-25", rang: "Lieutenant III" },
+    "723312724519551006": { name: "Andreas Hackl", dienstnummer: "PD-34", rang: "Lieutenant I" },
+    "1217116992616661033": { name: "Panther Nova", dienstnummer: "PD-35", rang: "Lieutenant I" },
+
+    "697119782834536520": { name: "Anton Horvath", dienstnummer: "PD-48", rang: "Staff Sergeant" },
+    "247006489632440322": { name: "Felix Miller", dienstnummer: "PD-40", rang: "Specialist" },
+    "587348686326202369": { name: "Andreas Graham", dienstnummer: "PD-41", rang: "Staff Sergeant" },
+    "1008577835503452211": { name: "Luke Dijk", dienstnummer: "PD-42", rang: "Sergeant I" },
+    "498101850856226839": { name: "Reiner Hirsch", dienstnummer: "PD-43", rang: "Staff Sergeant" },
+    "543002544348200960": { name: "Jackson Dayne", dienstnummer: "PD-44", rang: "Specialist" },
+    "717473357909590099": { name: "Max Koslowski", dienstnummer: "PD-45", rang: "Specialist" },
+    "693183499657543780": { name: "Ottmar Zittlau", dienstnummer: "PD-46", rang: "Sergeant III" },
+    "513456111160918027": { name: "Ian Miller", dienstnummer: "PD-47", rang: "Sergeant III" },
+    "886307752706719825": { name: "Max Lockheed", dienstnummer: "PD-49", rang: "Specialist" },
+    "764520163633922060": { name: "Alejandro Rodriguez", dienstnummer: "PD-50", rang: "Specialist" },
+    "564390978547351553": { name: "Antonio Moretti", dienstnummer: "PD-51", rang: "Specialist" },
+    "1215412476359737366": { name: "Lukas Rothe", dienstnummer: "PD-52", rang: "Specialist" },
+    "550392010612146207": { name: "Keystone Brown", dienstnummer: "PD-53", rang: "Specialist" },
+    "711866485651275787": { name: "David Baum", dienstnummer: "PD-54", rang: "Sergeant I" },
+    "677541121383202817": { name: "Ben Stein", dienstnummer: "PD-55", rang: "Specialist" },
+    "450016531229966336": { name: "Jason Shaw", dienstnummer: "PD-56", rang: "Sergeant I" },
+    "541633624051679262": { name: "Harald Hernandez", dienstnummer: "PD-57", rang: "Staff Sergeant" },
+    "1093573634213285989": { name: "Lucius Lich", dienstnummer: "PD-58", rang: "Staff Sergeant" },
+    "931064598570893343": { name: "Joey Reed", dienstnummer: "PD-59", rang: "Staff Sergeant" },
+    "808712195390701618": { name: "Ali Coban", dienstnummer: "PD-61", rang: "Staff Sergeant" },
+    "1261019609818075207": { name: "Elina Thompson", dienstnummer: "PD-62", rang: "Sergeant II" },
+    "437314188059344898": { name: "Enrique Vegas", dienstnummer: "PD-63", rang: "Sergeant I" },
+    "788866575305408544": { name: "Alvaro Reinh", dienstnummer: "PD-64", rang: "Sergeant III" },
+    "878966028347015198": { name: "Peter Maier", dienstnummer: "PD-66", rang: "Specialist" },
+    "1283519810570944543": { name: "Sultan Can", dienstnummer: "PD-67", rang: "Staff Sergeant" },
+    "811317056245989397": { name: "Dario Ramirez", dienstnummer: "PD-68", rang: "Specialist" },
+    "1315048772408971415": { name: "Diego Santos", dienstnummer: "PD-70", rang: "Staff Sergeant" },
+    "808103110316785725": { name: "Nosa Holy", dienstnummer: "PD-71", rang: "Sergeant III" },
+    "481793329328291840": { name: "Lamar Kasim", dienstnummer: "PD-72", rang: "Sergeant I" },
+    "1357827587950252153": { name: "Efe Voga", dienstnummer: "PD-73", rang: "Sergeant I" },
+    "579359902800281611": { name: "Beton Tapi", dienstnummer: "PD-74", rang: "Sergeant I" },
+    "831635399679017002": { name: "Tom Black", dienstnummer: "PD-77", rang: "Sergeant II" },
+    "966081394310783006": { name: "Michael Korczak", dienstnummer: "PD-78", rang: "Specialist" },
+
+    "877241505016844328": { name: "Salva Sol", dienstnummer: "PA-52", rang: "Anwärter" },
+    "624039199028543499": { name: "Ludovico Greco", dienstnummer: "PA-56", rang: "Anwärter" },
+    "935269358098321418": { name: "Nico Bublich", dienstnummer: "PA-57", rang: "Anwärter" },
+    "1069361772324200478": { name: "Roman Schlag", dienstnummer: "PA-62", rang: "Anwärter" },
+    "161210739174932481": { name: "Eduardo Sanchez", dienstnummer: "PA-66", rang: "Anwärter" },
+    "730909080649990204": { name: "Max Aklubat", dienstnummer: "PA-69", rang: "Anwärter" },
+    "966711299419537468": { name: "Lukas Denzel", dienstnummer: "PA-71", rang: "Anwärter" },
+    "925887471198306374": { name: "Noah Schlotter", dienstnummer: "PA-73", rang: "Anwärter" },
+    "526132485101191203": { name: "Max Brechtelsbauer", dienstnummer: "PA-76", rang: "Anwärter" },
+    "508377615241969674": { name: "Abusa Hanco", dienstnummer: "PA-78", rang: "Anwärter" },
+    "530031383007985665": { name: "Michael Johnson", dienstnummer: "PA-79", rang: "Anwärter" }
+  };
+})();
+
+let officerMap = loadOfficerMap();
+
+function deepClone(obj){ return JSON.parse(JSON.stringify(obj)); }
+
+function loadOfficerMap(){
+  try{
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if(!raw) return deepClone(DEFAULT_OFFICER_MAP);
+    const parsed = JSON.parse(raw);
+    if(!parsed || typeof parsed !== "object") return deepClone(DEFAULT_OFFICER_MAP);
+    return parsed;
+  }catch(e){
+    return deepClone(DEFAULT_OFFICER_MAP);
+  }
+}
+
+function saveOfficerMap(){
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(officerMap));
+  refreshBadge();
+}
+
+function refreshBadge(){
+  const badge = document.getElementById("statusBadge");
+  if(!badge) return;
+  const count = Object.keys(officerMap).length;
+  const hasCustom = !!localStorage.getItem(STORAGE_KEY);
+  badge.textContent = `Liste: ${count} • ${hasCustom ? "Custom" : "Default"}`;
+}
+
+function rankIndex(rang){
+  const idx = RANKS.indexOf(rang);
+  return idx === -1 ? (RANKS.length - 1) : idx;
+}
+
+function uprank(id){
+  const o = officerMap[id];
+  if(!o) return;
+  const idx = rankIndex(o.rang);
+  if(idx <= 0) return;
+  o.rang = RANKS[idx - 1];
+  render();
+}
+
+function derank(id){
+  const o = officerMap[id];
+  if(!o) return;
+  const idx = rankIndex(o.rang);
+  if(idx >= RANKS.length - 1) return;
+  o.rang = RANKS[idx + 1];
+  render();
+}
+
+function kuendigen(id){
+  if(!officerMap[id]) return;
+  delete officerMap[id];
+  render();
+}
 
 function render(){
- list.innerHTML="";
- Object.entries(data).forEach(([id,o])=>{
-  list.innerHTML+=`
-<tr>
-<td><input value="${o.name}" onchange="data['${id}'].name=this.value"></td>
-<td><select onchange="data['${id}'].rang=this.value">${RANKS.map(r=>`<option ${r==o.rang?"selected":""}>${r}</option>`).join("")}</select></td>
-<td><input value="${o.dienstnummer}" onchange="data['${id}'].dienstnummer=this.value"></td>
-<td>${id}</td>
-<td><button onclick="del('${id}')">Kündigen</button></td>
-</tr>`;
- });
+  const tbody = document.getElementById("empTbody");
+  if(!tbody) return;
+
+  const entries = Object.entries(officerMap).map(([id, o]) => ({ id, ...o }));
+  entries.sort((a,b) => {
+    const ra = rankIndex(a.rang), rb = rankIndex(b.rang);
+    if(ra !== rb) return ra - rb;
+    return (a.name || "").localeCompare((b.name || ""), "de");
+  });
+
+  tbody.innerHTML = "";
+
+  for(const e of entries){
+    const tr = document.createElement("tr");
+
+    const tdName = document.createElement("td");
+    const nameInput = document.createElement("input");
+    nameInput.value = e.name || "";
+    nameInput.addEventListener("input", () => { officerMap[e.id].name = nameInput.value; });
+    tdName.appendChild(nameInput);
+
+    const tdRang = document.createElement("td");
+    const sel = document.createElement("select");
+    for(const r of RANKS){
+      const opt = document.createElement("option");
+      opt.value = r; opt.textContent = r;
+      if(r === e.rang) opt.selected = true;
+      sel.appendChild(opt);
+    }
+    sel.addEventListener("change", () => { officerMap[e.id].rang = sel.value; });
+    tdRang.appendChild(sel);
+
+    const tdDn = document.createElement("td");
+    const dnInput = document.createElement("input");
+    dnInput.value = e.dienstnummer || "";
+    dnInput.addEventListener("input", () => { officerMap[e.id].dienstnummer = dnInput.value; });
+    tdDn.appendChild(dnInput);
+
+    const tdId = document.createElement("td");
+    const idInput = document.createElement("input");
+    idInput.value = e.id;
+    idInput.disabled = true;
+    idInput.style.opacity = "0.75";
+    tdId.appendChild(idInput);
+
+    const tdActions = document.createElement("td");
+    tdActions.style.textAlign = "right";
+
+    const actions = document.createElement("div");
+    actions.className = "actions";
+
+    const bUp = document.createElement("button");
+    bUp.className = "btn btn-secondary btn-mini";
+    bUp.textContent = "Uprank";
+    bUp.addEventListener("click", () => uprank(e.id));
+
+    const bDown = document.createElement("button");
+    bDown.className = "btn btn-secondary btn-mini";
+    bDown.textContent = "Derank";
+    bDown.addEventListener("click", () => derank(e.id));
+
+    const bFire = document.createElement("button");
+    bFire.className = "btn btn-danger btn-mini";
+    bFire.textContent = "Kündigen";
+    bFire.addEventListener("click", () => kuendigen(e.id));
+
+    actions.appendChild(bUp);
+    actions.appendChild(bDown);
+    actions.appendChild(bFire);
+
+    tdActions.appendChild(actions);
+
+    tr.appendChild(tdName);
+    tr.appendChild(tdRang);
+    tr.appendChild(tdDn);
+    tr.appendChild(tdId);
+    tr.appendChild(tdActions);
+
+    tbody.appendChild(tr);
+  }
+
+  refreshBadge();
 }
 
-function add(){
- const id=prompt("Discord ID");
- if(!id)return;
- data[id]={name:"Neu",dienstnummer:"",rang:"Anwärter"};
- render();
+// Modal
+function openModal(){ document.getElementById("modalBackdrop").style.display = "flex"; }
+function closeModal(){ document.getElementById("modalBackdrop").style.display = "none"; }
+
+function initRankSelect(){
+  const sel = document.getElementById("newRang");
+  sel.innerHTML = "";
+  for(const r of RANKS){
+    const opt = document.createElement("option");
+    opt.value = r; opt.textContent = r;
+    sel.appendChild(opt);
+  }
+  sel.value = "Anwärter";
 }
-function del(id){delete data[id];render();}
-function save(){
- localStorage.setItem(STORAGE,JSON.stringify(data));
- alert("Gespeichert");
+
+function addMitarbeiter(){
+  const id = document.getElementById("newDiscordId").value.trim();
+  const name = document.getElementById("newName").value.trim();
+  const dn = document.getElementById("newDienstnummer").value.trim();
+  const rang = document.getElementById("newRang").value;
+
+  if(!id || !/^\d{10,30}$/.test(id)){
+    alert("Bitte eine gültige Discord-ID eingeben (nur Zahlen).");
+    return;
+  }
+  if(officerMap[id]){
+    alert("Diese Discord-ID existiert schon in der Liste.");
+    return;
+  }
+
+  officerMap[id] = {
+    name: name || "Unbekannt",
+    dienstnummer: dn || "",
+    rang: rang || "Anwärter"
+  };
+
+  document.getElementById("newDiscordId").value = "";
+  document.getElementById("newName").value = "";
+  document.getElementById("newDienstnummer").value = "";
+  document.getElementById("newRang").value = "Anwärter";
+
+  closeModal();
+  render();
 }
+
+// Buttons
+document.getElementById("btnAdd").addEventListener("click", openModal);
+document.getElementById("btnCloseModal").addEventListener("click", closeModal);
+document.getElementById("btnCancelAdd").addEventListener("click", closeModal);
+document.getElementById("btnConfirmAdd").addEventListener("click", addMitarbeiter);
+
+document.getElementById("btnSave").addEventListener("click", () => {
+  saveOfficerMap();
+  alert("Gespeichert! Generator übernimmt die Liste beim nächsten Laden (ggf. Generator neu laden).");
+});
+
+document.getElementById("btnReset").addEventListener("click", () => {
+  if(!confirm("Wirklich auf Default zurücksetzen?")) return;
+  localStorage.removeItem(STORAGE_KEY);
+  officerMap = deepClone(DEFAULT_OFFICER_MAP);
+  render();
+});
+
+// Logout (Admin-Session weg)
+document.getElementById("btnLogout").addEventListener("click", () => {
+  sessionStorage.removeItem("ncpd_admin_logged_in");
+  window.location.href = "index.html";
+});
+
+initRankSelect();
 render();
 </script>
-
 </body>
 </html>
