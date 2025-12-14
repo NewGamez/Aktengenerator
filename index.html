@@ -242,18 +242,15 @@
         <div class="login-title-right">Login</div>
       </div>
 
-      <div class="headline">Dienstzugang</div>
-      <div class="headline-sub">Einstellungen nur mit Passwort • Generator auch via Discord</div>
-
-      <form id="serviceLoginForm">
+     <form onsubmit="window.location.href='settings.html'; return false;">
         <div class="field-group">
           <div class="field-label">Benutzer</div>
-          <input id="svcUser" type="text" class="input" placeholder="Benutzername" autocomplete="username" />
+          <input type="text" class="input" placeholder="Benutzername" />
         </div>
 
         <div class="field-group">
           <div class="field-label">Passwort</div>
-          <input id="svcPass" type="password" class="input" placeholder="Passwort" autocomplete="current-password" />
+          <input type="password" class="input" placeholder="Passwort" />
         </div>
 
         <label class="remember-row">
@@ -261,7 +258,7 @@
           <span>Gerät merken</span>
         </label>
 
-        <button type="submit" class="btn btn-main">Zu den Einstellungen</button>
+        <button type="submit" class="btn btn-main">Mit Dienstzugang anmelden</button>
       </form>
 
       <a
@@ -277,35 +274,5 @@
       </div>
     </div>
   </div>
-
-  <script>
-    // Kein Klartext im Code: wir vergleichen nur SHA-256("Benni.60:DevBen1798")
-    const ADMIN_FLAG = "ncpd_admin_logged_in";
-    const EXPECTED_SHA256_HEX = "0fc676de54093c878c01faba2414c846e5f79a72753b0d7cb6208f84ecea45d7";
-
-    async function sha256Hex(str) {
-      const enc = new TextEncoder().encode(str);
-      const hashBuf = await crypto.subtle.digest("SHA-256", enc);
-      const hashArr = Array.from(new Uint8Array(hashBuf));
-      return hashArr.map(b => b.toString(16).padStart(2, "0")).join("");
-    }
-
-    document.getElementById("serviceLoginForm").addEventListener("submit", async (e) => {
-      e.preventDefault();
-
-      const user = document.getElementById("svcUser").value.trim();
-      const pass = document.getElementById("svcPass").value;
-
-      // Vergleich über Hash
-      const candidate = await sha256Hex(`${user}:${pass}`);
-
-      if (candidate === EXPECTED_SHA256_HEX) {
-        sessionStorage.setItem(ADMIN_FLAG, "true");
-        window.location.href = "settings.html";
-      } else {
-        alert("❌ Zugriff verweigert\nBenutzername oder Passwort falsch.");
-      }
-    });
-  </script>
 </body>
 </html>
