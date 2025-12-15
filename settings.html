@@ -5,7 +5,6 @@
   <title>NCPD – Einstellungen</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-  <!-- 🔒 Zugriffsschutz -->
   <script>
     try {
       if (sessionStorage.getItem("ncpd_admin_logged_in") !== "true") {
@@ -58,7 +57,7 @@
       cursor:pointer;
       user-select:none;
       white-space:nowrap;
-      transition: transform 0.06s ease, background 0.12s ease;
+      transition: transform 0.06s ease, box-shadow 0.06s ease, background 0.15s ease;
     }
     .btn:hover { transform: translateY(-1px); }
     .btn:active { transform: translateY(0); }
@@ -66,12 +65,16 @@
     .btn-secondary{
       background:#1e213b;
       border:1px solid rgba(255,255,255,0.08);
+      box-shadow:none;
     }
+    .btn-secondary:hover{ background:#272b4b; }
 
     .btn-danger{
       background:#3b1e27;
       border:1px solid rgba(255,255,255,0.08);
+      box-shadow:none;
     }
+    .btn-danger:hover{ background:#4a2330; }
 
     .wrap{ max-width: 1400px; margin: 0 auto; }
 
@@ -133,17 +136,9 @@
       line-height: 1.35;
     }
 
-    .team-header td{
-      padding:10px 8px;
-      font-weight:600;
-      opacity:0.9;
-      background:rgba(255,255,255,0.04);
-      border-bottom:1px solid rgba(255,255,255,0.06);
-    }
-
     .autosave-pill{
       font-size:0.75rem;
-      opacity:0.85;
+      opacity:0.9;
       padding: 6px 10px;
       border-radius: 999px;
       border: 1px solid rgba(255,255,255,0.10);
@@ -151,7 +146,21 @@
       white-space:nowrap;
     }
 
-    /* Modal */
+    .team-header td{
+      padding: 10px 8px;
+      font-weight: 700;
+      text-align: center;
+      letter-spacing: 0.2px;
+      border-bottom: 1px solid rgba(255,255,255,0.10);
+    }
+
+    .team-black td { background: rgba(0,0,0,0.55); }
+    .team-red td   { background: rgba(255,60,60,0.16); }
+    .team-blue td  { background: rgba(60,120,255,0.16); }
+    .team-gold td  { background: rgba(255,200,60,0.16); }
+    .team-silver td{ background: rgba(220,220,220,0.10); }
+    .team-green td { background: rgba(60,255,140,0.12); }
+    .team-unknown td { background: rgba(255,255,255,0.06); }
     .modal-backdrop{
       position: fixed;
       inset: 0;
@@ -209,7 +218,6 @@
       justify-content:flex-end;
       padding: 12px 16px 16px;
     }
-
   </style>
 </head>
 <body>
@@ -217,7 +225,7 @@
   <div class="topbar">
     <div>
       <div class="title-main">NCPD Einstellungen</div>
-      <div class="title-sub">Mitarbeiterverwaltung • Team-Gruppierung • Autosave</div>
+      <div class="title-sub">Mitarbeiterverwaltung • Team-Gruppierung (nach Rang) • Autosave</div>
     </div>
     <div class="toolbar">
       <span class="autosave-pill" id="autosavePill">Autosave: bereit</span>
@@ -234,7 +242,6 @@
         <button class="btn" id="btnAdd" type="button">+ Mitarbeiter hinzufügen</button>
       </div>
 
-      <!-- 🔍 Suche -->
       <div class="search-row">
         <input id="searchInput" type="text" placeholder="Suche nach Name oder Dienstnummer (z.B. PD-48)">
         <button class="btn btn-secondary" id="btnClearSearch" type="button">X</button>
@@ -254,14 +261,12 @@
       </table>
 
       <div class="hint">
-        Änderungen werden automatisch gespeichert. <br>
-        Uprank/Derank übernimmt sofort und der Mitarbeiter “rutscht” direkt in die passende Position.
+        Änderungen werden automatisch gespeichert. Uprank/Derank übernimmt sofort und der Mitarbeiter springt direkt in die richtige Team-Gruppe & Position.
       </div>
 
     </div>
   </div>
 
-  <!-- Modal: Mitarbeiter hinzufügen -->
   <div class="modal-backdrop" id="modalBackdrop" aria-hidden="true">
     <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
       <div class="modal-head">
@@ -298,7 +303,6 @@
 <script>
 const STORAGE_KEY = "ncpd_officerMap_v1";
 
-/* Rangliste (oben = höher) */
 const RANKS = [
   "President of Police",
   "Chief of Police","Assistant Chief of Police","Deputy Chief","Bureau Chief",
@@ -308,7 +312,6 @@ const RANKS = [
   "Anwärter"
 ];
 
-/* Default Map (deine komplette Liste) */
 const DEFAULT_OFFICER_MAP = {
   "361115973203525633": { name: "Lukas Lutz", dienstnummer: "PD-01", rang: "Chief of Police" },
   "929489098471796756": { name: "Alev Sunal", dienstnummer: "PD-02", rang: "Assistant Chief of Police" },
@@ -378,11 +381,9 @@ const DEFAULT_OFFICER_MAP = {
   "530031383007985665": { name: "Michael Johnson", dienstnummer: "PA-79", rang: "Anwärter" }
 };
 
-/* ---------- State ---------- */
 let officerMap = loadOfficerMap();
 let searchQuery = "";
 
-/* ---------- Autosave (debounced) ---------- */
 let saveTimer = null;
 function setAutosaveStatus(text){
   const el = document.getElementById("autosavePill");
@@ -402,9 +403,7 @@ function scheduleSave(){
   }, 180);
 }
 
-/* ---------- Helpers ---------- */
 function deepClone(obj){ return JSON.parse(JSON.stringify(obj)); }
-
 function loadOfficerMap(){
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
@@ -416,7 +415,6 @@ function loadOfficerMap(){
     return deepClone(DEFAULT_OFFICER_MAP);
   }
 }
-
 function escapeHtml(str){
   return String(str ?? "")
     .replaceAll("&","&amp;")
@@ -425,36 +423,38 @@ function escapeHtml(str){
     .replaceAll('"',"&quot;")
     .replaceAll("'","&#039;");
 }
-
 function rankIndex(r){
   const i = RANKS.indexOf(r);
   return i === -1 ? (RANKS.length - 1) : i;
 }
-
-/* Team-Info aus Dienstnummer (wie im Generator) */
-function getTeamInfo(dienstnummer) {
-  if (!dienstnummer) return { key: "unknown", label: "Team Unbekannt" };
-  const dn = String(dienstnummer).trim().toUpperCase();
-
-  if (dn.startsWith("PA-")) return { key: "green", label: "Team Green" };
-  if (!dn.startsWith("PD-")) return { key: "unknown", label: "Team Unbekannt" };
-
-  const num = parseInt(dn.split("-")[1], 10);
-  if (Number.isNaN(num)) return { key: "unknown", label: "Team Unbekannt" };
-
-  if (num >= 1 && num <= 5)  return { key: "red", label: "Team Red" };
-  if (num >= 7 && num <= 19) return { key: "blue", label: "Team Blue" };
-  if (num >= 20 && num <= 39)return { key: "gold", label: "Team Gold" };
-  return { key: "silver", label: "Team Silver" };
-}
-
 function dienstNummerValue(dn) {
   if (!dn) return 99999;
   const m = String(dn).toUpperCase().match(/-(\d+)/);
   return m ? parseInt(m[1], 10) : 99999;
 }
 
-/* ---------- Actions ---------- */
+function getTeamInfoByRank(rang) {
+  const r = String(rang || "").trim();
+
+  if (r === "President of Police") return { key: "black", label: "Team Black" };
+
+  if (["Chief of Police","Assistant Chief of Police","Deputy Chief","Bureau Chief"].includes(r))
+    return { key: "red", label: "Team Red" };
+
+  if (["Commander","Watch Commander","Captain","Inspector","Deputy Inspector"].includes(r))
+    return { key: "blue", label: "Team Blue" };
+
+  if (["Master Lieutenant","Lieutenant III","Lieutenant II","Lieutenant I"].includes(r))
+    return { key: "gold", label: "Team Gold" };
+
+  if (["Staff Sergeant","Sergeant III","Sergeant II","Sergeant I","Specialist"].includes(r))
+    return { key: "silver", label: "Team Silver" };
+
+  if (r === "Anwärter") return { key: "green", label: "Team Green" };
+
+  return { key: "unknown", label: "Team Unbekannt" };
+}
+
 function uprank(id){
   const o = officerMap[id];
   if(!o) return;
@@ -462,9 +462,8 @@ function uprank(id){
   if(i <= 0) return;
   o.rang = RANKS[i - 1];
   scheduleSave();
-  render(); // sofort "hoch rutschen"
+  render();
 }
-
 function derank(id){
   const o = officerMap[id];
   if(!o) return;
@@ -472,9 +471,8 @@ function derank(id){
   if(i >= RANKS.length - 1) return;
   o.rang = RANKS[i + 1];
   scheduleSave();
-  render(); // sofort "runter rutschen"
+  render();
 }
-
 function kuendigen(id){
   if(!officerMap[id]) return;
   if(confirm("Mitarbeiter wirklich entfernen?")){
@@ -484,16 +482,7 @@ function kuendigen(id){
   }
 }
 
-/* ---------- Modal ---------- */
-function openModal(){
-  document.getElementById("modalBackdrop").style.display = "flex";
-  document.getElementById("modalBackdrop").setAttribute("aria-hidden", "false");
-  document.getElementById("newDiscordId").focus();
-}
-function closeModal(){
-  document.getElementById("modalBackdrop").style.display = "none";
-  document.getElementById("modalBackdrop").setAttribute("aria-hidden", "true");
-}
+/* Modal */
 function initRankSelect(){
   const sel = document.getElementById("newRang");
   sel.innerHTML = "";
@@ -504,6 +493,15 @@ function initRankSelect(){
     sel.appendChild(opt);
   }
   sel.value = "Anwärter";
+}
+function openModal(){
+  document.getElementById("modalBackdrop").style.display = "flex";
+  document.getElementById("modalBackdrop").setAttribute("aria-hidden","false");
+  document.getElementById("newDiscordId").focus();
+}
+function closeModal(){
+  document.getElementById("modalBackdrop").style.display = "none";
+  document.getElementById("modalBackdrop").setAttribute("aria-hidden","true");
 }
 function confirmAdd(){
   const id = document.getElementById("newDiscordId").value.trim();
@@ -526,7 +524,6 @@ function confirmAdd(){
     rang: rang || "Anwärter"
   };
 
-  // Felder zurücksetzen
   document.getElementById("newDiscordId").value = "";
   document.getElementById("newName").value = "";
   document.getElementById("newDienstnummer").value = "";
@@ -537,18 +534,26 @@ function confirmAdd(){
   render();
 }
 
-/* ---------- Render (Team-Gruppiert) ---------- */
+function teamRowClass(teamKey){
+  if(teamKey === "black") return "team-header team-black";
+  if(teamKey === "red") return "team-header team-red";
+  if(teamKey === "blue") return "team-header team-blue";
+  if(teamKey === "gold") return "team-header team-gold";
+  if(teamKey === "silver") return "team-header team-silver";
+  if(teamKey === "green") return "team-header team-green";
+  return "team-header team-unknown";
+}
+
 function render(){
   const tbody = document.getElementById("empTbody");
   tbody.innerHTML = "";
 
-  let entries = Object.entries(officerMap).map(([id, o]) => ({
+  let entries = Object.entries(officerMap).map(([id,o]) => ({
     id,
     ...o,
-    team: getTeamInfo(o.dienstnummer)
+    team: getTeamInfoByRank(o.rang)
   }));
 
-  // Suche
   if(searchQuery){
     entries = entries.filter(e =>
       (e.name || "").toLowerCase().includes(searchQuery) ||
@@ -556,12 +561,16 @@ function render(){
     );
   }
 
-  // Sort: Team -> Dienstnummer -> Name
-  const TEAM_ORDER = ["red","blue","gold","silver","green","unknown"];
+  const TEAM_ORDER = ["black","red","blue","gold","silver","green","unknown"];
+
   entries.sort((a,b) => {
     const ta = TEAM_ORDER.indexOf(a.team.key);
     const tb = TEAM_ORDER.indexOf(b.team.key);
     if(ta !== tb) return ta - tb;
+
+    const ra = rankIndex(a.rang);
+    const rb = rankIndex(b.rang);
+    if(ra !== rb) return ra - rb;
 
     const na = dienstNummerValue(a.dienstnummer);
     const nb = dienstNummerValue(b.dienstnummer);
@@ -575,7 +584,7 @@ function render(){
   entries.forEach(e => {
     if(e.team.key !== lastTeamKey){
       const trTeam = document.createElement("tr");
-      trTeam.className = "team-header";
+      trTeam.className = teamRowClass(e.team.key);
       trTeam.innerHTML = `<td colspan="5">${escapeHtml(e.team.label)}</td>`;
       tbody.appendChild(trTeam);
       lastTeamKey = e.team.key;
@@ -607,7 +616,6 @@ function render(){
     const downBtn   = tr.querySelectorAll("button")[1];
     const fireBtn   = tr.querySelectorAll("button")[2];
 
-    // Autosave bei Änderung (ohne ständig zu rerendern während tippen)
     nameInput.addEventListener("input", () => {
       officerMap[e.id].name = nameInput.value;
       scheduleSave();
@@ -618,16 +626,10 @@ function render(){
       scheduleSave();
     });
 
-    // Beim Verlassen der Dienstnummer neu rendern -> Team/Sort sofort korrekt
-    dnInput.addEventListener("blur", () => {
-      render();
-    });
-
-    // Rang-Dropdown: sofort speichern + rerender (damit Position sofort passt)
     rangSel.addEventListener("change", () => {
       officerMap[e.id].rang = rangSel.value;
       scheduleSave();
-      render();
+      render(); // Rang beeinflusst Team/Sort -> sofort springen
     });
 
     upBtn.addEventListener("click", () => uprank(e.id));
@@ -638,7 +640,6 @@ function render(){
   });
 }
 
-/* ---------- Events ---------- */
 document.getElementById("btnLogout").addEventListener("click", () => {
   sessionStorage.removeItem("ncpd_admin_logged_in");
   window.location.href = "index.html";
@@ -653,7 +654,6 @@ document.getElementById("btnReset").addEventListener("click", () => {
   }
 });
 
-// Suche
 document.getElementById("searchInput").addEventListener("input", (e) => {
   searchQuery = (e.target.value || "").trim().toLowerCase();
   render();
@@ -664,18 +664,14 @@ document.getElementById("btnClearSearch").addEventListener("click", () => {
   render();
 });
 
-// Modal Buttons
 document.getElementById("btnAdd").addEventListener("click", openModal);
 document.getElementById("btnCloseModal").addEventListener("click", closeModal);
 document.getElementById("btnCancelAdd").addEventListener("click", closeModal);
 document.getElementById("btnConfirmAdd").addEventListener("click", confirmAdd);
 
-// Modal: Klick auf Hintergrund schließt
 document.getElementById("modalBackdrop").addEventListener("click", (e) => {
   if(e.target.id === "modalBackdrop") closeModal();
 });
-
-// Modal: ESC schließt
 document.addEventListener("keydown", (e) => {
   if(e.key === "Escape"){
     const bd = document.getElementById("modalBackdrop");
@@ -683,7 +679,6 @@ document.addEventListener("keydown", (e) => {
   }
 });
 
-// Init
 initRankSelect();
 render();
 </script>
