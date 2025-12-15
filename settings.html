@@ -199,17 +199,99 @@ const STORAGE_KEY = "ncpd_officerMap_v1";
 
 const RANKS = [
   "President of Police",
-  "Chief of Police","Assistant Chief of Police","Deputy Chief","Bureau Chief",
-  "Commander","Watch Commander","Captain","Inspector","Deputy Inspector",
-  "Master Lieutenant","Lieutenant III","Lieutenant II","Lieutenant I",
-  "Staff Sergeant","Sergeant III","Sergeant II","Sergeant I","Specialist",
+  "Chief of Police",
+  "Assistant Chief of Police",
+  "Deputy Chief",
+  "Bureau Chief",
+  "Commander",
+  "Watch Commander",
+  "Captain",
+  "Inspector",
+  "Deputy Inspector",
+  "Master Lieutenant",
+  "Lieutenant III",
+  "Lieutenant II",
+  "Lieutenant I",
+  "Staff Sergeant",
+  "Sergeant III",
+  "Sergeant II",
+  "Sergeant I",
+  "Specialist",
   "Anwärter"
 ];
-
-// Default: Nimm hier gern deine volle Liste rein.
-// Falls nichts gespeichert ist, wird diese verwendet.
+  
 const DEFAULT_OFFICER_MAP = {
-  "697119782834536520": { name: "Anton Horvath", dienstnummer: "PD-48", rang: "Staff Sergeant" }
+  // ---------- TEAM RED ----------
+  "361115973203525633": { name: "Lukas Lutz", dienstnummer: "PD-01", rang: "Chief of Police" },
+  "929489098471796756": { name: "Alev Sunal", dienstnummer: "PD-02", rang: "Assistant Chief of Police" },
+  "689193377261944853": { name: "Pau Sunal", dienstnummer: "PD-03", rang: "Deputy Chief" },
+  "749676361274359869": { name: "Peter Klumb", dienstnummer: "PD-04", rang: "Deputy Chief" },
+  "281504730067369985": { name: "Steve McGarret", dienstnummer: "PD-05", rang: "Bureau Chief" },
+
+  // ---------- TEAM BLUE ----------
+  "721476043814207830": { name: "Tayo Backa", dienstnummer: "PD-09", rang: "Watch Commander" },
+  "663782248998502447": { name: "Walter Waldmeister", dienstnummer: "PD-16", rang: "Inspector" },
+  "340137585240440833": { name: "Morata Soler", dienstnummer: "PD-17", rang: "Inspector" },
+  "366609124038934528": { name: "Ben Morisson", dienstnummer: "PD-11", rang: "Captain" },
+  "708062101457076228": { name: "Vito Ramirez", dienstnummer: "PD-19", rang: "Deputy Inspector" },
+  "750431732607483905": { name: "Jule Waldmeister", dienstnummer: "PD-18", rang: "Deputy Inspector" },
+
+  // ---------- TEAM GOLD ----------
+  "1142017198718730271": { name: "Blaze Redman", dienstnummer: "PD-22", rang: "Master Lieutenant" },
+  "228380461628391424": { name: "Zane Blackwood", dienstnummer: "PD-23", rang: "Master Lieutenant" },
+  "378598475971166208": { name: "Toni Deluca", dienstnummer: "PD-26", rang: "Lieutenant III" },
+  "1134903991818534942": { name: "Daniel Waldmeister", dienstnummer: "PD-25", rang: "Lieutenant III" },
+  "723312724519551006": { name: "Andreas Hackl", dienstnummer: "PD-34", rang: "Lieutenant I" },
+  "1217116992616661033": { name: "Panther Nova", dienstnummer: "PD-35", rang: "Lieutenant I" },
+
+  // ---------- TEAM SILVER ----------
+  "697119782834536520": { name: "Anton Horvath", dienstnummer: "PD-48", rang: "Staff Sergeant" },
+  "247006489632440322": { name: "Felix Miller", dienstnummer: "PD-40", rang: "Specialist" },
+  "587348686326202369": { name: "Andreas Graham", dienstnummer: "PD-41", rang: "Staff Sergeant" },
+  "1008577835503452211": { name: "Luke Dijk", dienstnummer: "PD-42", rang: "Sergeant I" },
+  "498101850856226839": { name: "Reiner Hirsch", dienstnummer: "PD-43", rang: "Staff Sergeant" },
+  "543002544348200960": { name: "Jackson Dayne", dienstnummer: "PD-44", rang: "Specialist" },
+  "717473357909590099": { name: "Max Koslowski", dienstnummer: "PD-45", rang: "Specialist" },
+  "693183499657543780": { name: "Ottmar Zittlau", dienstnummer: "PD-46", rang: "Sergeant III" },
+  "513456111160918027": { name: "Ian Miller", dienstnummer: "PD-47", rang: "Sergeant III" },
+  "886307752706719825": { name: "Max Lockheed", dienstnummer: "PD-49", rang: "Specialist" },
+  "764520163633922060": { name: "Alejandro Rodriguez", dienstnummer: "PD-50", rang: "Specialist" },
+  "564390978547351553": { name: "Antonio Moretti", dienstnummer: "PD-51", rang: "Specialist" },
+  "550392010612146207": { name: "Keystone Brown", dienstnummer: "PD-53", rang: "Specialist" },
+  "711866485651275787": { name: "David Baum", dienstnummer: "PD-54", rang: "Sergeant I" },
+  "450016531229966336": { name: "Jason Shaw", dienstnummer: "PD-56", rang: "Sergeant I" },
+  "541633624051679262": { name: "Harald Hernandez", dienstnummer: "PD-57", rang: "Staff Sergeant" },
+  "1093573634213285989": { name: "Lucius Lich", dienstnummer: "PD-58", rang: "Staff Sergeant" },
+  "931064598570893343": { name: "Joey Reed", dienstnummer: "PD-59", rang: "Staff Sergeant" },
+  "808712195390701618": { name: "Ali Coban", dienstnummer: "PD-61", rang: "Staff Sergeant" },
+  "1261019609818075207": { name: "Elina Thompson", dienstnummer: "PD-62", rang: "Sergeant II" },
+  "437314188059344898": { name: "Enrique Vegas", dienstnummer: "PD-63", rang: "Sergeant I" },
+  "788866575305408544": { name: "Alvaro Reinh", dienstnummer: "PD-64", rang: "Sergeant III" },
+  "878966028347015198": { name: "Peter Maier", dienstnummer: "PD-66", rang: "Specialist" },
+  "1283519810570944543": { name: "Sultan Can", dienstnummer: "PD-67", rang: "Staff Sergeant" },
+  "811317056245989397": { name: "Dario Ramirez", dienstnummer: "PD-68", rang: "Specialist" },
+  "1315048772408971415": { name: "Diego Santos", dienstnummer: "PD-70", rang: "Staff Sergeant" },
+  "808103110316785725": { name: "Nosa Holy", dienstnummer: "PD-71", rang: "Sergeant III" },
+  "481793329328291840": { name: "Lamar Kasim", dienstnummer: "PD-72", rang: "Sergeant I" },
+  "1357827587950252153": { name: "Efe Voga", dienstnummer: "PD-73", rang: "Sergeant I" },
+  "579359902800281611": { name: "Beton Tapi", dienstnummer: "PD-74", rang: "Sergeant I" },
+  "831635399679017002": { name: "Tom Black", dienstnummer: "PD-77", rang: "Sergeant II" },
+  "966081394310783006": { name: "Michael Korczak", dienstnummer: "PD-78", rang: "Specialist" },
+  "1215412476359737366": { name: "Lukas Rothe", dienstnummer: "PD-52", rang: "Specialist" },
+  "677541121383202817": { name: "Ben Stein", dienstnummer: "PD-55", rang: "Specialist" },
+
+  // ---------- TEAM GREEN ----------
+  "877241505016844328": { name: "Salva Sol", dienstnummer: "PA-52", rang: "Anwärter" },
+  "624039199028543499": { name: "Ludovico Greco", dienstnummer: "PA-56", rang: "Anwärter" },
+  "935269358098321418": { name: "Nico Bublich", dienstnummer: "PA-57", rang: "Anwärter" },
+  "1069361772324200478": { name: "Roman Schlag", dienstnummer: "PA-62", rang: "Anwärter" },
+  "161210739174932481": { name: "Eduardo Sanchez", dienstnummer: "PA-66", rang: "Anwärter" },
+  "730909080649990204": { name: "Max Aklubat", dienstnummer: "PA-69", rang: "Anwärter" },
+  "966711299419537468": { name: "Lukas Denzel", dienstnummer: "PA-71", rang: "Anwärter" },
+  "925887471198306374": { name: "Noah Schlotter", dienstnummer: "PA-73", rang: "Anwärter" },
+  "526132485101191203": { name: "Max Brechtelsbauer", dienstnummer: "PA-76", rang: "Anwärter" },
+  "508377615241969674": { name: "Abusa Hanco", dienstnummer: "PA-78", rang: "Anwärter" },
+  "530031383007985665": { name: "Michael Johnson", dienstnummer: "PA-79", rang: "Anwärter" }
 };
 
 let officerMap = loadOfficerMap();
