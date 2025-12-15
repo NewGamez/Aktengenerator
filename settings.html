@@ -4,6 +4,15 @@
   <meta charset="UTF-8" />
   <title>NCPD – Einstellungen</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <script>
+  try {
+    if (sessionStorage.getItem("ncpd_admin_logged_in") !== "true") {
+      window.location.replace("index.html");
+      }
+    } catch (e) {
+      window.location.replace("index.html");
+    }
+  </script>
 
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
 
@@ -281,7 +290,6 @@
     </div>
   </div>
 
-  <!-- MODAL: Add Mitarbeiter -->
   <div class="modal-backdrop" id="modalBackdrop">
     <div class="modal">
       <div class="modal-head">
@@ -319,7 +327,6 @@
 /** ========= Shared Storage Key ========= */
 const STORAGE_KEY = "ncpd_officerMap_v1";
 
-/** ========= Rang-Reihenfolge (hoch -> niedrig) ========= */
 const RANKS = [
   "President of Police",
 
@@ -348,7 +355,6 @@ const RANKS = [
   "Anwärter"
 ];
 
-/** ========= Default Officer Map (deine aktuelle Liste) ========= */
 const DEFAULT_OFFICER_MAP = {
   "361115973203525633": { name: "Lukas Lutz", dienstnummer: "PD-01", rang: "Chief of Police" },
   "929489098471796756": { name: "Alev Sunal", dienstnummer: "PD-02", rang: "Assistant Chief of Police" },
