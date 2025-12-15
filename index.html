@@ -205,6 +205,9 @@
       border: 1px solid #353757;
       text-decoration: none;
       margin-top: 4px;
+      border-radius: 7px;
+      padding: 10px 10px;
+      transition: transform 0.06s ease, background 0.12s ease;
     }
 
     .btn-discord:hover {
@@ -242,15 +245,15 @@
         <div class="login-title-right">Login</div>
       </div>
 
-     <form onsubmit="window.location.href='settings.html'; return false;">
+      <form id="serviceLoginForm">
         <div class="field-group">
           <div class="field-label">Benutzer</div>
-          <input type="text" class="input" placeholder="Benutzername" />
+          <input id="svcUser" type="text" class="input" placeholder="Benutzername" autocomplete="username" />
         </div>
 
         <div class="field-group">
           <div class="field-label">Passwort</div>
-          <input type="password" class="input" placeholder="Passwort" />
+          <input id="svcPass" type="password" class="input" placeholder="Passwort" autocomplete="current-password" />
         </div>
 
         <label class="remember-row">
@@ -262,7 +265,7 @@
       </form>
 
       <a
-        class="btn btn-discord"
+        class="btn-discord"
         href="https://discord.com/api/oauth2/authorize?client_id=1447191138825142323&redirect_uri=https%3A%2F%2Fnewgamez.github.io%2FAktengenerator%2Fgenerator.html&response_type=token&scope=identify">
         <i class="fa-brands fa-discord discord-icon"></i>
         <span>Mit Discord einloggen</span>
@@ -274,5 +277,37 @@
       </div>
     </div>
   </div>
+
+  <script>
+    // Admin-Flag (Session)
+    const ADMIN_FLAG = "ncpd_admin_logged_in";
+
+    // SHA-256("Anton Horvath:DevBen1798")
+    // -> kein Klartext im Code
+    const EXPECTED_SHA256_HEX = "49c724e7cd0a0778d466977fe5b38794ebf33fd2229b24ab34781caaa9e92275";
+
+    async function sha256Hex(str) {
+      const enc = new TextEncoder().encode(str);
+      const hashBuf = await crypto.subtle.digest("SHA-256", enc);
+      const hashArr = Array.from(new Uint8Array(hashBuf));
+      return hashArr.map(b => b.toString(16).padStart(2, "0")).join("");
+    }
+
+    document.getElementById("serviceLoginForm").addEventListener("submit", async (e) => {
+      e.preventDefault();
+
+      const user = document.getElementById("svcUser").value.trim();
+      const pass = document.getElementById("svcPass").value;
+
+      const candidate = await sha256Hex(`${user}:${pass}`);
+
+      if (candidate === EXPECTED_SHA256_HEX) {
+        sessionStorage.setItem(ADMIN_FLAG, "true");
+        window.location.href = "settings.html";
+      } else {
+        alert("❌ Zugriff verweigert\nBenutzername oder Passwort falsch.");
+      }
+    });
+  </script>
 </body>
 </html>
