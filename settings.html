@@ -56,7 +56,12 @@
       color:#fff;
       font-size:0.82rem;
       cursor:pointer;
+      user-select:none;
+      white-space:nowrap;
+      transition: transform 0.06s ease, background 0.12s ease;
     }
+    .btn:hover { transform: translateY(-1px); }
+    .btn:active { transform: translateY(0); }
 
     .btn-secondary{
       background:#1e213b;
@@ -65,6 +70,7 @@
 
     .btn-danger{
       background:#3b1e27;
+      border:1px solid rgba(255,255,255,0.08);
     }
 
     .wrap{
@@ -88,6 +94,7 @@
       border-radius: 8px;
       font-size:0.8rem;
       width:100%;
+      outline:none;
     }
 
     table{
@@ -101,11 +108,10 @@
       border-bottom: 1px solid rgba(255,255,255,0.06);
       font-size:0.78rem;
       text-align:left;
+      vertical-align: middle;
     }
 
-    th{
-      opacity:0.8;
-    }
+    th{ opacity:0.8; }
 
     .actions{
       display:flex;
@@ -119,12 +125,24 @@
       gap:8px;
       flex-wrap:wrap;
       justify-content:flex-end;
+      align-items:center;
     }
 
     .search-row{
       display:flex;
       gap:10px;
       margin: 12px 0;
+      align-items:center;
+    }
+
+    .hint{
+      opacity:0.7;
+      font-size:0.78rem;
+      margin-top: 10px;
+    }
+
+    @media (max-width: 900px){
+      .actions{ justify-content:flex-start; }
     }
   </style>
 </head>
@@ -133,7 +151,7 @@
   <div class="topbar">
     <div>
       <div class="title-main">NCPD Einstellungen</div>
-      <div class="title-sub">Mitarbeiterverwaltung</div>
+      <div class="title-sub">Mitarbeiterverwaltung • Suche • Uprank/Derank</div>
     </div>
     <div class="toolbar">
       <button class="btn btn-secondary" onclick="window.location.href='generator.html'">Zum Generator</button>
@@ -145,29 +163,33 @@
     <div class="panel">
 
       <div class="toolbar" style="margin-bottom:10px;">
-        <button class="btn btn-secondary" id="btnReset">Auf Default zurück</button>
-        <button class="btn" id="btnAdd">+ Mitarbeiter hinzufügen</button>
-        <button class="btn" id="btnSave">Speichern</button>
+        <button class="btn btn-secondary" id="btnReset" type="button">Auf Default zurück</button>
+        <button class="btn" id="btnAdd" type="button">+ Mitarbeiter hinzufügen</button>
+        <button class="btn" id="btnSave" type="button">Speichern</button>
       </div>
 
       <!-- 🔍 Suche -->
       <div class="search-row">
         <input id="searchInput" type="text" placeholder="Suche nach Name oder Dienstnummer (z.B. PD-48)">
-        <button class="btn btn-secondary" id="btnClearSearch">X</button>
+        <button class="btn btn-secondary" id="btnClearSearch" type="button">X</button>
       </div>
 
       <table>
         <thead>
           <tr>
-            <th>Name</th>
-            <th>Rang</th>
-            <th>Dienstnummer</th>
-            <th>Discord-ID</th>
-            <th style="text-align:right;">Aktionen</th>
+            <th style="min-width:220px;">Name</th>
+            <th style="min-width:220px;">Rang</th>
+            <th style="min-width:160px;">Dienstnummer</th>
+            <th style="min-width:200px;">Discord-ID</th>
+            <th style="text-align:right; min-width:320px;">Aktionen</th>
           </tr>
         </thead>
         <tbody id="empTbody"></tbody>
       </table>
+
+      <div class="hint">
+        Tipp: Suche filtert live nach Name oder Dienstnummer. Nach Änderungen bitte „Speichern“ klicken.
+      </div>
 
     </div>
   </div>
@@ -184,116 +206,191 @@ const RANKS = [
   "Anwärter"
 ];
 
+// Default: Nimm hier gern deine volle Liste rein.
+// Falls nichts gespeichert ist, wird diese verwendet.
 const DEFAULT_OFFICER_MAP = {
-  "697119782834536520": { name:"Anton Horvath", dienstnummer:"PD-48", rang:"Staff Sergeant" }
+  "697119782834536520": { name: "Anton Horvath", dienstnummer: "PD-48", rang: "Staff Sergeant" }
 };
 
 let officerMap = loadOfficerMap();
 let searchQuery = "";
 
+function deepClone(obj){ return JSON.parse(JSON.stringify(obj)); }
+
 function loadOfficerMap(){
-  const raw = localStorage.getItem(STORAGE_KEY);
-  if(!raw) return JSON.parse(JSON.stringify(DEFAULT_OFFICER_MAP));
-  return JSON.parse(raw);
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if(!raw) return deepClone(DEFAULT_OFFICER_MAP);
+    const parsed = JSON.parse(raw);
+    if(!parsed || typeof parsed !== "object") return deepClone(DEFAULT_OFFICER_MAP);
+    return parsed;
+  } catch(e) {
+    return deepClone(DEFAULT_OFFICER_MAP);
+  }
 }
 
 function saveOfficerMap(){
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(officerMap));
-  alert("Gespeichert!");
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(officerMap));
+    alert("Gespeichert!");
+  } catch(e) {
+    alert("Speichern fehlgeschlagen (localStorage).");
+  }
 }
 
-function rankIndex(r){ return RANKS.indexOf(r); }
+function rankIndex(r){
+  const i = RANKS.indexOf(r);
+  return i === -1 ? (RANKS.length - 1) : i;
+}
 
 function uprank(id){
-  const i = rankIndex(officerMap[id].rang);
-  if(i > 0) officerMap[id].rang = RANKS[i-1];
+  const o = officerMap[id];
+  if(!o) return;
+  const i = rankIndex(o.rang);
+  if(i <= 0) return;
+  o.rang = RANKS[i - 1];
   render();
 }
 
 function derank(id){
-  const i = rankIndex(officerMap[id].rang);
-  if(i < RANKS.length-1) officerMap[id].rang = RANKS[i+1];
+  const o = officerMap[id];
+  if(!o) return;
+  const i = rankIndex(o.rang);
+  if(i >= RANKS.length - 1) return;
+  o.rang = RANKS[i + 1];
   render();
 }
 
 function kuendigen(id){
+  if(!officerMap[id]) return;
   if(confirm("Mitarbeiter wirklich entfernen?")){
     delete officerMap[id];
     render();
   }
 }
 
+/* ✅ Mitarbeiter hinzufügen (funktioniert wieder) */
+function addMitarbeiter(){
+  const id = prompt("Discord-ID (nur Zahlen, eindeutig):");
+  if(!id) return;
+
+  const cleanId = id.trim();
+  if(!/^\d{10,30}$/.test(cleanId)){
+    alert("Ungültige Discord-ID. Bitte nur Zahlen verwenden.");
+    return;
+  }
+  if(officerMap[cleanId]){
+    alert("Diese Discord-ID existiert schon.");
+    return;
+  }
+
+  const name = (prompt("Name (Vorname Nachname):") || "").trim() || "Unbekannt";
+  const dn = (prompt("Dienstnummer (z.B. PD-80 / PA-80):") || "").trim();
+  const rang = "Anwärter";
+
+  officerMap[cleanId] = { name, dienstnummer: dn, rang };
+  render();
+}
+
 function render(){
   const tbody = document.getElementById("empTbody");
   tbody.innerHTML = "";
 
-  let entries = Object.entries(officerMap).map(([id,o])=>({id,...o}));
+  let entries = Object.entries(officerMap).map(([id,o]) => ({ id, ...o }));
 
+  // sort: nach Rang (hoch->niedrig), dann Name
+  entries.sort((a,b) => {
+    const ra = rankIndex(a.rang);
+    const rb = rankIndex(b.rang);
+    if(ra !== rb) return ra - rb;
+    return (a.name || "").localeCompare((b.name || ""), "de");
+  });
+
+  // Filter
   if(searchQuery){
     entries = entries.filter(e =>
-      (e.name||"").toLowerCase().includes(searchQuery) ||
-      (e.dienstnummer||"").toLowerCase().includes(searchQuery)
+      (e.name || "").toLowerCase().includes(searchQuery) ||
+      (e.dienstnummer || "").toLowerCase().includes(searchQuery)
     );
   }
 
-  entries.forEach(e=>{
+  entries.forEach(e => {
     const tr = document.createElement("tr");
 
     tr.innerHTML = `
-      <td><input value="${e.name}"></td>
+      <td><input value="${escapeHtml(e.name || "")}"></td>
       <td>
-        <select>${RANKS.map(r=>`<option ${r===e.rang?"selected":""}>${r}</option>`).join("")}</select>
+        <select>${RANKS.map(r => `<option ${r === e.rang ? "selected" : ""}>${escapeHtml(r)}</option>`).join("")}</select>
       </td>
-      <td><input value="${e.dienstnummer||""}"></td>
-      <td>${e.id}</td>
-      <td class="actions">
-        <button class="btn btn-secondary">Uprank</button>
-        <button class="btn btn-secondary">Derank</button>
-        <button class="btn btn-danger">Kündigen</button>
+      <td><input value="${escapeHtml(e.dienstnummer || "")}"></td>
+      <td>${escapeHtml(e.id)}</td>
+      <td>
+        <div class="actions">
+          <button class="btn btn-secondary" type="button">Uprank</button>
+          <button class="btn btn-secondary" type="button">Derank</button>
+          <button class="btn btn-danger" type="button">Kündigen</button>
+        </div>
       </td>
     `;
 
-    const [nameI, rangS, dnI] = tr.querySelectorAll("input,select");
-    const [bUp, bDown, bFire] = tr.querySelectorAll("button");
+    const nameInput = tr.querySelectorAll("input")[0];
+    const dnInput   = tr.querySelectorAll("input")[1];
+    const rangSel   = tr.querySelector("select");
 
-    nameI.oninput = ()=> officerMap[e.id].name = nameI.value;
-    dnI.oninput = ()=> officerMap[e.id].dienstnummer = dnI.value;
-    rangS.onchange = ()=> officerMap[e.id].rang = rangS.value;
+    const upBtn   = tr.querySelectorAll("button")[0];
+    const downBtn = tr.querySelectorAll("button")[1];
+    const fireBtn = tr.querySelectorAll("button")[2];
 
-    bUp.onclick = ()=> uprank(e.id);
-    bDown.onclick = ()=> derank(e.id);
-    bFire.onclick = ()=> kuendigen(e.id);
+    nameInput.addEventListener("input", () => { officerMap[e.id].name = nameInput.value; });
+    dnInput.addEventListener("input",   () => { officerMap[e.id].dienstnummer = dnInput.value; });
+    rangSel.addEventListener("change",  () => { officerMap[e.id].rang = rangSel.value; });
+
+    upBtn.addEventListener("click",   () => uprank(e.id));
+    downBtn.addEventListener("click", () => derank(e.id));
+    fireBtn.addEventListener("click", () => kuendigen(e.id));
 
     tbody.appendChild(tr);
   });
 }
 
+/* kleine HTML-Escape helper */
+function escapeHtml(str){
+  return String(str)
+    .replaceAll("&","&amp;")
+    .replaceAll("<","&lt;")
+    .replaceAll(">","&gt;")
+    .replaceAll('"',"&quot;")
+    .replaceAll("'","&#039;");
+}
+
 /* 🔍 Suche */
-document.getElementById("searchInput").addEventListener("input", e=>{
-  searchQuery = e.target.value.toLowerCase().trim();
+document.getElementById("searchInput").addEventListener("input", e => {
+  searchQuery = (e.target.value || "").toLowerCase().trim();
   render();
 });
 
-document.getElementById("btnClearSearch").onclick = ()=>{
+document.getElementById("btnClearSearch").addEventListener("click", () => {
   searchQuery = "";
   document.getElementById("searchInput").value = "";
   render();
-};
+});
 
 /* Buttons */
-document.getElementById("btnSave").onclick = saveOfficerMap;
-document.getElementById("btnReset").onclick = ()=>{
-  if(confirm("Auf Default zurücksetzen?")){
+document.getElementById("btnAdd").addEventListener("click", addMitarbeiter);
+document.getElementById("btnSave").addEventListener("click", saveOfficerMap);
+
+document.getElementById("btnReset").addEventListener("click", () => {
+  if(confirm("Auf Default zurücksetzen? (Gespeicherte Liste wird gelöscht)")){
     localStorage.removeItem(STORAGE_KEY);
     officerMap = loadOfficerMap();
     render();
   }
-};
+});
 
-document.getElementById("btnLogout").onclick = ()=>{
+document.getElementById("btnLogout").addEventListener("click", () => {
   sessionStorage.removeItem("ncpd_admin_logged_in");
   window.location.href = "index.html";
-};
+});
 
 render();
 </script>
