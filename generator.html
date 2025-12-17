@@ -9,12 +9,7 @@
   <link rel="icon" type="image/png" href="ncpd-logo.png">
 
   <style>
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      font-family: "Inter", system-ui, sans-serif;
-    }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: "Inter", system-ui, sans-serif; }
 
     body {
       min-height: 100vh;
@@ -37,31 +32,15 @@
       z-index: 10;
     }
 
-    .topbar-left {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
+    .topbar-left { display: flex; align-items: center; gap: 10px; }
 
     .hero-logo {
-      width: 36px;
-      height: 36px;
-      object-fit: cover;
-      border-radius: 50%;
-      display: block;
-      margin-right: 8px;
-      opacity: 0.95;
+      width: 36px; height: 36px; object-fit: cover; border-radius: 50%;
+      display: block; margin-right: 8px; opacity: 0.95;
     }
 
-    .topbar-title-main {
-      font-size: 1rem;
-      font-weight: 600;
-    }
-
-    .topbar-title-sub {
-      font-size: 0.8rem;
-      opacity: 0.7;
-    }
+    .topbar-title-main { font-size: 1rem; font-weight: 600; }
+    .topbar-title-sub { font-size: 0.8rem; opacity: 0.7; }
 
     .logout-btn {
       font-size: 0.8rem;
@@ -73,17 +52,9 @@
       background: rgba(20, 22, 40, 0.8);
       transition: 0.2s;
     }
+    .logout-btn:hover { background: rgba(35, 38, 70, 0.95); }
 
-    .logout-btn:hover {
-      background: rgba(35, 38, 70, 0.95);
-    }
-
-    .login-status {
-      text-align: right;
-      font-size: 0.78rem;
-      line-height: 1.25;
-    }
-
+    .login-status { text-align: right; font-size: 0.78rem; line-height: 1.25; }
     .login-status-main { font-weight: 500; }
     .login-status-sub { opacity: 0.8; }
     .login-status-officer { opacity: 0.8; margin-top: 2px; font-size: 0.76rem; }
@@ -98,10 +69,7 @@
       grid-template-columns: minmax(0, 2.1fr) minmax(0, 1.4fr);
       gap: 18px;
     }
-
-    @media (max-width: 1100px) {
-      .page { grid-template-columns: 1fr; }
-    }
+    @media (max-width: 1100px) { .page { grid-template-columns: 1fr; } }
 
     .panel {
       background: rgba(10, 12, 25, 0.8);
@@ -111,22 +79,11 @@
       box-shadow: 0 10px 25px rgba(0,0,0,0.4);
     }
 
-    .panel-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: baseline;
-      margin-bottom: 12px;
-    }
-
+    .panel-header { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 12px; }
     .panel-title { font-size: 0.95rem; font-weight: 600; }
     .panel-subtitle { font-size: 0.75rem; opacity: 0.7; }
 
-    label {
-      display: block;
-      margin: 8px 0 3px;
-      font-size: 0.8rem;
-      opacity: 0.9;
-    }
+    label { display: block; margin: 8px 0 3px; font-size: 0.8rem; opacity: 0.9; }
 
     input, textarea, select {
       width: 100%;
@@ -139,7 +96,6 @@
       outline: none;
       transition: border 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
     }
-
     input:focus, textarea:focus, select:focus {
       border-color: #5865f2;
       box-shadow: 0 0 0 1px rgba(88, 101, 242, 0.45);
@@ -148,38 +104,17 @@
 
     textarea { min-height: 110px; resize: vertical; }
 
-    .row {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 12px;
-    }
-
-    @media (max-width: 700px) {
-      .row { grid-template-columns: 1fr; }
-    }
+    .row { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+    @media (max-width: 700px) { .row { grid-template-columns: 1fr; } }
 
     .checkbox-row {
-      display: flex;
-      flex-wrap: wrap;
+      display: flex; flex-wrap: wrap;
       gap: 8px 12px;
       margin: 4px 0 8px;
       font-size: 0.78rem;
     }
-
-    .checkbox-row label {
-      margin: 0;
-      display: inline-flex;
-      align-items: center;
-      gap: 5px;
-    }
-
-    .checkbox-row input[type="checkbox"] {
-      width: 14px;
-      height: 14px;
-      border-radius: 4px;
-      cursor: pointer;
-      padding: 0;
-    }
+    .checkbox-row label { margin: 0; display: inline-flex; align-items: center; gap: 5px; }
+    .checkbox-row input[type="checkbox"] { width: 14px; height: 14px; border-radius: 4px; cursor: pointer; padding: 0; }
 
     .btn {
       display: inline-flex;
@@ -198,17 +133,8 @@
       box-shadow: 0 8px 20px rgba(88,101,242,0.45);
       transition: transform 0.06s ease, box-shadow 0.06s ease, background 0.15s ease;
     }
-
-    .btn:hover {
-      background: #6a74ff;
-      transform: translateY(-1px);
-      box-shadow: 0 11px 26px rgba(88,101,242,0.55);
-    }
-
-    .btn:active {
-      transform: translateY(0);
-      box-shadow: 0 7px 16px rgba(88,101,242,0.5);
-    }
+    .btn:hover { background: #6a74ff; transform: translateY(-1px); box-shadow: 0 11px 26px rgba(88,101,242,0.55); }
+    .btn:active { transform: translateY(0); box-shadow: 0 7px 16px rgba(88,101,242,0.5); }
 
     .btn-secondary {
       background: #1e213b;
@@ -216,11 +142,7 @@
       border: 1px solid rgba(255,255,255,0.08);
       margin-left: 6px;
     }
-
-    .btn-secondary:hover {
-      background: #272b4b;
-      box-shadow: 0 8px 20px rgba(0,0,0,0.4);
-    }
+    .btn-secondary:hover { background: #272b4b; box-shadow: 0 8px 20px rgba(0,0,0,0.4); }
 
     .tab-buttons {
       display: inline-flex;
@@ -243,14 +165,13 @@
       color: #a4a7d7;
       transition: 0.15s;
     }
-
     .tab-btn.active {
       background: #5865f2;
       color: #fff;
       box-shadow: 0 6px 15px rgba(88,101,242,0.5);
     }
-
     .tab-btn:not(.active):hover { background: rgba(255,255,255,0.04); }
+
     .hidden { display: none; }
 
     #output {
@@ -268,21 +189,9 @@
     }
 
     /* Verzeichnis-Styles */
-    #tab-verzeichnis h3 {
-      margin-top: 12px;
-      margin-bottom: 6px;
-      font-size: 0.9rem;
-      font-weight: 600;
-    }
-
-    .verz-hinweis {
-      font-size: 0.78rem;
-      opacity: 0.7;
-      margin-bottom: 10px;
-    }
-
+    #tab-verzeichnis h3 { margin-top: 12px; margin-bottom: 6px; font-size: 0.9rem; font-weight: 600; }
+    .verz-hinweis { font-size: 0.78rem; opacity: 0.7; margin-bottom: 10px; }
     .verz-list { margin-bottom: 6px; }
-
     .verz-item {
       padding: 7px 9px;
       background: #0f1122;
@@ -295,16 +204,8 @@
       justify-content: space-between;
       gap: 8px;
     }
-
     .verz-item:hover { background: #171a33; }
-
-    .verz-item-title {
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      max-width: 230px;
-    }
-
+    .verz-item-title { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 230px; }
     .verz-item-date { opacity: 0.6; font-size: 0.74rem; }
     .verz-empty { font-size: 0.78rem; opacity: 0.65; padding: 6px 2px 10px; }
   </style>
@@ -573,7 +474,10 @@
             <label for="ko-verlesen">Verlesen</label>
             <input id="ko-verlesen" type="text" />
           </div>
-          <div></div>
+          <div>
+            <label>&nbsp;</label>
+            <input type="text" disabled style="opacity:0; pointer-events:none;" />
+          </div>
         </div>
 
         <div class="row">
@@ -620,7 +524,6 @@
         <div>
           <label for="ko-gezeichnet">Gezeichnet von</label>
           <textarea id="ko-gezeichnet" rows="2"></textarea>
-
           <button class="btn" id="btn-kollektivakte">Kollektivakte generieren</button>
         </div>
       </div>
@@ -701,9 +604,17 @@
         <button class="btn-secondary btn" id="btn-reset">Zurücksetzen</button>
       </div>
 
-      <!-- Hinweis: NUR bei Kollektivakte sichtbar -->
+      <!-- NUR bei Kollektivakte sichtbar: groß, zentriert, 1 Zeile -->
       <div id="kollektiv-hinweis"
-           style="margin-top: 10px; font-size: 0.78rem; opacity: 0.75; text-align: right; display: none;">
+           style="
+             margin-top: 12px;
+             text-align: center;
+             font-size: 1.05rem;
+             font-weight: 600;
+             opacity: 0.9;
+             white-space: nowrap;
+             display: none;
+           ">
         Abgenommene Gegenstände müssen selber im Aktentablet vermerkt werden.
       </div>
     </section>
@@ -711,18 +622,15 @@
 
   <script>
     let currentDiscordId = null;
-
     const STORAGE_KEY = "ncpd_officerMap_v1";
 
     const defaultOfficerMap = {
-      // ---------- TEAM RED ----------
       "361115973203525633": { name: "Lukas Lutz", dienstnummer: "PD-01", rang: "Chief of Police" },
       "929489098471796756": { name: "Alev Sunal", dienstnummer: "PD-02", rang: "Assistant Chief of Police" },
       "689193377261944853": { name: "Pau Sunal", dienstnummer: "PD-03", rang: "Deputy Chief" },
       "749676361274359869": { name: "Peter Klumb", dienstnummer: "PD-04", rang: "Deputy Chief" },
       "281504730067369985": { name: "Steve McGarret", dienstnummer: "PD-05", rang: "Bureau Chief" },
 
-      // ---------- TEAM BLUE ----------
       "721476043814207830": { name: "Tayo Backa", dienstnummer: "PD-09", rang: "Watch Commander" },
       "663782248998502447": { name: "Walter Waldmeister", dienstnummer: "PD-16", rang: "Inspector" },
       "340137585240440833": { name: "Morata Soler", dienstnummer: "PD-17", rang: "Inspector" },
@@ -730,7 +638,6 @@
       "708062101457076228": { name: "Vito Ramirez", dienstnummer: "PD-19", rang: "Deputy Inspector" },
       "750431732607483905": { name: "Jule Waldmeister", dienstnummer: "PD-18", rang: "Deputy Inspector" },
 
-      // ---------- TEAM GOLD ----------
       "1142017198718730271": { name: "Blaze Redman", dienstnummer: "PD-22", rang: "Master Lieutenant" },
       "228380461628391424": { name: "Zane Blackwood", dienstnummer: "PD-23", rang: "Master Lieutenant" },
       "378598475971166208": { name: "Toni Deluca", dienstnummer: "PD-26", rang: "Lieutenant III" },
@@ -738,7 +645,6 @@
       "723312724519551006": { name: "Andreas Hackl", dienstnummer: "PD-34", rang: "Lieutenant I" },
       "1217116992616661033": { name: "Panther Nova", dienstnummer: "PD-35", rang: "Lieutenant I" },
 
-      // ---------- TEAM SILVER ----------
       "697119782834536520": { name: "Anton Horvath", dienstnummer: "PD-48", rang: "Staff Sergeant" },
       "247006489632440322": { name: "Felix Miller", dienstnummer: "PD-40", rang: "Specialist" },
       "587348686326202369": { name: "Andreas Graham", dienstnummer: "PD-41", rang: "Staff Sergeant" },
@@ -774,7 +680,6 @@
       "1215412476359737366": { name: "Lukas Rothe", dienstnummer: "PD-52", rang: "Specialist" },
       "677541121383202817": { name: "Ben Stein", dienstnummer: "PD-55", rang: "Specialist" },
 
-      // ---------- TEAM GREEN ----------
       "877241505016844328": { name: "Salva Sol", dienstnummer: "PA-52", rang: "Anwärter" },
       "624039199028543499": { name: "Ludovico Greco", dienstnummer: "PA-56", rang: "Anwärter" },
       "935269358098321418": { name: "Nico Bublich", dienstnummer: "PA-57", rang: "Anwärter" },
@@ -799,10 +704,8 @@
         return JSON.parse(JSON.stringify(defaultOfficerMap));
       }
     }
-
     const officerMap = loadOfficerMap();
 
-    // ---------- Login-Status Helfer ----------
     function setLoginStatus(mainText, subText, isGood = false) {
       const mainEl = document.getElementById("login-main");
       const subEl = document.getElementById("login-sub");
@@ -816,10 +719,8 @@
       mainEl.style.color = isGood ? "#a5ffb5" : "#ffffff";
     }
 
-    // ---------- Team / Kreis aus Dienstnummer ----------
     function getTeamCircle(dienstnummer) {
       if (!dienstnummer) return "⚪";
-
       if (dienstnummer.startsWith("PA-")) return "🟢";
       if (!dienstnummer.startsWith("PD-")) return "⚪";
 
@@ -832,7 +733,6 @@
       return "⚪";
     }
 
-    // ---------- Discord OAuth ----------
     function getDiscordAccessToken() {
       const hash = window.location.hash.substring(1);
       if (!hash) return null;
@@ -886,7 +786,6 @@
         mainEl.style.color = "#a5ffb5";
         subEl.textContent = `Team ${circle} [${o.dienstnummer}] ${o.name}`;
       }
-
       if (infoEl) infoEl.textContent = o.rang;
 
       initVerzeichnis();
@@ -923,7 +822,7 @@
       }
     }
 
-    // ---------- Tabs + Hinweis nur bei Kollektivakte ----------
+    // Tabs + Hinweis nur bei Kollektivakte
     document.querySelectorAll(".tab-btn").forEach(btn => {
       btn.addEventListener("click", () => {
         document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
@@ -942,22 +841,19 @@
       });
     });
 
-    // ---------- Identitätsfeststellung ----------
     function getIdentitaet(prefix) {
       const parts = [];
-      if (document.getElementById(prefix + "-id-pers")?.checked) parts.push("Personalausweis");
-      if (document.getElementById(prefix + "-id-waffe")?.checked) parts.push("Waffenschein");
-      if (document.getElementById(prefix + "-id-fs")?.checked) parts.push("Führerschein");
+      if (document.getElementById(prefix + "-id-pers")?.checked)   parts.push("Personalausweis");
+      if (document.getElementById(prefix + "-id-waffe")?.checked)  parts.push("Waffenschein");
+      if (document.getElementById(prefix + "-id-fs")?.checked)     parts.push("Führerschein");
       if (document.getElementById(prefix + "-id-finger")?.checked) parts.push("Fingerabdruckscanner");
       if (!parts.length) return "Keine Identitätsfeststellung vermerkt.";
       return "Die Identität wurde mittels " + parts.join(", ") + " festgestellt.";
     }
 
-    // ---------- Bußgeld-Datum ----------
     function setDefaultBussgeldDatum() {
       const d = new Date();
       d.setDate(d.getDate() + 7);
-
       const s = d.toLocaleDateString("de-DE", { day: "2-digit", month: "2-digit", year: "numeric" });
 
       ["st-bussgeld", "sc-bussgeld", "ko-bussgeld"].forEach(id => {
@@ -966,7 +862,6 @@
       });
     }
 
-    // ---------- Verzeichnis / Storage ----------
     const verzContainerIds = {
       straf: "verzeichnis-straf",
       schnell: "verzeichnis-schnell",
@@ -1104,7 +999,6 @@
       out += gezeichnet + "\n\n";
 
       document.getElementById("output").value = out;
-
       const titel = tatort || (besch.split("\n")[0] || "Strafakte ohne Titel");
       saveAkte("straf", titel, out);
     }
@@ -1164,7 +1058,6 @@
       out += gezeichnet + "\n\n";
 
       document.getElementById("output").value = out;
-
       const titel = tatort || (besch.split("\n")[0] || "Schnellakte ohne Titel");
       saveAkte("schnell", titel, out);
     }
@@ -1225,7 +1118,6 @@
       out += gezeichnet + "\n\n";
 
       document.getElementById("output").value = out;
-
       const titel = tatort || "Kollektivakte ohne Titel";
       saveAkte("kollektiv", titel, out);
     }
@@ -1275,12 +1167,10 @@
       out += gezeichnet + "\n\n";
 
       document.getElementById("output").value = out;
-
       const titel = person.split("\n")[0] || "Fahndungsakte ohne Titel";
       saveAkte("fahndung", titel, out);
     }
 
-    // ---------- Reset ----------
     function resetForm() {
       const keepIds = new Set([
         "st-officer","sc-officer","ko-officer","fa-officer",
@@ -1301,7 +1191,6 @@
       if (out) out.value = "";
     }
 
-    // ---------- Buttons ----------
     document.getElementById("btn-strafakte").addEventListener("click", genStrafakte);
     document.getElementById("btn-schnellakte").addEventListener("click", genSchnellakte);
     document.getElementById("btn-kollektivakte").addEventListener("click", genKollektivakte);
@@ -1316,14 +1205,13 @@
 
     document.getElementById("btn-reset").addEventListener("click", resetForm);
 
-    // ---------- Init ----------
+    // Init
     initDiscordUser();
     setDefaultBussgeldDatum();
 
-    // Hinweis beim Start korrekt setzen (Default Tab: strafakte => versteckt)
+    // Default Tab ist Strafakte => Hinweis aus
     const hintInit = document.getElementById("kollektiv-hinweis");
     if (hintInit) hintInit.style.display = "none";
   </script>
 </body>
 </html>
-
