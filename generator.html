@@ -611,15 +611,7 @@
 
         <label for="ko-zeugen">Weitere beteiligte Einheiten/Zeugen</label>
         <textarea id="ko-zeugen"></textarea>
-
-        <label for="ko-gegenstaende">Abgenommene Gegenstände</label>
-        <textarea id="ko-gegenstaende"></textarea>
-
-        <div class="row">
-          <div>
-            <label for="ko-abgenommen-von">Abgenommen von</label>
-            <input id="ko-abgenommen-von" type="text" />
-          </div>
+        
           <div>
             <label for="ko-verlesen">Verlesen</label>
             <input id="ko-verlesen" type="text" />
@@ -1239,8 +1231,6 @@ function genKollektivakte() {
   const sach = document.getElementById("ko-sachverhalt").value.trim();
   const idTxt = getIdentitaet("ko");
   const zeugen = document.getElementById("ko-zeugen").value.trim();
-  const geg = document.getElementById("ko-gegenstaende").value.trim();
-  const abn = document.getElementById("ko-abgenommen-von").value.trim();
   const verlesen = document.getElementById("ko-verlesen").value.trim();
   const beisein = document.getElementById("ko-beisein").value.trim();
   const rb = document.getElementById("ko-rechtsbeistand").value;
@@ -1273,9 +1263,6 @@ function genKollektivakte() {
 
   out += "| Weitere beteiligte Einheiten/Zeugen: |\n";
   out += zeugen + "\n\n";
-
-  out += "| Abgenommene Gegenstände: |  Abgenommen von: " + abn + "\n";
-  out += geg + "\n\n";
 
   out += "| Bemerkungen: |\n";
   out += "Die Rechte wurden dem Beschuldigten durch " + verlesen + " im Beisein von " + beisein + " verlesen und verstanden.\n";
