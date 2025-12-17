@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="de">
 <head>
@@ -7,7 +6,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
-
   <link rel="icon" type="image/png" href="ncpd-logo.png">
 
   <style>
@@ -54,7 +52,7 @@
       margin-right: 8px;
       opacity: 0.95;
     }
-    
+
     .topbar-title-main {
       font-size: 1rem;
       font-weight: 600;
@@ -86,19 +84,9 @@
       line-height: 1.25;
     }
 
-    .login-status-main {
-      font-weight: 500;
-    }
-
-    .login-status-sub {
-      opacity: 0.8;
-    }
-
-    .login-status-officer {
-      opacity: 0.8;
-      margin-top: 2px;
-      font-size: 0.76rem;
-    }
+    .login-status-main { font-weight: 500; }
+    .login-status-sub { opacity: 0.8; }
+    .login-status-officer { opacity: 0.8; margin-top: 2px; font-size: 0.76rem; }
 
     .page {
       flex: 1;
@@ -112,9 +100,7 @@
     }
 
     @media (max-width: 1100px) {
-      .page {
-        grid-template-columns: 1fr;
-      }
+      .page { grid-template-columns: 1fr; }
     }
 
     .panel {
@@ -132,15 +118,8 @@
       margin-bottom: 12px;
     }
 
-    .panel-title {
-      font-size: 0.95rem;
-      font-weight: 600;
-    }
-
-    .panel-subtitle {
-      font-size: 0.75rem;
-      opacity: 0.7;
-    }
+    .panel-title { font-size: 0.95rem; font-weight: 600; }
+    .panel-subtitle { font-size: 0.75rem; opacity: 0.7; }
 
     label {
       display: block;
@@ -167,10 +146,7 @@
       background: #10132a;
     }
 
-    textarea {
-      min-height: 110px;
-      resize: vertical;
-    }
+    textarea { min-height: 110px; resize: vertical; }
 
     .row {
       display: grid;
@@ -179,9 +155,7 @@
     }
 
     @media (max-width: 700px) {
-      .row {
-        grid-template-columns: 1fr;
-      }
+      .row { grid-template-columns: 1fr; }
     }
 
     .checkbox-row {
@@ -276,13 +250,8 @@
       box-shadow: 0 6px 15px rgba(88,101,242,0.5);
     }
 
-    .tab-btn:not(.active):hover {
-      background: rgba(255,255,255,0.04);
-    }
-
-    .hidden {
-      display: none;
-    }
+    .tab-btn:not(.active):hover { background: rgba(255,255,255,0.04); }
+    .hidden { display: none; }
 
     #output {
       width: 100%;
@@ -312,9 +281,7 @@
       margin-bottom: 10px;
     }
 
-    .verz-list {
-      margin-bottom: 6px;
-    }
+    .verz-list { margin-bottom: 6px; }
 
     .verz-item {
       padding: 7px 9px;
@@ -329,9 +296,7 @@
       gap: 8px;
     }
 
-    .verz-item:hover {
-      background: #171a33;
-    }
+    .verz-item:hover { background: #171a33; }
 
     .verz-item-title {
       white-space: nowrap;
@@ -340,20 +305,12 @@
       max-width: 230px;
     }
 
-    .verz-item-date {
-      opacity: 0.6;
-      font-size: 0.74rem;
-    }
-
-    .verz-empty {
-      font-size: 0.78rem;
-      opacity: 0.65;
-      padding: 6px 2px 10px;
-    }
+    .verz-item-date { opacity: 0.6; font-size: 0.74rem; }
+    .verz-empty { font-size: 0.78rem; opacity: 0.65; padding: 6px 2px 10px; }
   </style>
 </head>
-<body>
 
+<body>
   <header class="topbar">
     <div class="topbar-left">
       <img src="ncpd-logo.png" class="hero-logo" alt="NCPD Logo">
@@ -374,7 +331,6 @@
   </header>
 
   <main class="page">
-
     <section class="panel">
       <div class="panel-header">
         <div>
@@ -486,7 +442,7 @@
 
         <button class="btn" id="btn-strafakte">Strafakte generieren</button>
       </div>
-      
+
       <!-- SCHNELLAKTE -->
       <div id="tab-schnellakte" class="hidden">
         <div class="row">
@@ -574,7 +530,7 @@
         <button class="btn" id="btn-schnellakte">Schnellakte generieren</button>
       </div>
 
-      <!-- KOLLEKTIVAKTE -->
+      <!-- KOLLEKTIVAKTE (OHNE Abgenommene Gegenstände / Abgenommen von) -->
       <div id="tab-kollektivakte" class="hidden">
         <div class="row">
           <div>
@@ -611,11 +567,13 @@
 
         <label for="ko-zeugen">Weitere beteiligte Einheiten/Zeugen</label>
         <textarea id="ko-zeugen"></textarea>
-        
+
+        <div class="row">
           <div>
             <label for="ko-verlesen">Verlesen</label>
             <input id="ko-verlesen" type="text" />
           </div>
+          <div></div>
         </div>
 
         <div class="row">
@@ -665,19 +623,18 @@
 
           <button class="btn" id="btn-kollektivakte">Kollektivakte generieren</button>
         </div>
-        </div>
-      
+      </div>
+
       <!-- FAHNDUNGSAKTE -->
       <div id="tab-fahndung" class="hidden">
-
         <div class="row">
           <div>
             <label for="fa-officer">Officer</label>
             <input id="fa-officer" type="text" />
-           </div>
-           <div>
+          </div>
+          <div>
             <label for="fa-datum">Datum / Uhrzeit</label>
-             <input id="fa-datum" type="text" placeholder="z. B. 05.12.2025 14:30 Uhr" />
+            <input id="fa-datum" type="text" placeholder="z. B. 05.12.2025 14:30 Uhr" />
           </div>
         </div>
 
@@ -719,7 +676,7 @@
 
         <h3>Schnellakten</h3>
         <div id="verzeichnis-schnell" class="verz-list"></div>
-    
+
         <h3>Kollektivakten</h3>
         <div id="verzeichnis-kollektiv" class="verz-list"></div>
 
@@ -728,6 +685,7 @@
       </div>
     </section>
 
+    <!-- RECHTES PANEL -->
     <section class="panel">
       <div class="panel-header">
         <div>
@@ -743,651 +701,629 @@
         <button class="btn-secondary btn" id="btn-reset">Zurücksetzen</button>
       </div>
 
-      <div style="margin-top: 10px; font-size: 0.78rem; opacity: 0.75; text-align: right;">
+      <!-- Hinweis: NUR bei Kollektivakte sichtbar -->
+      <div id="kollektiv-hinweis"
+           style="margin-top: 10px; font-size: 0.78rem; opacity: 0.75; text-align: right; display: none;">
         Abgenommene Gegenstände müssen selber im Aktentablet vermerkt werden.
       </div>
-
     </section>
   </main>
 
   <script>
-let currentDiscordId = null;
+    let currentDiscordId = null;
 
-  const STORAGE_KEY = "ncpd_officerMap_v1";
+    const STORAGE_KEY = "ncpd_officerMap_v1";
 
-const defaultOfficerMap = {
-   // ---------- TEAM RED ----------
-  "361115973203525633": { name: "Lukas Lutz", dienstnummer: "PD-01", rang: "Chief of Police" },
-  "929489098471796756": { name: "Alev Sunal", dienstnummer: "PD-02", rang: "Assistant Chief of Police" },
-  "689193377261944853": { name: "Pau Sunal", dienstnummer: "PD-03", rang: "Deputy Chief" },
-  "749676361274359869": { name: "Peter Klumb", dienstnummer: "PD-04", rang: "Deputy Chief" },
-  "281504730067369985": { name: "Steve McGarret", dienstnummer: "PD-05", rang: "Bureau Chief" },
+    const defaultOfficerMap = {
+      // ---------- TEAM RED ----------
+      "361115973203525633": { name: "Lukas Lutz", dienstnummer: "PD-01", rang: "Chief of Police" },
+      "929489098471796756": { name: "Alev Sunal", dienstnummer: "PD-02", rang: "Assistant Chief of Police" },
+      "689193377261944853": { name: "Pau Sunal", dienstnummer: "PD-03", rang: "Deputy Chief" },
+      "749676361274359869": { name: "Peter Klumb", dienstnummer: "PD-04", rang: "Deputy Chief" },
+      "281504730067369985": { name: "Steve McGarret", dienstnummer: "PD-05", rang: "Bureau Chief" },
 
-  // ---------- TEAM BLUE ----------
-  "721476043814207830": { name: "Tayo Backa", dienstnummer: "PD-09", rang: "Watch Commander" },
-  "663782248998502447": { name: "Walter Waldmeister", dienstnummer: "PD-16", rang: "Inspector" },
-  "340137585240440833": { name: "Morata Soler", dienstnummer: "PD-17", rang: "Inspector" },
-  "366609124038934528": { name: "Ben Morisson", dienstnummer: "PD-10", rang: "Captain" },
-  "708062101457076228": { name: "Vito Ramirez", dienstnummer: "PD-19", rang: "Deputy Inspector" },
-  "750431732607483905": { name: "Jule Waldmeister", dienstnummer: "PD-18", rang: "Deputy Inspector" },
+      // ---------- TEAM BLUE ----------
+      "721476043814207830": { name: "Tayo Backa", dienstnummer: "PD-09", rang: "Watch Commander" },
+      "663782248998502447": { name: "Walter Waldmeister", dienstnummer: "PD-16", rang: "Inspector" },
+      "340137585240440833": { name: "Morata Soler", dienstnummer: "PD-17", rang: "Inspector" },
+      "366609124038934528": { name: "Ben Morisson", dienstnummer: "PD-10", rang: "Captain" },
+      "708062101457076228": { name: "Vito Ramirez", dienstnummer: "PD-19", rang: "Deputy Inspector" },
+      "750431732607483905": { name: "Jule Waldmeister", dienstnummer: "PD-18", rang: "Deputy Inspector" },
 
-  // ---------- TEAM GOLD ----------
-  "1142017198718730271": { name: "Blaze Redman", dienstnummer: "PD-22", rang: "Master Lieutenant" },
-  "228380461628391424": { name: "Zane Blackwood", dienstnummer: "PD-23", rang: "Master Lieutenant" },
-  "378598475971166208": { name: "Toni Deluca", dienstnummer: "PD-26", rang: "Lieutenant III" },
-  "1134903991818534942": { name: "Daniel Waldmeister", dienstnummer: "PD-25", rang: "Lieutenant III" },
-  "723312724519551006": { name: "Andreas Hackl", dienstnummer: "PD-34", rang: "Lieutenant I" },
-  "1217116992616661033": { name: "Panther Nova", dienstnummer: "PD-35", rang: "Lieutenant I" },
+      // ---------- TEAM GOLD ----------
+      "1142017198718730271": { name: "Blaze Redman", dienstnummer: "PD-22", rang: "Master Lieutenant" },
+      "228380461628391424": { name: "Zane Blackwood", dienstnummer: "PD-23", rang: "Master Lieutenant" },
+      "378598475971166208": { name: "Toni Deluca", dienstnummer: "PD-26", rang: "Lieutenant III" },
+      "1134903991818534942": { name: "Daniel Waldmeister", dienstnummer: "PD-25", rang: "Lieutenant III" },
+      "723312724519551006": { name: "Andreas Hackl", dienstnummer: "PD-34", rang: "Lieutenant I" },
+      "1217116992616661033": { name: "Panther Nova", dienstnummer: "PD-35", rang: "Lieutenant I" },
 
-  // ---------- TEAM SILVER ----------
-  "697119782834536520": { name: "Anton Horvath", dienstnummer: "PD-48", rang: "Staff Sergeant" },
-  "247006489632440322": { name: "Felix Miller", dienstnummer: "PD-40", rang: "Specialist" },
-  "587348686326202369": { name: "Andreas Graham", dienstnummer: "PD-41", rang: "Staff Sergeant" },
-  "1008577835503452211": { name: "Luke Dijk", dienstnummer: "PD-42", rang: "Sergeant I" },
-  "498101850856226839": { name: "Reiner Hirsch", dienstnummer: "PD-43", rang: "Staff Sergeant" },
-  "543002544348200960": { name: "Jackson Dayne", dienstnummer: "PD-44", rang: "Specialist" },
-  "717473357909590099": { name: "Max Koslowski", dienstnummer: "PD-45", rang: "Specialist" },
-  "693183499657543780": { name: "Ottmar Zittlau", dienstnummer: "PD-46", rang: "Sergeant III" },
-  "513456111160918027": { name: "Ian Miller", dienstnummer: "PD-47", rang: "Sergeant III" },
-  "886307752706719825": { name: "Max Lockheed", dienstnummer: "PD-49", rang: "Specialist" },
-  "764520163633922060": { name: "Alejandro Rodriguez", dienstnummer: "PD-50", rang: "Specialist" },
-  "564390978547351553": { name: "Antonio Moretti", dienstnummer: "PD-51", rang: "Specialist" },
-  "550392010612146207": { name: "Keystone Brown", dienstnummer: "PD-53", rang: "Specialist" },
-  "711866485651275787": { name: "David Baum", dienstnummer: "PD-54", rang: "Sergeant I" },
-  "450016531229966336": { name: "Jason Shaw", dienstnummer: "PD-56", rang: "Sergeant I" },
-  "541633624051679262": { name: "Harald Hernandez", dienstnummer: "PD-57", rang: "Staff Sergeant" },
-  "1093573634213285989": { name: "Lucius Lich", dienstnummer: "PD-58", rang: "Staff Sergeant" },
-  "931064598570893343": { name: "Joey Reed", dienstnummer: "PD-59", rang: "Staff Sergeant" },
-  "808712195390701618": { name: "Ali Coban", dienstnummer: "PD-61", rang: "Staff Sergeant" },
-  "1261019609818075207": { name: "Elina Thompson", dienstnummer: "PD-62", rang: "Sergeant II" },
-  "437314188059344898": { name: "Enrique Vegas", dienstnummer: "PD-63", rang: "Sergeant I" },
-  "788866575305408544": { name: "Alvaro Reinh", dienstnummer: "PD-64", rang: "Sergeant III" },
-  "878966028347015198": { name: "Peter Maier", dienstnummer: "PD-66", rang: "Specialist" },
-  "1283519810570944543": { name: "Sultan Can", dienstnummer: "PD-67", rang: "Staff Sergeant" },
-  "811317056245989397": { name: "Dario Ramirez", dienstnummer: "PD-68", rang: "Specialist" },
-  "1315048772408971415": { name: "Diego Santos", dienstnummer: "PD-70", rang: "Staff Sergeant" },
-  "808103110316785725": { name: "Nosa Holy", dienstnummer: "PD-71", rang: "Sergeant III" },
-  "481793329328291840": { name: "Lamar Kasim", dienstnummer: "PD-72", rang: "Sergeant I" },
-  "1357827587950252153": { name: "Efe Voga", dienstnummer: "PD-73", rang: "Sergeant I" },
-  "579359902800281611": { name: "Beton Tapi", dienstnummer: "PD-74", rang: "Sergeant I" },
-  "831635399679017002": { name: "Tom Black", dienstnummer: "PD-77", rang: "Sergeant II" },
-  "966081394310783006": { name: "Michael Korczak", dienstnummer: "PD-78", rang: "Specialist" },
-  "1215412476359737366": { name: "Lukas Rothe", dienstnummer: "PD-52", rang: "Specialist" },
-  "677541121383202817": { name: "Ben Stein", dienstnummer: "PD-55", rang: "Specialist" },
+      // ---------- TEAM SILVER ----------
+      "697119782834536520": { name: "Anton Horvath", dienstnummer: "PD-48", rang: "Staff Sergeant" },
+      "247006489632440322": { name: "Felix Miller", dienstnummer: "PD-40", rang: "Specialist" },
+      "587348686326202369": { name: "Andreas Graham", dienstnummer: "PD-41", rang: "Staff Sergeant" },
+      "1008577835503452211": { name: "Luke Dijk", dienstnummer: "PD-42", rang: "Sergeant I" },
+      "498101850856226839": { name: "Reiner Hirsch", dienstnummer: "PD-43", rang: "Staff Sergeant" },
+      "543002544348200960": { name: "Jackson Dayne", dienstnummer: "PD-44", rang: "Specialist" },
+      "717473357909590099": { name: "Max Koslowski", dienstnummer: "PD-45", rang: "Specialist" },
+      "693183499657543780": { name: "Ottmar Zittlau", dienstnummer: "PD-46", rang: "Sergeant III" },
+      "513456111160918027": { name: "Ian Miller", dienstnummer: "PD-47", rang: "Sergeant III" },
+      "886307752706719825": { name: "Max Lockheed", dienstnummer: "PD-49", rang: "Specialist" },
+      "764520163633922060": { name: "Alejandro Rodriguez", dienstnummer: "PD-50", rang: "Specialist" },
+      "564390978547351553": { name: "Antonio Moretti", dienstnummer: "PD-51", rang: "Specialist" },
+      "550392010612146207": { name: "Keystone Brown", dienstnummer: "PD-53", rang: "Specialist" },
+      "711866485651275787": { name: "David Baum", dienstnummer: "PD-54", rang: "Sergeant I" },
+      "450016531229966336": { name: "Jason Shaw", dienstnummer: "PD-56", rang: "Sergeant I" },
+      "541633624051679262": { name: "Harald Hernandez", dienstnummer: "PD-57", rang: "Staff Sergeant" },
+      "1093573634213285989": { name: "Lucius Lich", dienstnummer: "PD-58", rang: "Staff Sergeant" },
+      "931064598570893343": { name: "Joey Reed", dienstnummer: "PD-59", rang: "Staff Sergeant" },
+      "808712195390701618": { name: "Ali Coban", dienstnummer: "PD-61", rang: "Staff Sergeant" },
+      "1261019609818075207": { name: "Elina Thompson", dienstnummer: "PD-62", rang: "Sergeant II" },
+      "437314188059344898": { name: "Enrique Vegas", dienstnummer: "PD-63", rang: "Sergeant I" },
+      "788866575305408544": { name: "Alvaro Reinh", dienstnummer: "PD-64", rang: "Sergeant III" },
+      "878966028347015198": { name: "Peter Maier", dienstnummer: "PD-66", rang: "Specialist" },
+      "1283519810570944543": { name: "Sultan Can", dienstnummer: "PD-67", rang: "Staff Sergeant" },
+      "811317056245989397": { name: "Dario Ramirez", dienstnummer: "PD-68", rang: "Specialist" },
+      "1315048772408971415": { name: "Diego Santos", dienstnummer: "PD-70", rang: "Staff Sergeant" },
+      "808103110316785725": { name: "Nosa Holy", dienstnummer: "PD-71", rang: "Sergeant III" },
+      "481793329328291840": { name: "Lamar Kasim", dienstnummer: "PD-72", rang: "Sergeant I" },
+      "1357827587950252153": { name: "Efe Voga", dienstnummer: "PD-73", rang: "Sergeant I" },
+      "579359902800281611": { name: "Beton Tapi", dienstnummer: "PD-74", rang: "Sergeant I" },
+      "831635399679017002": { name: "Tom Black", dienstnummer: "PD-77", rang: "Sergeant II" },
+      "966081394310783006": { name: "Michael Korczak", dienstnummer: "PD-78", rang: "Specialist" },
+      "1215412476359737366": { name: "Lukas Rothe", dienstnummer: "PD-52", rang: "Specialist" },
+      "677541121383202817": { name: "Ben Stein", dienstnummer: "PD-55", rang: "Specialist" },
 
-  // ---------- TEAM GREEN ----------
-  "877241505016844328": { name: "Salva Sol", dienstnummer: "PA-52", rang: "Anwärter" },
-  "624039199028543499": { name: "Ludovico Greco", dienstnummer: "PA-56", rang: "Anwärter" },
-  "935269358098321418": { name: "Nico Bublich", dienstnummer: "PA-57", rang: "Anwärter" },
-  "1069361772324200478": { name: "Roman Schlag", dienstnummer: "PA-62", rang: "Anwärter" },
-  "161210739174932481": { name: "Eduardo Sanchez", dienstnummer: "PA-66", rang: "Anwärter" },
-  "730909080649990204": { name: "Max Aklubat", dienstnummer: "PA-69", rang: "Anwärter" },
-  "966711299419537468": { name: "Lukas Denzel", dienstnummer: "PA-71", rang: "Anwärter" },
-  "925887471198306374": { name: "Noah Schlotter", dienstnummer: "PA-73", rang: "Anwärter" },
-  "526132485101191203": { name: "Max Brechtelsbauer", dienstnummer: "PA-76", rang: "Anwärter" },
-  "508377615241969674": { name: "Abusa Hanco", dienstnummer: "PA-78", rang: "Anwärter" },
-  "530031383007985665": { name: "Michael Johnson", dienstnummer: "PA-79", rang: "Anwärter" }
-};
-
-function loadOfficerMap() {
-  try {
-    const raw = localStorage.getItem(STORAGE_KEY);
-    if (!raw) return JSON.parse(JSON.stringify(defaultOfficerMap));
-    const parsed = JSON.parse(raw);
-    if (!parsed || typeof parsed !== "object") return JSON.parse(JSON.stringify(defaultOfficerMap));
-    return parsed;
-  } catch (e) {
-    return JSON.parse(JSON.stringify(defaultOfficerMap));
-  }
-}
-
-const officerMap = loadOfficerMap();
-    
-// ---------- Login-Status Helfer ----------
-
-function setLoginStatus(mainText, subText, isGood = false) {
-  const mainEl = document.getElementById("login-main");
-  const subEl = document.getElementById("login-sub");
-  const infoEl = document.getElementById("login-officer-info");
-  if (!mainEl || !subEl) return;
-
-  mainEl.textContent = mainText || "";
-  subEl.textContent = subText || "";
-  if (infoEl) infoEl.textContent = "";
-
-  mainEl.style.color = isGood ? "#a5ffb5" : "#ffffff";
-}
-
-// ---------- Team / Kreis aus Dienstnummer ----------
-
-function getTeamCircle(dienstnummer) {
-  if (!dienstnummer) return "⚪";
-
-  if (dienstnummer.startsWith("PA-")) {
-    return "🟢"; // Team Green
-  }
-
-  if (!dienstnummer.startsWith("PD-")) return "⚪";
-
-  const num = parseInt(dienstnummer.split("-")[1], 10);
-  if (Number.isNaN(num)) return "⚪";
-
-  if (num >= 1 && num <= 5) return "🔴";     // Team Red
-  if (num >= 7 && num <= 19) return "🔵";   // Team Blue
-  if (num >= 20 && num <= 39) return "🟡"; // Team Gold
-
-  return "⚪"; // Default: Team Silver
-}
-
-// ---------- Discord OAuth ----------
-
-function getDiscordAccessToken() {
-  const hash = window.location.hash.substring(1);
-  if (!hash) return null;
-
-  const params = new URLSearchParams(hash);
-  const token = params.get("access_token");
-
-  if (token) {
-    history.replaceState(null, "", window.location.pathname + window.location.search);
-  }
-
-  return token;
-}
-
-function fillOfficerFromDiscord(discordId, userObj) {
-  currentDiscordId = discordId || null;
-
-  const o = officerMap[discordId];
-  const mainEl = document.getElementById("login-main");
-  const subEl = document.getElementById("login-sub");
-  const infoEl = document.getElementById("login-officer-info");
-
-  if (!o) {
-    const uname = userObj
-      ? userObj.username + (userObj.discriminator ? "#" + userObj.discriminator : "")
-      : "Unbekannt";
-    setLoginStatus("Eingeloggt (unbekannter Officer)", uname, false);
-    if (infoEl) infoEl.textContent = "";
-    initVerzeichnis(); // trotzdem Verzeichnis laden (mit "unknown"-Key)
-    return;
-  }
-
-  const full = `${o.name} | ${o.dienstnummer} | ${o.rang}`;
-  const [vorname, nachname] = o.name.split(" ");
-  const kuerzel = `${vorname.charAt(0)}. ${nachname}`;
-  const unterschrift = `${kuerzel}\n${o.name} | ${o.dienstnummer} | ${o.rang}`;
-
-  ["st-officer","sc-officer","ko-officer","fa-officer"].forEach(id => {
-    const el = document.getElementById(id);
-    if (el) el.value = full;
-  });
-
-  ["st-gezeichnet","sc-gezeichnet","ko-gezeichnet","fa-gezeichnet"].forEach(id => {
-    const el = document.getElementById(id);
-    if (el) el.value = unterschrift;
-  });
-
-  const circle = getTeamCircle(o.dienstnummer);
-
-  if (mainEl && subEl) {
-    mainEl.textContent = "Eingeloggt als:";
-    mainEl.style.color = "#a5ffb5";
-    subEl.textContent = `Team ${circle} [${o.dienstnummer}] ${o.name}`;
-  }
-
-  if (infoEl) {
-    infoEl.textContent = o.rang;
-  }
-
-  initVerzeichnis();
-}
-
-async function initDiscordUser() {
-  const token = getDiscordAccessToken();
-  if (!token) {
-    setLoginStatus("Nicht mit Discord verbunden", "Bitte über das Portal einloggen.");
-    initVerzeichnis(); // Verzeichnis für unknown
-    return;
-  }
-
-  try {
-    setLoginStatus("Verbinde mit Discord …", "Bitte einen Moment warten.");
-
-    const res = await fetch("https://discord.com/api/users/@me", {
-      headers: { Authorization: `Bearer ${token}` }
-    });
-
-    if (!res.ok) {
-      console.error("Discord API Fehler", res.status);
-      setLoginStatus("Discord-Fehler", "Benutzerdaten konnten nicht geladen werden.");
-      initVerzeichnis();
-      return;
-    }
-
-    const user = await res.json();
-    fillOfficerFromDiscord(user.id, user);
-  } catch (err) {
-    console.error("Discord Request fehlgeschlagen:", err);
-    setLoginStatus("Verbindungsfehler", "Discord konnte nicht erreicht werden.");
-    initVerzeichnis();
-  }
-}
-
-// ---------- Tabs ----------
-
-document.querySelectorAll(".tab-btn").forEach(btn => {
-  btn.addEventListener("click", () => {
-    document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
-    btn.classList.add("active");
-
-    const tab = btn.dataset.tab;
-    document.querySelectorAll("#tab-strafakte, #tab-schnellakte, #tab-kollektivakte, #tab-fahndung, #tab-verzeichnis")
-      .forEach(el => el.classList.add("hidden"));
-    const activeTab = document.getElementById("tab-" + tab);
-    if (activeTab) activeTab.classList.remove("hidden");
-  });
-});
-
-// ---------- Identitätsfeststellung ----------
-
-function getIdentitaet(prefix) {
-  const parts = [];
-  if (document.getElementById(prefix + "-id-pers")?.checked)   parts.push("Personalausweis");
-  if (document.getElementById(prefix + "-id-waffe")?.checked)  parts.push("Waffenschein");
-  if (document.getElementById(prefix + "-id-fs")?.checked)     parts.push("Führerschein");
-  if (document.getElementById(prefix + "-id-finger")?.checked) parts.push("Fingerabdruckscanner");
-  if (!parts.length) return "Keine Identitätsfeststellung vermerkt.";
-  return "Die Identität wurde mittels " + parts.join(", ") + " festgestellt.";
-}
-
-// ---------- Bußgeld-Datum ----------
-
-function setDefaultBussgeldDatum() {
-  const d = new Date();
-  d.setDate(d.getDate() + 7); // +7 Tage
-
-  const s = d.toLocaleDateString("de-DE", {
-    day: "2-digit",
-    month: "2-digit",
-    year: "numeric"
-  });
-
-  ["st-bussgeld", "sc-bussgeld", "ko-bussgeld"].forEach(id => {
-    const el = document.getElementById(id);
-    if (el && !el.value) {
-      el.value = s;
-    }
-  });
-}
-
-// ---------- Verzeichnis / Storage ----------
-
-const verzContainerIds = {
-  straf: "verzeichnis-straf",
-  schnell: "verzeichnis-schnell",
-  kollektiv: "verzeichnis-kollektiv",
-  fahndung: "verzeichnis-fahndung"
-};
-
-function getStorageKey(type) {
-  const id = currentDiscordId || "unknown";
-  return "akten_" + id + "_" + type;
-}
-
-function saveAkte(type, title, text) {
-  try {
-    const key = getStorageKey(type);
-    const list = JSON.parse(localStorage.getItem(key) || "[]");
-    const entry = {
-      id: Date.now(),
-      title: title || "Ohne Titel",
-      createdAt: new Date().toLocaleString("de-DE"),
-      text
+      // ---------- TEAM GREEN ----------
+      "877241505016844328": { name: "Salva Sol", dienstnummer: "PA-52", rang: "Anwärter" },
+      "624039199028543499": { name: "Ludovico Greco", dienstnummer: "PA-56", rang: "Anwärter" },
+      "935269358098321418": { name: "Nico Bublich", dienstnummer: "PA-57", rang: "Anwärter" },
+      "1069361772324200478": { name: "Roman Schlag", dienstnummer: "PA-62", rang: "Anwärter" },
+      "161210739174932481": { name: "Eduardo Sanchez", dienstnummer: "PA-66", rang: "Anwärter" },
+      "730909080649990204": { name: "Max Aklubat", dienstnummer: "PA-69", rang: "Anwärter" },
+      "966711299419537468": { name: "Lukas Denzel", dienstnummer: "PA-71", rang: "Anwärter" },
+      "925887471198306374": { name: "Noah Schlotter", dienstnummer: "PA-73", rang: "Anwärter" },
+      "526132485101191203": { name: "Max Brechtelsbauer", dienstnummer: "PA-76", rang: "Anwärter" },
+      "508377615241969674": { name: "Abusa Hanco", dienstnummer: "PA-78", rang: "Anwärter" },
+      "530031383007985665": { name: "Michael Johnson", dienstnummer: "PA-79", rang: "Anwärter" }
     };
-    list.unshift(entry);
-    localStorage.setItem(key, JSON.stringify(list));
-    renderVerzeichnisListe(type);
-  } catch (e) {
-    console.error("Speichern der Akte fehlgeschlagen:", e);
-  }
-}
 
-function renderVerzeichnisListe(type) {
-  const containerId = verzContainerIds[type];
-  const container = document.getElementById(containerId);
-  if (!container) return;
+    function loadOfficerMap() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if (!raw) return JSON.parse(JSON.stringify(defaultOfficerMap));
+        const parsed = JSON.parse(raw);
+        if (!parsed || typeof parsed !== "object") return JSON.parse(JSON.stringify(defaultOfficerMap));
+        return parsed;
+      } catch (e) {
+        return JSON.parse(JSON.stringify(defaultOfficerMap));
+      }
+    }
 
-  const key = getStorageKey(type);
-  const list = JSON.parse(localStorage.getItem(key) || "[]");
+    const officerMap = loadOfficerMap();
 
-  container.innerHTML = "";
+    // ---------- Login-Status Helfer ----------
+    function setLoginStatus(mainText, subText, isGood = false) {
+      const mainEl = document.getElementById("login-main");
+      const subEl = document.getElementById("login-sub");
+      const infoEl = document.getElementById("login-officer-info");
+      if (!mainEl || !subEl) return;
 
-  if (!list.length) {
-    const empty = document.createElement("div");
-    empty.className = "verz-empty";
-    empty.textContent = "Noch keine Akten gespeichert.";
-    container.appendChild(empty);
-    return;
-  }
+      mainEl.textContent = mainText || "";
+      subEl.textContent = subText || "";
+      if (infoEl) infoEl.textContent = "";
 
-  list.forEach(entry => {
-    const div = document.createElement("div");
-    div.className = "verz-item";
+      mainEl.style.color = isGood ? "#a5ffb5" : "#ffffff";
+    }
 
-    const spanTitle = document.createElement("span");
-    spanTitle.className = "verz-item-title";
-    spanTitle.textContent = entry.title;
+    // ---------- Team / Kreis aus Dienstnummer ----------
+    function getTeamCircle(dienstnummer) {
+      if (!dienstnummer) return "⚪";
 
-    const spanDate = document.createElement("span");
-    spanDate.className = "verz-item-date";
-    spanDate.textContent = entry.createdAt;
+      if (dienstnummer.startsWith("PA-")) return "🟢";
+      if (!dienstnummer.startsWith("PD-")) return "⚪";
 
-    div.appendChild(spanTitle);
-    div.appendChild(spanDate);
+      const num = parseInt(dienstnummer.split("-")[1], 10);
+      if (Number.isNaN(num)) return "⚪";
 
-    div.addEventListener("click", () => {
-      const out = document.getElementById("output");
-      if (out) out.value = entry.text;
+      if (num >= 1 && num <= 5) return "🔴";
+      if (num >= 7 && num <= 19) return "🔵";
+      if (num >= 20 && num <= 39) return "🟡";
+      return "⚪";
+    }
+
+    // ---------- Discord OAuth ----------
+    function getDiscordAccessToken() {
+      const hash = window.location.hash.substring(1);
+      if (!hash) return null;
+
+      const params = new URLSearchParams(hash);
+      const token = params.get("access_token");
+
+      if (token) {
+        history.replaceState(null, "", window.location.pathname + window.location.search);
+      }
+      return token;
+    }
+
+    function fillOfficerFromDiscord(discordId, userObj) {
+      currentDiscordId = discordId || null;
+
+      const o = officerMap[discordId];
+      const mainEl = document.getElementById("login-main");
+      const subEl = document.getElementById("login-sub");
+      const infoEl = document.getElementById("login-officer-info");
+
+      if (!o) {
+        const uname = userObj
+          ? userObj.username + (userObj.discriminator ? "#" + userObj.discriminator : "")
+          : "Unbekannt";
+        setLoginStatus("Eingeloggt (unbekannter Officer)", uname, false);
+        if (infoEl) infoEl.textContent = "";
+        initVerzeichnis();
+        return;
+      }
+
+      const full = `${o.name} | ${o.dienstnummer} | ${o.rang}`;
+      const [vorname, nachname] = o.name.split(" ");
+      const kuerzel = `${vorname.charAt(0)}. ${nachname}`;
+      const unterschrift = `${kuerzel}\n${o.name} | ${o.dienstnummer} | ${o.rang}`;
+
+      ["st-officer","sc-officer","ko-officer","fa-officer"].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.value = full;
+      });
+
+      ["st-gezeichnet","sc-gezeichnet","ko-gezeichnet","fa-gezeichnet"].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.value = unterschrift;
+      });
+
+      const circle = getTeamCircle(o.dienstnummer);
+
+      if (mainEl && subEl) {
+        mainEl.textContent = "Eingeloggt als:";
+        mainEl.style.color = "#a5ffb5";
+        subEl.textContent = `Team ${circle} [${o.dienstnummer}] ${o.name}`;
+      }
+
+      if (infoEl) infoEl.textContent = o.rang;
+
+      initVerzeichnis();
+    }
+
+    async function initDiscordUser() {
+      const token = getDiscordAccessToken();
+      if (!token) {
+        setLoginStatus("Nicht mit Discord verbunden", "Bitte über das Portal einloggen.");
+        initVerzeichnis();
+        return;
+      }
+
+      try {
+        setLoginStatus("Verbinde mit Discord …", "Bitte einen Moment warten.");
+
+        const res = await fetch("https://discord.com/api/users/@me", {
+          headers: { Authorization: `Bearer ${token}` }
+        });
+
+        if (!res.ok) {
+          console.error("Discord API Fehler", res.status);
+          setLoginStatus("Discord-Fehler", "Benutzerdaten konnten nicht geladen werden.");
+          initVerzeichnis();
+          return;
+        }
+
+        const user = await res.json();
+        fillOfficerFromDiscord(user.id, user);
+      } catch (err) {
+        console.error("Discord Request fehlgeschlagen:", err);
+        setLoginStatus("Verbindungsfehler", "Discord konnte nicht erreicht werden.");
+        initVerzeichnis();
+      }
+    }
+
+    // ---------- Tabs + Hinweis nur bei Kollektivakte ----------
+    document.querySelectorAll(".tab-btn").forEach(btn => {
+      btn.addEventListener("click", () => {
+        document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
+        btn.classList.add("active");
+
+        const tab = btn.dataset.tab;
+
+        document.querySelectorAll("#tab-strafakte, #tab-schnellakte, #tab-kollektivakte, #tab-fahndung, #tab-verzeichnis")
+          .forEach(el => el.classList.add("hidden"));
+
+        const activeTab = document.getElementById("tab-" + tab);
+        if (activeTab) activeTab.classList.remove("hidden");
+
+        const hint = document.getElementById("kollektiv-hinweis");
+        if (hint) hint.style.display = (tab === "kollektivakte") ? "block" : "none";
+      });
     });
 
-    container.appendChild(div);
-  });
-}
-
-function initVerzeichnis() {
-  ["straf","schnell","kollektiv","fahndung"].forEach(renderVerzeichnisListe);
-}
-
-// ---------- Generatoren ----------
-
-function genStrafakte() {
-  const officer = document.getElementById("st-officer").value.trim();
-  const tatort = document.getElementById("st-tatort").value.trim();
-  const besch = document.getElementById("st-beschuldigte").value.trim();
-  const ges = document.getElementById("st-geschaedigte").value.trim();
-  const sach = document.getElementById("st-sachverhalt").value.trim();
-  const idTxt = getIdentitaet("st");
-  const zeugen = document.getElementById("st-zeugen").value.trim();
-  const geg = document.getElementById("st-gegenstaende").value.trim();
-  const abn = document.getElementById("st-abgenommen-von").value.trim();
-  const verlesen = document.getElementById("st-verlesen").value.trim();
-  const beisein = document.getElementById("st-beisein").value.trim();
-  const rb = document.getElementById("st-rechtsbeistand").value;
-  const med = document.getElementById("st-medizin").value;
-  const eil = document.getElementById("st-eilverfahren").value.trim();
-  const buss = document.getElementById("st-bussgeld").value.trim();
-  const gezeichnet = document.getElementById("st-gezeichnet").value.trim();
-
-  let out = "";
-
-  out += "| - Strafakte - |\n\n";
-  out += "Narco City Police Department\n";
-  out += officer + "\n\n";
-
-  out += "| Tatort und Zeitraum: |\n";
-  out += tatort + "\n\n";
-
-  out += "| Beschuldigte Person(en): |\n";
-  out += besch + "\n\n";
-
-  out += "| Geschädigte Person(en): |\n";
-  out += ges + "\n\n";
-
-  out += "| Sachverhalt aus Sicht des NCPDs: |\n";
-  out += sach + "\n\n";
-  out += idTxt + "\n\n";
-
-  out += "| Weitere beteiligte Einheiten/Zeugen: |\n";
-  out += zeugen + "\n\n";
-
-  out += "| Abgenommene Gegenstände: |  Abgenommen von: " + abn + "\n";
-  out += geg + "\n\n";
-
-  out += "| Bemerkungen: |\n";
-  out += "Die Rechte wurden dem Beschuldigten durch " + verlesen + " im Beisein von " + beisein + " verlesen und verstanden.\n";
-
-  if (rb === "bestand") out += "Dieser bestand auf einen Rechtsbeistand.\n";
-  if (rb === "verzichtete") out += "Dieser verzichtete auf einen Rechtsbeistand.\n";
-
-  if (med === "bestand") out += "Der TV bestand auf medizinische Versorgung.\n";
-  if (med === "verzichtete") out += "Der TV verzichtete auf medizinische Versorgung.\n";
-
-  out += "Das Bußgeld ist bis zum " + buss + " zu bezahlen.\n";
-  out += "Die dem Tatverdächtigen abgenommenen Gegenstände wurden in seinen persönlichen Spind gelegt.\n";
-
-  if (eil !== "") out += "Das Eilverfahren wurde durch " + eil + " abgelehnt.\n";
-
-  out += "\n| Gezeichnet von: |\n";
-  out += gezeichnet + "\n\n";
-
-  document.getElementById("output").value = out;
-
-  const titel = tatort || (besch.split("\n")[0] || "Strafakte ohne Titel");
-  saveAkte("straf", titel, out);
-}
-
-function genSchnellakte() {
-  const officer = document.getElementById("sc-officer").value.trim();
-  const tatort = document.getElementById("sc-tatort").value.trim();
-  const besch = document.getElementById("sc-beschuldigte").value.trim();
-  const ges = document.getElementById("sc-geschaedigte").value.trim();
-  const idTxt = getIdentitaet("sc");
-  const zeugen = document.getElementById("sc-zeugen").value.trim();
-  const geg = document.getElementById("sc-gegenstaende").value.trim();
-  const abn = document.getElementById("sc-abgenommen-von").value.trim();
-  const verlesen = document.getElementById("sc-verlesen").value.trim();
-  const beisein = document.getElementById("sc-beisein").value.trim();
-  const rb = document.getElementById("sc-rechtsbeistand").value;
-  const med = document.getElementById("sc-medizin").value;
-  const buss = document.getElementById("sc-bussgeld").value.trim();
-  const gezeichnet = document.getElementById("sc-gezeichnet").value.trim();
-
-  let out = "";
-
-  out += "| - Schnellakte - |\n\n";
-  out += "Narco City Police Department\n";
-  out += officer + "\n\n";
-
-  out += "| Tatort und Zeitraum: |\n";
-  out += tatort + "\n\n";
-
-  out += "| Beschuldigte Person(en): |\n";
-  out += besch + "\n\n";
-
-  out += "| Geschädigte Person(en): |\n";
-  out += ges + "\n\n";
-
-  out += "| Identitätsfeststellung: |\n";
-  out += idTxt + "\n\n";
-
-  out += "| Weitere beteiligte Einheiten/Zeugen: |\n";
-  out += zeugen + "\n\n";
-
-  out += "| Abgenommene Gegenstände: |  Abgenommen von: " + abn + "\n";
-  out += geg + "\n\n";
-
-  out += "| Bemerkungen: |\n";
-  out += "Die Rechte wurden dem Beschuldigten durch " + verlesen + " im Beisein von " + beisein + " verlesen und verstanden.\n";
-
-  if (rb === "bestand") out += "Dieser bestand auf einen Rechtsbeistand.\n";
-  if (rb === "verzichtete") out += "Dieser verzichtete auf einen Rechtsbeistand.\n";
-
-  if (med === "bestand") out += "Der TV bestand auf medizinische Versorgung.\n";
-  if (med === "verzichtete") out += "Der TV verzichtete auf medizinische Versorgung.\n";
-
-  out += "Das Bußgeld ist bis zum " + buss + " zu bezahlen.\n";
-  out += "Die dem Tatverdächtigen abgenommenen Gegenstände wurden in seinen persönlichen Spind gelegt.\n\n";
-
-  out += "| Gezeichnet von: |\n";
-  out += gezeichnet + "\n\n";
-
-  document.getElementById("output").value = out;
-
-  const titel = tatort || (besch.split("\n")[0] || "Schnellakte ohne Titel");
-  saveAkte("schnell", titel, out);
-}
-
-function genKollektivakte() {
-  const officer = document.getElementById("ko-officer").value.trim();
-  const tatort = document.getElementById("ko-tatort").value.trim();
-  const besch = document.getElementById("ko-beschuldigte").value.trim();
-  const ges = document.getElementById("ko-geschaedigte").value.trim();
-  const sach = document.getElementById("ko-sachverhalt").value.trim();
-  const idTxt = getIdentitaet("ko");
-  const zeugen = document.getElementById("ko-zeugen").value.trim();
-  const verlesen = document.getElementById("ko-verlesen").value.trim();
-  const beisein = document.getElementById("ko-beisein").value.trim();
-  const rb = document.getElementById("ko-rechtsbeistand").value;
-  const med = document.getElementById("ko-medizin").value;
-  const buss = document.getElementById("ko-bussgeld").value.trim();
-  const bestaetigtVon = document.getElementById("ko-bestaetigt-von").value.trim();
-  const bestaetigtZeit = document.getElementById("ko-bestaetigt-zeit").value.trim();
-  const gezeichnet = document.getElementById("ko-gezeichnet").value.trim();
-
-  let out = "";
-
-  out += "| - Kollektivakte - |\n";
-  out += "Narco City Police Department\n";
-  out += officer + "\n\n";
-  out += "Kollektivakte wurde von " + bestaetigtVon + " um " + bestaetigtZeit + " genehmigt\n\n";
-
-  out += "| Tatort und Zeitraum: |\n";
-  out += tatort + "\n\n";
-
-  out += "| Beschuldigte Personen: |\n";
-  out += besch + "\n\n";
-
-  out += "| Geschädigte Person(en): |\n";
-  out += ges + "\n\n";
-
-  out += idTxt + "\n\n";
-
-  out += "| Sachverhalt aus Sicht des NCPDs: |\n";
-  out += sach + "\n\n";
-
-  out += "| Weitere beteiligte Einheiten/Zeugen: |\n";
-  out += zeugen + "\n\n";
-
-  out += "| Bemerkungen: |\n";
-  out += "Die Rechte wurden dem Beschuldigten durch " + verlesen + " im Beisein von " + beisein + " verlesen und verstanden.\n";
-
-  if (rb === "bestand") out += "Diese bestand auf einen Rechtsbeistand.\n";
-  if (rb === "verzichtete") out += "Diese verzichtete auf einen Rechtsbeistand.\n";
-
-  if (med === "bestand") out += "Die TV´s bestanden auf medizinische Versorgung.\n";
-  if (med === "verzichtete") out += "Die TV´s verzichteten auf medizinische Versorgung.\n";
-
-  out += "Das Bußgeld ist bis zum " + buss + " zu bezahlen.\n\n";
-
-  out += "| Gezeichnet von: |\n";
-  out += gezeichnet + "\n\n";
-
-  document.getElementById("output").value = out;
-
-  const titel = tatort || "Kollektivakte ohne Titel";
-  saveAkte("kollektiv", titel, out);
-}
-
-function genFahndung() {
-  const officer    = document.getElementById("fa-officer").value.trim();
-  const datum      = document.getElementById("fa-datum").value.trim();
-  const tatort     = document.getElementById("fa-tatort").value.trim();
-  const person     = document.getElementById("fa-person").value.trim();
-  const paragrafen = document.getElementById("fa-paragrafen").value.trim();
-  const sach       = document.getElementById("fa-sachverhalt").value.trim();
-  const hinweise   = document.getElementById("fa-hinweise").value.trim();
-  const einheiten  = document.getElementById("fa-einheiten").value.trim();
-  const gezeichnet = document.getElementById("fa-gezeichnet").value.trim();
-
-  let out = "";
-
-  out += "| - Fahndungsakte - |\n";
-  out += "Narco City Police Department\n";
-  out += officer + "\n\n";
-
-  out += "| Tatort und Zeitraum: |\n";
-  out += tatort + "\n";
-  out += "Am " + datum + "\n\n";
-
-  out += "| Beschuldigte Person(en): |\n";
-  out += person + "\n\n";
-
-  out += "| Geschädigte Person(en): |\n";
-  out += "—-----------------------\n\n";
-
-  out += "| Sachverhalt aus Sicht des NCPDs: |\n";
-  if (paragrafen) {
-    out += paragrafen + "\n\n";
-  }
-
-  out += "|Sachverhalt:|\n";
-  out += sach + "\n\n";
-
-  out += "| Weitere beteiligte Einheiten/Zeugen: |\n";
-  out += einheiten + "\n\n";
-
-  out += "| Besondere Hinweise: |\n";
-  out += hinweise + "\n\n";
-
-  out += "| Bemerkungen: |\n";
-  out += "Die o.g. Beschuldigte ist flüchtig. Beim Antreffen der Beschuldigten ist diese festzunehmen, ihre Rechte zu belehren und der gerechten Strafe zuzuführen.\n\n";
-
-  out += "| Gezeichnet von: |\n";
-  out += gezeichnet + "\n\n";
-
-  document.getElementById("output").value = out;
-
-  const titel = person.split("\n")[0] || "Fahndungsakte ohne Titel";
-  saveAkte("fahndung", titel, out);
-}
-
-// ---------- Reset ----------
-
-function resetForm() {
-  const keepIds = new Set([
-    "st-officer","sc-officer","ko-officer","fa-officer",
-    "st-gezeichnet","sc-gezeichnet","ko-gezeichnet","fa-gezeichnet",
-    "st-bussgeld","sc-bussgeld","ko-bussgeld"
-  ]);
-
-  document.querySelectorAll("input, textarea, select").forEach(el => {
-    if (!el.id) return;
-    if (keepIds.has(el.id)) return;
-
-    if (el.type === "checkbox") {
-      el.checked = false;
-    } else if (el.tagName === "SELECT") {
-      el.value = "";
-    } else {
-      el.value = "";
+    // ---------- Identitätsfeststellung ----------
+    function getIdentitaet(prefix) {
+      const parts = [];
+      if (document.getElementById(prefix + "-id-pers")?.checked) parts.push("Personalausweis");
+      if (document.getElementById(prefix + "-id-waffe")?.checked) parts.push("Waffenschein");
+      if (document.getElementById(prefix + "-id-fs")?.checked) parts.push("Führerschein");
+      if (document.getElementById(prefix + "-id-finger")?.checked) parts.push("Fingerabdruckscanner");
+      if (!parts.length) return "Keine Identitätsfeststellung vermerkt.";
+      return "Die Identität wurde mittels " + parts.join(", ") + " festgestellt.";
     }
-  });
 
-  const out = document.getElementById("output");
-  if (out) out.value = "";
-}
+    // ---------- Bußgeld-Datum ----------
+    function setDefaultBussgeldDatum() {
+      const d = new Date();
+      d.setDate(d.getDate() + 7);
 
-// ---------- Buttons ----------
+      const s = d.toLocaleDateString("de-DE", { day: "2-digit", month: "2-digit", year: "numeric" });
 
-document.getElementById("btn-strafakte").addEventListener("click", genStrafakte);
-document.getElementById("btn-schnellakte").addEventListener("click", genSchnellakte);
-document.getElementById("btn-kollektivakte").addEventListener("click", genKollektivakte);
-document.getElementById("btn-fahndung").addEventListener("click", genFahndung);
+      ["st-bussgeld", "sc-bussgeld", "ko-bussgeld"].forEach(id => {
+        const el = document.getElementById(id);
+        if (el && !el.value) el.value = s;
+      });
+    }
 
-document.getElementById("btn-copy").addEventListener("click", () => {
-  const out = document.getElementById("output");
-  out.select();
-  out.setSelectionRange(0, 99999);
-  try { document.execCommand("copy"); } catch (e) {}
-});
+    // ---------- Verzeichnis / Storage ----------
+    const verzContainerIds = {
+      straf: "verzeichnis-straf",
+      schnell: "verzeichnis-schnell",
+      kollektiv: "verzeichnis-kollektiv",
+      fahndung: "verzeichnis-fahndung"
+    };
 
-document.getElementById("btn-reset").addEventListener("click", resetForm);
+    function getStorageKey(type) {
+      const id = currentDiscordId || "unknown";
+      return "akten_" + id + "_" + type;
+    }
 
-// ---------- Init ----------
+    function saveAkte(type, title, text) {
+      try {
+        const key = getStorageKey(type);
+        const list = JSON.parse(localStorage.getItem(key) || "[]");
+        const entry = {
+          id: Date.now(),
+          title: title || "Ohne Titel",
+          createdAt: new Date().toLocaleString("de-DE"),
+          text
+        };
+        list.unshift(entry);
+        localStorage.setItem(key, JSON.stringify(list));
+        renderVerzeichnisListe(type);
+      } catch (e) {
+        console.error("Speichern der Akte fehlgeschlagen:", e);
+      }
+    }
 
-initDiscordUser();
-setDefaultBussgeldDatum();
+    function renderVerzeichnisListe(type) {
+      const containerId = verzContainerIds[type];
+      const container = document.getElementById(containerId);
+      if (!container) return;
+
+      const key = getStorageKey(type);
+      const list = JSON.parse(localStorage.getItem(key) || "[]");
+
+      container.innerHTML = "";
+
+      if (!list.length) {
+        const empty = document.createElement("div");
+        empty.className = "verz-empty";
+        empty.textContent = "Noch keine Akten gespeichert.";
+        container.appendChild(empty);
+        return;
+      }
+
+      list.forEach(entry => {
+        const div = document.createElement("div");
+        div.className = "verz-item";
+
+        const spanTitle = document.createElement("span");
+        spanTitle.className = "verz-item-title";
+        spanTitle.textContent = entry.title;
+
+        const spanDate = document.createElement("span");
+        spanDate.className = "verz-item-date";
+        spanDate.textContent = entry.createdAt;
+
+        div.appendChild(spanTitle);
+        div.appendChild(spanDate);
+
+        div.addEventListener("click", () => {
+          const out = document.getElementById("output");
+          if (out) out.value = entry.text;
+        });
+
+        container.appendChild(div);
+      });
+    }
+
+    function initVerzeichnis() {
+      ["straf","schnell","kollektiv","fahndung"].forEach(renderVerzeichnisListe);
+    }
+
+    // ---------- Generatoren ----------
+    function genStrafakte() {
+      const officer = document.getElementById("st-officer").value.trim();
+      const tatort = document.getElementById("st-tatort").value.trim();
+      const besch = document.getElementById("st-beschuldigte").value.trim();
+      const ges = document.getElementById("st-geschaedigte").value.trim();
+      const sach = document.getElementById("st-sachverhalt").value.trim();
+      const idTxt = getIdentitaet("st");
+      const zeugen = document.getElementById("st-zeugen").value.trim();
+      const geg = document.getElementById("st-gegenstaende").value.trim();
+      const abn = document.getElementById("st-abgenommen-von").value.trim();
+      const verlesen = document.getElementById("st-verlesen").value.trim();
+      const beisein = document.getElementById("st-beisein").value.trim();
+      const rb = document.getElementById("st-rechtsbeistand").value;
+      const med = document.getElementById("st-medizin").value;
+      const eil = document.getElementById("st-eilverfahren").value.trim();
+      const buss = document.getElementById("st-bussgeld").value.trim();
+      const gezeichnet = document.getElementById("st-gezeichnet").value.trim();
+
+      let out = "";
+      out += "| - Strafakte - |\n\n";
+      out += "Narco City Police Department\n";
+      out += officer + "\n\n";
+
+      out += "| Tatort und Zeitraum: |\n";
+      out += tatort + "\n\n";
+
+      out += "| Beschuldigte Person(en): |\n";
+      out += besch + "\n\n";
+
+      out += "| Geschädigte Person(en): |\n";
+      out += ges + "\n\n";
+
+      out += "| Sachverhalt aus Sicht des NCPDs: |\n";
+      out += sach + "\n\n";
+      out += idTxt + "\n\n";
+
+      out += "| Weitere beteiligte Einheiten/Zeugen: |\n";
+      out += zeugen + "\n\n";
+
+      out += "| Abgenommene Gegenstände: |  Abgenommen von: " + abn + "\n";
+      out += geg + "\n\n";
+
+      out += "| Bemerkungen: |\n";
+      out += "Die Rechte wurden dem Beschuldigten durch " + verlesen + " im Beisein von " + beisein + " verlesen und verstanden.\n";
+
+      if (rb === "bestand") out += "Dieser bestand auf einen Rechtsbeistand.\n";
+      if (rb === "verzichtete") out += "Dieser verzichtete auf einen Rechtsbeistand.\n";
+
+      if (med === "bestand") out += "Der TV bestand auf medizinische Versorgung.\n";
+      if (med === "verzichtete") out += "Der TV verzichtete auf medizinische Versorgung.\n";
+
+      out += "Das Bußgeld ist bis zum " + buss + " zu bezahlen.\n";
+      out += "Die dem Tatverdächtigen abgenommenen Gegenstände wurden in seinen persönlichen Spind gelegt.\n";
+
+      if (eil !== "") out += "Das Eilverfahren wurde durch " + eil + " abgelehnt.\n";
+
+      out += "\n| Gezeichnet von: |\n";
+      out += gezeichnet + "\n\n";
+
+      document.getElementById("output").value = out;
+
+      const titel = tatort || (besch.split("\n")[0] || "Strafakte ohne Titel");
+      saveAkte("straf", titel, out);
+    }
+
+    function genSchnellakte() {
+      const officer = document.getElementById("sc-officer").value.trim();
+      const tatort = document.getElementById("sc-tatort").value.trim();
+      const besch = document.getElementById("sc-beschuldigte").value.trim();
+      const ges = document.getElementById("sc-geschaedigte").value.trim();
+      const idTxt = getIdentitaet("sc");
+      const zeugen = document.getElementById("sc-zeugen").value.trim();
+      const geg = document.getElementById("sc-gegenstaende").value.trim();
+      const abn = document.getElementById("sc-abgenommen-von").value.trim();
+      const verlesen = document.getElementById("sc-verlesen").value.trim();
+      const beisein = document.getElementById("sc-beisein").value.trim();
+      const rb = document.getElementById("sc-rechtsbeistand").value;
+      const med = document.getElementById("sc-medizin").value;
+      const buss = document.getElementById("sc-bussgeld").value.trim();
+      const gezeichnet = document.getElementById("sc-gezeichnet").value.trim();
+
+      let out = "";
+      out += "| - Schnellakte - |\n\n";
+      out += "Narco City Police Department\n";
+      out += officer + "\n\n";
+
+      out += "| Tatort und Zeitraum: |\n";
+      out += tatort + "\n\n";
+
+      out += "| Beschuldigte Person(en): |\n";
+      out += besch + "\n\n";
+
+      out += "| Geschädigte Person(en): |\n";
+      out += ges + "\n\n";
+
+      out += "| Identitätsfeststellung: |\n";
+      out += idTxt + "\n\n";
+
+      out += "| Weitere beteiligte Einheiten/Zeugen: |\n";
+      out += zeugen + "\n\n";
+
+      out += "| Abgenommene Gegenstände: |  Abgenommen von: " + abn + "\n";
+      out += geg + "\n\n";
+
+      out += "| Bemerkungen: |\n";
+      out += "Die Rechte wurden dem Beschuldigten durch " + verlesen + " im Beisein von " + beisein + " verlesen und verstanden.\n";
+
+      if (rb === "bestand") out += "Dieser bestand auf einen Rechtsbeistand.\n";
+      if (rb === "verzichtete") out += "Dieser verzichtete auf einen Rechtsbeistand.\n";
+
+      if (med === "bestand") out += "Der TV bestand auf medizinische Versorgung.\n";
+      if (med === "verzichtete") out += "Der TV verzichtete auf medizinische Versorgung.\n";
+
+      out += "Das Bußgeld ist bis zum " + buss + " zu bezahlen.\n";
+      out += "Die dem Tatverdächtigen abgenommenen Gegenstände wurden in seinen persönlichen Spind gelegt.\n\n";
+
+      out += "| Gezeichnet von: |\n";
+      out += gezeichnet + "\n\n";
+
+      document.getElementById("output").value = out;
+
+      const titel = tatort || (besch.split("\n")[0] || "Schnellakte ohne Titel");
+      saveAkte("schnell", titel, out);
+    }
+
+    // KOLLEKTIVAKTE: ohne Abgenommene Gegenstände / Abgenommen von
+    function genKollektivakte() {
+      const officer = document.getElementById("ko-officer").value.trim();
+      const tatort = document.getElementById("ko-tatort").value.trim();
+      const besch = document.getElementById("ko-beschuldigte").value.trim();
+      const ges = document.getElementById("ko-geschaedigte").value.trim();
+      const sach = document.getElementById("ko-sachverhalt").value.trim();
+      const idTxt = getIdentitaet("ko");
+      const zeugen = document.getElementById("ko-zeugen").value.trim();
+      const verlesen = document.getElementById("ko-verlesen").value.trim();
+      const beisein = document.getElementById("ko-beisein").value.trim();
+      const rb = document.getElementById("ko-rechtsbeistand").value;
+      const med = document.getElementById("ko-medizin").value;
+      const buss = document.getElementById("ko-bussgeld").value.trim();
+      const bestaetigtVon = document.getElementById("ko-bestaetigt-von").value.trim();
+      const bestaetigtZeit = document.getElementById("ko-bestaetigt-zeit").value.trim();
+      const gezeichnet = document.getElementById("ko-gezeichnet").value.trim();
+
+      let out = "";
+      out += "| - Kollektivakte - |\n";
+      out += "Narco City Police Department\n";
+      out += officer + "\n\n";
+      out += "Kollektivakte wurde von " + bestaetigtVon + " um " + bestaetigtZeit + " genehmigt\n\n";
+
+      out += "| Tatort und Zeitraum: |\n";
+      out += tatort + "\n\n";
+
+      out += "| Beschuldigte Personen: |\n";
+      out += besch + "\n\n";
+
+      out += "| Geschädigte Person(en): |\n";
+      out += ges + "\n\n";
+
+      out += idTxt + "\n\n";
+
+      out += "| Sachverhalt aus Sicht des NCPDs: |\n";
+      out += sach + "\n\n";
+
+      out += "| Weitere beteiligte Einheiten/Zeugen: |\n";
+      out += zeugen + "\n\n";
+
+      out += "| Bemerkungen: |\n";
+      out += "Die Rechte wurden dem Beschuldigten durch " + verlesen + " im Beisein von " + beisein + " verlesen und verstanden.\n";
+
+      if (rb === "bestand") out += "Diese bestand auf einen Rechtsbeistand.\n";
+      if (rb === "verzichtete") out += "Diese verzichtete auf einen Rechtsbeistand.\n";
+
+      if (med === "bestand") out += "Die TV´s bestanden auf medizinische Versorgung.\n";
+      if (med === "verzichtete") out += "Die TV´s verzichteten auf medizinische Versorgung.\n";
+
+      out += "Das Bußgeld ist bis zum " + buss + " zu bezahlen.\n\n";
+
+      out += "| Gezeichnet von: |\n";
+      out += gezeichnet + "\n\n";
+
+      document.getElementById("output").value = out;
+
+      const titel = tatort || "Kollektivakte ohne Titel";
+      saveAkte("kollektiv", titel, out);
+    }
+
+    function genFahndung() {
+      const officer    = document.getElementById("fa-officer").value.trim();
+      const datum      = document.getElementById("fa-datum").value.trim();
+      const tatort     = document.getElementById("fa-tatort").value.trim();
+      const person     = document.getElementById("fa-person").value.trim();
+      const paragrafen = document.getElementById("fa-paragrafen").value.trim();
+      const sach       = document.getElementById("fa-sachverhalt").value.trim();
+      const hinweise   = document.getElementById("fa-hinweise").value.trim();
+      const einheiten  = document.getElementById("fa-einheiten").value.trim();
+      const gezeichnet = document.getElementById("fa-gezeichnet").value.trim();
+
+      let out = "";
+      out += "| - Fahndungsakte - |\n";
+      out += "Narco City Police Department\n";
+      out += officer + "\n\n";
+
+      out += "| Tatort und Zeitraum: |\n";
+      out += tatort + "\n";
+      out += "Am " + datum + "\n\n";
+
+      out += "| Beschuldigte Person(en): |\n";
+      out += person + "\n\n";
+
+      out += "| Geschädigte Person(en): |\n";
+      out += "—-----------------------\n\n";
+
+      out += "| Sachverhalt aus Sicht des NCPDs: |\n";
+      if (paragrafen) out += paragrafen + "\n\n";
+
+      out += "|Sachverhalt:|\n";
+      out += sach + "\n\n";
+
+      out += "| Weitere beteiligte Einheiten/Zeugen: |\n";
+      out += einheiten + "\n\n";
+
+      out += "| Besondere Hinweise: |\n";
+      out += hinweise + "\n\n";
+
+      out += "| Bemerkungen: |\n";
+      out += "Die o.g. Beschuldigte ist flüchtig. Beim Antreffen der Beschuldigten ist diese festzunehmen, ihre Rechte zu belehren und der gerechten Strafe zuzuführen.\n\n";
+
+      out += "| Gezeichnet von: |\n";
+      out += gezeichnet + "\n\n";
+
+      document.getElementById("output").value = out;
+
+      const titel = person.split("\n")[0] || "Fahndungsakte ohne Titel";
+      saveAkte("fahndung", titel, out);
+    }
+
+    // ---------- Reset ----------
+    function resetForm() {
+      const keepIds = new Set([
+        "st-officer","sc-officer","ko-officer","fa-officer",
+        "st-gezeichnet","sc-gezeichnet","ko-gezeichnet","fa-gezeichnet",
+        "st-bussgeld","sc-bussgeld","ko-bussgeld"
+      ]);
+
+      document.querySelectorAll("input, textarea, select").forEach(el => {
+        if (!el.id) return;
+        if (keepIds.has(el.id)) return;
+
+        if (el.type === "checkbox") el.checked = false;
+        else if (el.tagName === "SELECT") el.value = "";
+        else el.value = "";
+      });
+
+      const out = document.getElementById("output");
+      if (out) out.value = "";
+    }
+
+    // ---------- Buttons ----------
+    document.getElementById("btn-strafakte").addEventListener("click", genStrafakte);
+    document.getElementById("btn-schnellakte").addEventListener("click", genSchnellakte);
+    document.getElementById("btn-kollektivakte").addEventListener("click", genKollektivakte);
+    document.getElementById("btn-fahndung").addEventListener("click", genFahndung);
+
+    document.getElementById("btn-copy").addEventListener("click", () => {
+      const out = document.getElementById("output");
+      out.select();
+      out.setSelectionRange(0, 99999);
+      try { document.execCommand("copy"); } catch (e) {}
+    });
+
+    document.getElementById("btn-reset").addEventListener("click", resetForm);
+
+    // ---------- Init ----------
+    initDiscordUser();
+    setDefaultBussgeldDatum();
+
+    // Hinweis beim Start korrekt setzen (Default Tab: strafakte => versteckt)
+    const hintInit = document.getElementById("kollektiv-hinweis");
+    if (hintInit) hintInit.style.display = "none";
   </script>
 </body>
 </html>
+
