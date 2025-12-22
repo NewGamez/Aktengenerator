@@ -596,43 +596,60 @@
         </div>
       </div>
 
-      <!-- FAHNDUNGSAKTE -->
+      <!-- FAHNDUNGSAKTE (IN BEARBEITUNG / DEAKTIVIERT) -->
       <div id="tab-fahndung" class="hidden">
-        <div class="row">
-          <div>
-            <label for="fa-officer">Officer</label>
-            <input id="fa-officer" type="text" />
-          </div>
-          <div>
-            <label for="fa-datum">Datum / Uhrzeit</label>
-            <input id="fa-datum" type="text" placeholder="z. B. 05.12.2025 14:30 Uhr" />
-          </div>
+
+        <div style="
+          margin-bottom: 12px;
+          padding: 10px 12px;
+          border-radius: 12px;
+          border: 1px solid rgba(255,255,255,0.10);
+          background: rgba(255,255,255,0.04);
+          color: rgba(255,255,255,0.85);
+          font-size: 0.82rem;
+          line-height: 1.35;
+        ">
+          <strong style="color:#ffd3d5;">Hinweis:</strong>
+          Die Fahndungsakte ist aktuell <strong>in Bearbeitung</strong>. Bitte hier noch nichts ausfüllen – diese Funktion ist derzeit deaktiviert.
         </div>
 
-        <label for="fa-tatort">Tatort und Zeitraum</label>
-        <input id="fa-tatort" type="text" placeholder="z. B. Route 68 Kleidungsladen, Zwischen 5004 und 5000 | 06.12.2025 16:00–16:15 Uhr" />
+        <div style="opacity:0.45; pointer-events:none;">
+          <div class="row">
+            <div>
+              <label for="fa-officer">Officer</label>
+              <input id="fa-officer" type="text" />
+            </div>
+            <div>
+              <label for="fa-datum">Datum / Uhrzeit</label>
+              <input id="fa-datum" type="text" placeholder="z. B. 05.12.2025 14:30 Uhr" />
+            </div>
+          </div>
 
-        <label for="fa-person">Gesuchte Person</label>
-        <textarea id="fa-person" placeholder="Name, Geburtsdatum, Beschreibung"></textarea>
+          <label for="fa-tatort">Tatort und Zeitraum</label>
+          <input id="fa-tatort" type="text" placeholder="z. B. Route 68 Kleidungsladen, Zwischen 5004 und 5000 | 06.12.2025 16:00–16:15 Uhr" />
 
-        <label for="fa-paragrafen">Straftatbestände / Paragraphen</label>
-        <textarea id="fa-paragrafen" placeholder="§1 Abs. 01 BtMG&#10;§4 Abs. 03 StGB"></textarea>
+          <label for="fa-person">Gesuchte Person</label>
+          <textarea id="fa-person" placeholder="Name, Geburtsdatum, Beschreibung"></textarea>
 
-        <label for="fa-sachverhalt">Sachverhalt</label>
-        <textarea id="fa-sachverhalt" placeholder="Freitextlicher Sachverhalt, Ermittlungsstand ..."></textarea>
+          <label for="fa-paragrafen">Straftatbestände / Paragraphen</label>
+          <textarea id="fa-paragrafen" placeholder="§1 Abs. 01 BtMG&#10;§4 Abs. 03 StGB"></textarea>
 
-        <label for="fa-hinweise">Besondere Hinweise</label>
-        <textarea id="fa-hinweise" placeholder="Bewaffnung, Gefährlichkeit, letzte Sichtung"></textarea>
+          <label for="fa-sachverhalt">Sachverhalt</label>
+          <textarea id="fa-sachverhalt" placeholder="Freitextlicher Sachverhalt, Ermittlungsstand ..."></textarea>
 
-        <label for="fa-einheiten">Beteiligte Einheiten</label>
-        <textarea id="fa-einheiten" placeholder="PD-XX, FIB-XX, USM-XX …"></textarea>
+          <label for="fa-hinweise">Besondere Hinweise</label>
+          <textarea id="fa-hinweise" placeholder="Bewaffnung, Gefährlichkeit, letzte Sichtung"></textarea>
 
-        <div>
-          <label for="fa-gezeichnet">Gezeichnet von</label>
-          <textarea id="fa-gezeichnet" rows="2"></textarea>
+          <label for="fa-einheiten">Beteiligte Einheiten</label>
+          <textarea id="fa-einheiten" placeholder="PD-XX, FIB-XX, USM-XX …"></textarea>
+
+          <div>
+            <label for="fa-gezeichnet">Gezeichnet von</label>
+            <textarea id="fa-gezeichnet" rows="2"></textarea>
+          </div>
+
+          <button class="btn" id="btn-fahndung">Fahndungsakte generieren</button>
         </div>
-
-        <button class="btn" id="btn-fahndung">Fahndungsakte generieren</button>
       </div>
 
       <!-- AKTENVERZEICHNIS -->
@@ -676,7 +693,6 @@
         <button class="btn-secondary btn" id="btn-reset">Zurücksetzen</button>
       </div>
 
-      <!-- NUR bei Kollektivakte sichtbar -->
       <div id="kollektiv-hinweis"
            style="
              margin-top: 12px;
@@ -910,6 +926,9 @@
 
         const hint = document.getElementById("kollektiv-hinweis");
         if (hint) hint.style.display = (tab === "kollektivakte") ? "block" : "none";
+
+        // optional: errors beim tabwechsel weg
+        clearErrors(document);
       });
     });
 
@@ -978,7 +997,6 @@
     function validateRequiredFields(spec) {
       let ok = true;
 
-      // normale Felder
       spec.fields.forEach(f => {
         const el = document.getElementById(f.id);
         if (!el) return;
@@ -988,7 +1006,6 @@
         if (!valid) ok = false;
       });
 
-      // Identitätsfeststellung: mind. 1 Checkbox
       if (spec.ident) {
         const { prefix, groupEl, hintEl } = spec.ident;
         const ids = [prefix + "-id-pers", prefix + "-id-waffe", prefix + "-id-fs", prefix + "-id-finger"];
@@ -996,7 +1013,6 @@
         markGroupError(groupEl, hintEl, !any);
         if (!any) ok = false;
 
-        // Auto-clear bei Checkbox change
         ids.forEach(cid => {
           const cb = document.getElementById(cid);
           if (!cb) return;
@@ -1044,19 +1060,11 @@
       addRequiredMarkerFor("ko-bestaetigt-von");
       addRequiredMarkerFor("ko-bestaetigt-zeit");
 
-      // Auto-clear normale Felder
       attachAutoClear([
         "st-abgenommen-von","st-verlesen","st-beisein","st-eilverfahren","st-bussgeld",
         "sc-abgenommen-von","sc-verlesen","sc-beisein","sc-eilverfahren","sc-bussgeld",
         "ko-verlesen","ko-beisein","ko-eilverfahren","ko-bussgeld","ko-bestaetigt-von","ko-bestaetigt-zeit"
       ]);
-
-      // Auto-clear selects
-      ["st-rechtsbeistand","st-medizin","sc-rechtsbeistand","sc-medizin","ko-rechtsbeistand","ko-medizin"].forEach(id => {
-        const el = document.getElementById(id);
-        if (!el) return;
-        el.addEventListener("change", () => { if (el.value) markError(el, false); });
-      });
     }
 
     /* ---------- Verzeichnis ---------- */
@@ -1394,17 +1402,17 @@
       saveAkte("kollektiv", titel, out);
     }
 
+    // Fahndung ist deaktiviert im UI, aber handler bleibt vorhanden (falls du später aktivierst)
     function genFahndung() {
-      // (Fahndung bleibt ohne Pflichtvalidierung wie vorher)
-      const officer    = document.getElementById("fa-officer").value.trim();
-      const datum      = document.getElementById("fa-datum").value.trim();
-      const tatort     = document.getElementById("fa-tatort").value.trim();
-      const person     = document.getElementById("fa-person").value.trim();
-      const paragrafen = document.getElementById("fa-paragrafen").value.trim();
-      const sach       = document.getElementById("fa-sachverhalt").value.trim();
-      const hinweise   = document.getElementById("fa-hinweise").value.trim();
-      const einheiten  = document.getElementById("fa-einheiten").value.trim();
-      const gezeichnet = document.getElementById("fa-gezeichnet").value.trim();
+      const officer    = document.getElementById("fa-officer")?.value?.trim() || "";
+      const datum      = document.getElementById("fa-datum")?.value?.trim() || "";
+      const tatort     = document.getElementById("fa-tatort")?.value?.trim() || "";
+      const person     = document.getElementById("fa-person")?.value?.trim() || "";
+      const paragrafen = document.getElementById("fa-paragrafen")?.value?.trim() || "";
+      const sach       = document.getElementById("fa-sachverhalt")?.value?.trim() || "";
+      const hinweise   = document.getElementById("fa-hinweise")?.value?.trim() || "";
+      const einheiten  = document.getElementById("fa-einheiten")?.value?.trim() || "";
+      const gezeichnet = document.getElementById("fa-gezeichnet")?.value?.trim() || "";
 
       let out = "";
       out += "| - Fahndungsakte - |\n";
@@ -1445,7 +1453,6 @@
     }
 
     function resetForm() {
-      // Bußgeld NICHT mehr behalten
       const keepIds = new Set([
         "st-officer","sc-officer","ko-officer","fa-officer",
         "st-gezeichnet","sc-gezeichnet","ko-gezeichnet","fa-gezeichnet"
@@ -1477,7 +1484,6 @@
       try {
         await navigator.clipboard.writeText(text);
       } catch (e) {
-        // Fallback
         out.select();
         out.setSelectionRange(0, 99999);
         try { document.execCommand("copy"); } catch (err) {}
