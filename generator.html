@@ -208,6 +208,48 @@
     .verz-item-title { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 230px; }
     .verz-item-date { opacity: 0.6; font-size: 0.74rem; }
     .verz-empty { font-size: 0.78rem; opacity: 0.65; padding: 6px 2px 10px; }
+
+    /* ---------- Validation UI (no alerts) ---------- */
+    .label-required::after{
+      content:" *";
+      color:#ff4d4f;
+      font-weight:700;
+      margin-left:2px;
+    }
+
+    .field-error{
+      border-color:#ff4d4f !important;
+      box-shadow: 0 0 0 1px rgba(255,77,79,0.55) !important;
+      background: rgba(255,77,79,0.06) !important;
+    }
+
+    .group-error{
+      outline: 1px solid rgba(255,77,79,0.65);
+      border-radius: 9px;
+      padding: 8px 10px;
+      background: rgba(255,77,79,0.05);
+    }
+
+    .error-hint{
+      margin-top: 6px;
+      font-size: 0.76rem;
+      color: #ffb3b6;
+      opacity: 0.95;
+      display:none;
+    }
+    .error-hint.show{ display:block; }
+
+    .validation-banner{
+      display:none;
+      margin: 10px 0 14px;
+      padding: 10px 12px;
+      border-radius: 12px;
+      border: 1px solid rgba(255,77,79,0.35);
+      background: rgba(255,77,79,0.08);
+      color: #ffd3d5;
+      font-size: 0.82rem;
+    }
+    .validation-banner.show{ display:block; }
   </style>
 </head>
 
@@ -275,13 +317,14 @@
         <label for="st-sachverhalt">Sachverhalt aus Sicht des NCPDs</label>
         <textarea id="st-sachverhalt"></textarea>
 
-        <label>Identitätsfeststellung</label>
-        <div class="checkbox-row">
+        <label id="st-id-label">Identitätsfeststellung</label>
+        <div id="st-id-group" class="checkbox-row">
           <label><input type="checkbox" id="st-id-pers" /> Personalausweis</label>
           <label><input type="checkbox" id="st-id-waffe" /> Waffenschein</label>
           <label><input type="checkbox" id="st-id-fs" /> Führerschein</label>
           <label><input type="checkbox" id="st-id-finger" /> Fingerabdruckscanner</label>
         </div>
+        <div id="st-id-hint" class="error-hint">Bitte mindestens eine Option auswählen.</div>
 
         <label for="st-zeugen">Weitere beteiligte Einheiten/Zeugen</label>
         <textarea id="st-zeugen"></textarea>
@@ -368,13 +411,14 @@
           </div>
         </div>
 
-        <label>Identitätsfeststellung</label>
-        <div class="checkbox-row">
+        <label id="sc-id-label">Identitätsfeststellung</label>
+        <div id="sc-id-group" class="checkbox-row">
           <label><input type="checkbox" id="sc-id-pers" /> Personalausweis</label>
           <label><input type="checkbox" id="sc-id-waffe" /> Waffenschein</label>
           <label><input type="checkbox" id="sc-id-fs" /> Führerschein</label>
           <label><input type="checkbox" id="sc-id-finger" /> Fingerabdruckscanner</label>
         </div>
+        <div id="sc-id-hint" class="error-hint">Bitte mindestens eine Option auswählen.</div>
 
         <label for="sc-zeugen">Weitere beteiligte Einheiten/Zeugen</label>
         <textarea id="sc-zeugen"></textarea>
@@ -429,14 +473,9 @@
             <input id="sc-bussgeld" type="text" placeholder="TT.MM.JJJJ" />
           </div>
           <div>
-            <label>&nbsp;</label>
-            <input type="text" disabled style="opacity:0; pointer-events:none;" />
+            <label for="sc-gezeichnet">Gezeichnet von</label>
+            <textarea id="sc-gezeichnet" rows="2"></textarea>
           </div>
-        </div>
-
-        <div>
-          <label for="sc-gezeichnet">Gezeichnet von</label>
-          <textarea id="sc-gezeichnet" rows="2"></textarea>
         </div>
 
         <button class="btn" id="btn-schnellakte">Schnellakte generieren</button>
@@ -469,18 +508,18 @@
         <label for="ko-sachverhalt">Sachverhalt aus Sicht des NCPDs</label>
         <textarea id="ko-sachverhalt"></textarea>
 
-        <label>Identitätsfeststellung</label>
-        <div class="checkbox-row">
+        <label id="ko-id-label">Identitätsfeststellung</label>
+        <div id="ko-id-group" class="checkbox-row">
           <label><input type="checkbox" id="ko-id-pers" /> Personalausweis</label>
           <label><input type="checkbox" id="ko-id-waffe" /> Waffenschein</label>
           <label><input type="checkbox" id="ko-id-fs" /> Führerschein</label>
           <label><input type="checkbox" id="ko-id-finger" /> Fingerabdruckscanner</label>
         </div>
+        <div id="ko-id-hint" class="error-hint">Bitte mindestens eine Option auswählen.</div>
 
         <label for="ko-zeugen">Weitere beteiligte Einheiten/Zeugen</label>
         <textarea id="ko-zeugen"></textarea>
 
-        <!-- WIEDER DRIN: Abgenommene Gegenstände (ohne Abgenommen von) -->
         <label for="ko-gegenstaende">Abgenommene Gegenstände</label>
         <textarea id="ko-gegenstaende"></textarea>
         <div style="font-size:0.76rem; opacity:0.7; margin-top:4px; margin-bottom:6px;">
@@ -624,6 +663,10 @@
           <div class="panel-title">Generierte Akte</div>
           <div class="panel-subtitle">Text kann direkt kopiert werden • Verzeichnis-Einträge laden die Akte hier</div>
         </div>
+      </div>
+
+      <div id="validation-banner" class="validation-banner">
+        Bitte fülle die rot markierten Pflichtfelder aus.
       </div>
 
       <textarea id="output" readonly></textarea>
@@ -880,43 +923,143 @@
       return "Die Identität wurde mittels " + parts.join(", ") + " festgestellt.";
     }
 
-    // ---------- Pflichtfeld-Checks ----------
-    function requireNonEmpty(id, label) {
-      const el = document.getElementById(id);
-      if (!el) return true;
-      const val = (el.value || "").trim();
-      if (!val) {
-        alert("Pflichtfeld fehlt: " + label);
-        el.focus();
-        return false;
+    /* ---------- Validation UI (no alerts) ---------- */
+    function addRequiredMarkerFor(forId) {
+      const lbl = document.querySelector(`label[for="${forId}"]`);
+      if (lbl) lbl.classList.add("label-required");
+    }
+    function addRequiredMarkerById(labelId) {
+      const lbl = document.getElementById(labelId);
+      if (lbl) lbl.classList.add("label-required");
+    }
+    function setBanner(show) {
+      const b = document.getElementById("validation-banner");
+      if (!b) return;
+      b.classList.toggle("show", !!show);
+    }
+    function markError(el, isError) {
+      if (!el) return;
+      el.classList.toggle("field-error", !!isError);
+    }
+    function markGroupError(groupEl, hintEl, isError) {
+      if (groupEl) groupEl.classList.toggle("group-error", !!isError);
+      if (hintEl) hintEl.classList.toggle("show", !!isError);
+    }
+    function scrollToFirstError(root) {
+      const first = (root || document).querySelector(".field-error, .group-error");
+      if (first) {
+        first.scrollIntoView({ behavior: "smooth", block: "center" });
+        const focusEl = first.matches("input, textarea, select")
+          ? first
+          : first.querySelector("input, textarea, select");
+        if (focusEl) focusEl.focus({ preventScroll: true });
       }
-      return true;
+    }
+    function clearErrors(root) {
+      (root || document).querySelectorAll(".field-error").forEach(el => el.classList.remove("field-error"));
+      (root || document).querySelectorAll(".group-error").forEach(el => el.classList.remove("group-error"));
+      (root || document).querySelectorAll(".error-hint.show").forEach(el => el.classList.remove("show"));
+      setBanner(false);
+    }
+    function attachAutoClear(ids) {
+      ids.forEach(id => {
+        const el = document.getElementById(id);
+        if (!el) return;
+        const evt = (el.tagName === "SELECT") ? "change" : "input";
+        el.addEventListener(evt, () => {
+          if (el.tagName === "SELECT") {
+            if (el.value) markError(el, false);
+          } else {
+            if ((el.value || "").trim()) markError(el, false);
+          }
+        });
+      });
+    }
+    function validateRequiredFields(spec) {
+      let ok = true;
+
+      // normale Felder
+      spec.fields.forEach(f => {
+        const el = document.getElementById(f.id);
+        if (!el) return;
+        const val = (el.value || "").trim();
+        const valid = f.type === "select" ? !!el.value : !!val;
+        markError(el, !valid);
+        if (!valid) ok = false;
+      });
+
+      // Identitätsfeststellung: mind. 1 Checkbox
+      if (spec.ident) {
+        const { prefix, groupEl, hintEl } = spec.ident;
+        const ids = [prefix + "-id-pers", prefix + "-id-waffe", prefix + "-id-fs", prefix + "-id-finger"];
+        const any = ids.some(x => document.getElementById(x)?.checked);
+        markGroupError(groupEl, hintEl, !any);
+        if (!any) ok = false;
+
+        // Auto-clear bei Checkbox change
+        ids.forEach(cid => {
+          const cb = document.getElementById(cid);
+          if (!cb) return;
+          cb.addEventListener("change", () => {
+            const nowAny = ids.some(x => document.getElementById(x)?.checked);
+            markGroupError(groupEl, hintEl, !nowAny);
+          }, { once: false });
+        });
+      }
+
+      setBanner(!ok);
+      if (!ok) scrollToFirstError(spec.rootEl);
+      return ok;
     }
 
-    function requireSelect(id, label) {
-      const el = document.getElementById(id);
-      if (!el) return true;
-      const val = (el.value || "").trim();
-      if (!val) {
-        alert("Pflichtfeld fehlt: " + label);
-        el.focus();
-        return false;
-      }
-      return true;
+    function initRequiredStarsAndAutoclear() {
+      // Sterne Strafakte
+      addRequiredMarkerById("st-id-label");
+      addRequiredMarkerFor("st-abgenommen-von");
+      addRequiredMarkerFor("st-verlesen");
+      addRequiredMarkerFor("st-beisein");
+      addRequiredMarkerFor("st-rechtsbeistand");
+      addRequiredMarkerFor("st-medizin");
+      addRequiredMarkerFor("st-eilverfahren");
+      addRequiredMarkerFor("st-bussgeld");
+
+      // Sterne Schnellakte
+      addRequiredMarkerById("sc-id-label");
+      addRequiredMarkerFor("sc-abgenommen-von");
+      addRequiredMarkerFor("sc-verlesen");
+      addRequiredMarkerFor("sc-beisein");
+      addRequiredMarkerFor("sc-rechtsbeistand");
+      addRequiredMarkerFor("sc-medizin");
+      addRequiredMarkerFor("sc-eilverfahren");
+      addRequiredMarkerFor("sc-bussgeld");
+
+      // Sterne Kollektivakte
+      addRequiredMarkerById("ko-id-label");
+      addRequiredMarkerFor("ko-verlesen");
+      addRequiredMarkerFor("ko-beisein");
+      addRequiredMarkerFor("ko-rechtsbeistand");
+      addRequiredMarkerFor("ko-medizin");
+      addRequiredMarkerFor("ko-eilverfahren");
+      addRequiredMarkerFor("ko-bussgeld");
+      addRequiredMarkerFor("ko-bestaetigt-von");
+      addRequiredMarkerFor("ko-bestaetigt-zeit");
+
+      // Auto-clear normale Felder
+      attachAutoClear([
+        "st-abgenommen-von","st-verlesen","st-beisein","st-eilverfahren","st-bussgeld",
+        "sc-abgenommen-von","sc-verlesen","sc-beisein","sc-eilverfahren","sc-bussgeld",
+        "ko-verlesen","ko-beisein","ko-eilverfahren","ko-bussgeld","ko-bestaetigt-von","ko-bestaetigt-zeit"
+      ]);
+
+      // Auto-clear selects
+      ["st-rechtsbeistand","st-medizin","sc-rechtsbeistand","sc-medizin","ko-rechtsbeistand","ko-medizin"].forEach(id => {
+        const el = document.getElementById(id);
+        if (!el) return;
+        el.addEventListener("change", () => { if (el.value) markError(el, false); });
+      });
     }
 
-    function requireIdent(prefix) {
-      const ids = [prefix + "-id-pers", prefix + "-id-waffe", prefix + "-id-fs", prefix + "-id-finger"];
-      const any = ids.some(x => document.getElementById(x)?.checked);
-      if (!any) {
-        alert("Pflichtfeld fehlt: Identitätsfeststellung (mind. eine Option auswählen).");
-        const first = document.getElementById(ids[0]);
-        if (first) first.focus();
-        return false;
-      }
-      return true;
-    }
-
+    /* ---------- Verzeichnis ---------- */
     const verzContainerIds = {
       straf: "verzeichnis-straf",
       schnell: "verzeichnis-schnell",
@@ -995,17 +1138,27 @@
 
     // ---------- Generatoren ----------
     function genStrafakte() {
-      // Pflichtfelder Strafakte
-      if (!requireNonEmpty("st-officer", "Officer")) return;
-      if (!requireNonEmpty("st-tatort", "Tatort und Tatzeit")) return;
-      if (!requireIdent("st")) return;
-      if (!requireNonEmpty("st-abgenommen-von", "Abgenommen von")) return;
-      if (!requireNonEmpty("st-verlesen", "Verlesen")) return;
-      if (!requireNonEmpty("st-beisein", "Beisein")) return;
-      if (!requireSelect("st-rechtsbeistand", "Rechtsbeistand")) return;
-      if (!requireSelect("st-medizin", "Medizinische Versorgung")) return;
-      if (!requireNonEmpty("st-eilverfahren", "Eilverfahren")) return;
-      if (!requireNonEmpty("st-bussgeld", "Bußgelddatum")) return;
+      const root = document.getElementById("tab-strafakte");
+      clearErrors(root);
+
+      const ok = validateRequiredFields({
+        rootEl: root,
+        fields: [
+          { id: "st-abgenommen-von", type: "text" },
+          { id: "st-verlesen", type: "text" },
+          { id: "st-beisein", type: "text" },
+          { id: "st-rechtsbeistand", type: "select" },
+          { id: "st-medizin", type: "select" },
+          { id: "st-eilverfahren", type: "text" },
+          { id: "st-bussgeld", type: "text" }
+        ],
+        ident: {
+          prefix: "st",
+          groupEl: document.getElementById("st-id-group"),
+          hintEl: document.getElementById("st-id-hint")
+        }
+      });
+      if (!ok) return;
 
       const officer = document.getElementById("st-officer").value.trim();
       const tatort = document.getElementById("st-tatort").value.trim();
@@ -1070,17 +1223,27 @@
     }
 
     function genSchnellakte() {
-      // Pflichtfelder Schnellakte
-      if (!requireNonEmpty("sc-officer", "Officer")) return;
-      if (!requireNonEmpty("sc-tatort", "Tatort und Tatzeit")) return;
-      if (!requireIdent("sc")) return;
-      if (!requireNonEmpty("sc-abgenommen-von", "Abgenommen von")) return;
-      if (!requireNonEmpty("sc-verlesen", "Verlesen")) return;
-      if (!requireNonEmpty("sc-beisein", "Beisein")) return;
-      if (!requireSelect("sc-rechtsbeistand", "Rechtsbeistand")) return;
-      if (!requireSelect("sc-medizin", "Medizinische Versorgung")) return;
-      if (!requireNonEmpty("sc-eilverfahren", "Eilverfahren")) return;
-      if (!requireNonEmpty("sc-bussgeld", "Bußgelddatum")) return;
+      const root = document.getElementById("tab-schnellakte");
+      clearErrors(root);
+
+      const ok = validateRequiredFields({
+        rootEl: root,
+        fields: [
+          { id: "sc-abgenommen-von", type: "text" },
+          { id: "sc-verlesen", type: "text" },
+          { id: "sc-beisein", type: "text" },
+          { id: "sc-rechtsbeistand", type: "select" },
+          { id: "sc-medizin", type: "select" },
+          { id: "sc-eilverfahren", type: "text" },
+          { id: "sc-bussgeld", type: "text" }
+        ],
+        ident: {
+          prefix: "sc",
+          groupEl: document.getElementById("sc-id-group"),
+          hintEl: document.getElementById("sc-id-hint")
+        }
+      });
+      if (!ok) return;
 
       const officer = document.getElementById("sc-officer").value.trim();
       const tatort = document.getElementById("sc-tatort").value.trim();
@@ -1143,18 +1306,28 @@
     }
 
     function genKollektivakte() {
-      // Pflichtfelder Kollektivakte
-      if (!requireNonEmpty("ko-officer", "Officer")) return;
-      if (!requireNonEmpty("ko-tatort", "Tatort und Tatzeit")) return;
-      if (!requireNonEmpty("ko-bestaetigt-von", "Bestätigt von")) return;
-      if (!requireNonEmpty("ko-bestaetigt-zeit", "Bestätigt um (Uhrzeit)")) return;
-      if (!requireIdent("ko")) return;
-      if (!requireNonEmpty("ko-verlesen", "Verlesen")) return;
-      if (!requireNonEmpty("ko-beisein", "Beisein")) return;
-      if (!requireSelect("ko-rechtsbeistand", "Rechtsbeistand")) return;
-      if (!requireSelect("ko-medizin", "Medizinische Versorgung")) return;
-      if (!requireNonEmpty("ko-eilverfahren", "Eilverfahren")) return;
-      if (!requireNonEmpty("ko-bussgeld", "Bußgelddatum")) return;
+      const root = document.getElementById("tab-kollektivakte");
+      clearErrors(root);
+
+      const ok = validateRequiredFields({
+        rootEl: root,
+        fields: [
+          { id: "ko-verlesen", type: "text" },
+          { id: "ko-beisein", type: "text" },
+          { id: "ko-rechtsbeistand", type: "select" },
+          { id: "ko-medizin", type: "select" },
+          { id: "ko-eilverfahren", type: "text" },
+          { id: "ko-bussgeld", type: "text" },
+          { id: "ko-bestaetigt-von", type: "text" },
+          { id: "ko-bestaetigt-zeit", type: "text" }
+        ],
+        ident: {
+          prefix: "ko",
+          groupEl: document.getElementById("ko-id-group"),
+          hintEl: document.getElementById("ko-id-hint")
+        }
+      });
+      if (!ok) return;
 
       const officer = document.getElementById("ko-officer").value.trim();
       const tatort = document.getElementById("ko-tatort").value.trim();
@@ -1222,6 +1395,7 @@
     }
 
     function genFahndung() {
+      // (Fahndung bleibt ohne Pflichtvalidierung wie vorher)
       const officer    = document.getElementById("fa-officer").value.trim();
       const datum      = document.getElementById("fa-datum").value.trim();
       const tatort     = document.getElementById("fa-tatort").value.trim();
@@ -1286,6 +1460,7 @@
         else el.value = "";
       });
 
+      clearErrors(document);
       const out = document.getElementById("output");
       if (out) out.value = "";
     }
@@ -1295,17 +1470,25 @@
     document.getElementById("btn-kollektivakte").addEventListener("click", genKollektivakte);
     document.getElementById("btn-fahndung").addEventListener("click", genFahndung);
 
-    document.getElementById("btn-copy").addEventListener("click", () => {
+    document.getElementById("btn-copy").addEventListener("click", async () => {
       const out = document.getElementById("output");
-      out.select();
-      out.setSelectionRange(0, 99999);
-      try { document.execCommand("copy"); } catch (e) {}
+      const text = out?.value || "";
+      if (!text) return;
+      try {
+        await navigator.clipboard.writeText(text);
+      } catch (e) {
+        // Fallback
+        out.select();
+        out.setSelectionRange(0, 99999);
+        try { document.execCommand("copy"); } catch (err) {}
+      }
     });
 
     document.getElementById("btn-reset").addEventListener("click", resetForm);
 
     // Init
     initDiscordUser();
+    initRequiredStarsAndAutoclear();
 
     // Default Tab ist Strafakte => Hinweis aus
     const hintInit = document.getElementById("kollektiv-hinweis");
