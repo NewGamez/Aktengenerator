@@ -333,7 +333,7 @@
         <div class="row">
           <div>
             <label for="st-bussgeld">Bußgelddatum</label>
-            <input id="st-bussgeld" type="text" />
+            <input id="st-bussgeld" type="text" placeholder="TT.MM.JJJJ" />
           </div>
           <div>
             <label for="st-gezeichnet">Gezeichnet von</label>
@@ -418,8 +418,19 @@
             </select>
           </div>
           <div>
+            <label for="sc-eilverfahren">Eilverfahren</label>
+            <input id="sc-eilverfahren" type="text" placeholder="z. B. abgelehnt durch DOJ-XX" />
+          </div>
+        </div>
+
+        <div class="row">
+          <div>
             <label for="sc-bussgeld">Bußgelddatum</label>
-            <input id="sc-bussgeld" type="text" />
+            <input id="sc-bussgeld" type="text" placeholder="TT.MM.JJJJ" />
+          </div>
+          <div>
+            <label>&nbsp;</label>
+            <input type="text" disabled style="opacity:0; pointer-events:none;" />
           </div>
         </div>
 
@@ -431,7 +442,7 @@
         <button class="btn" id="btn-schnellakte">Schnellakte generieren</button>
       </div>
 
-      <!-- KOLLEKTIVAKTE (OHNE Abgenommene Gegenstände / Abgenommen von) -->
+      <!-- KOLLEKTIVAKTE -->
       <div id="tab-kollektivakte" class="hidden">
         <div class="row">
           <div>
@@ -469,6 +480,13 @@
         <label for="ko-zeugen">Weitere beteiligte Einheiten/Zeugen</label>
         <textarea id="ko-zeugen"></textarea>
 
+        <!-- WIEDER DRIN: Abgenommene Gegenstände (ohne Abgenommen von) -->
+        <label for="ko-gegenstaende">Abgenommene Gegenstände</label>
+        <textarea id="ko-gegenstaende"></textarea>
+        <div style="font-size:0.76rem; opacity:0.7; margin-top:4px; margin-bottom:6px;">
+          Hinweis: Bitte bei den Gegenständen selbst eintragen, von wem diese abgenommen wurden.
+        </div>
+
         <div class="row">
           <div>
             <label for="ko-verlesen">Verlesen</label>
@@ -505,8 +523,19 @@
             </select>
           </div>
           <div>
+            <label for="ko-eilverfahren">Eilverfahren</label>
+            <input id="ko-eilverfahren" type="text" placeholder="z. B. abgelehnt durch DOJ-XX" />
+          </div>
+        </div>
+
+        <div class="row">
+          <div>
             <label for="ko-bussgeld">Bußgelddatum</label>
-            <input id="ko-bussgeld" type="text" />
+            <input id="ko-bussgeld" type="text" placeholder="TT.MM.JJJJ" />
+          </div>
+          <div>
+            <label>&nbsp;</label>
+            <input type="text" disabled style="opacity:0; pointer-events:none;" />
           </div>
         </div>
 
@@ -517,7 +546,7 @@
           </div>
           <div>
             <label for="ko-bestaetigt-zeit">Bestätigt um (Uhrzeit)</label>
-            <input id="ko-bestaetigt-zeit" type="text" />
+            <input id="ko-bestaetigt-zeit" type="text" placeholder="z. B. 23:45" />
           </div>
         </div>
 
@@ -604,7 +633,7 @@
         <button class="btn-secondary btn" id="btn-reset">Zurücksetzen</button>
       </div>
 
-      <!-- NUR bei Kollektivakte sichtbar: groß, zentriert, 1 Zeile -->
+      <!-- NUR bei Kollektivakte sichtbar -->
       <div id="kollektiv-hinweis"
            style="
              margin-top: 12px;
@@ -851,15 +880,41 @@
       return "Die Identität wurde mittels " + parts.join(", ") + " festgestellt.";
     }
 
-    function setDefaultBussgeldDatum() {
-      const d = new Date();
-      d.setDate(d.getDate() + 7);
-      const s = d.toLocaleDateString("de-DE", { day: "2-digit", month: "2-digit", year: "numeric" });
+    // ---------- Pflichtfeld-Checks ----------
+    function requireNonEmpty(id, label) {
+      const el = document.getElementById(id);
+      if (!el) return true;
+      const val = (el.value || "").trim();
+      if (!val) {
+        alert("Pflichtfeld fehlt: " + label);
+        el.focus();
+        return false;
+      }
+      return true;
+    }
 
-      ["st-bussgeld", "sc-bussgeld", "ko-bussgeld"].forEach(id => {
-        const el = document.getElementById(id);
-        if (el && !el.value) el.value = s;
-      });
+    function requireSelect(id, label) {
+      const el = document.getElementById(id);
+      if (!el) return true;
+      const val = (el.value || "").trim();
+      if (!val) {
+        alert("Pflichtfeld fehlt: " + label);
+        el.focus();
+        return false;
+      }
+      return true;
+    }
+
+    function requireIdent(prefix) {
+      const ids = [prefix + "-id-pers", prefix + "-id-waffe", prefix + "-id-fs", prefix + "-id-finger"];
+      const any = ids.some(x => document.getElementById(x)?.checked);
+      if (!any) {
+        alert("Pflichtfeld fehlt: Identitätsfeststellung (mind. eine Option auswählen).");
+        const first = document.getElementById(ids[0]);
+        if (first) first.focus();
+        return false;
+      }
+      return true;
     }
 
     const verzContainerIds = {
@@ -940,6 +995,18 @@
 
     // ---------- Generatoren ----------
     function genStrafakte() {
+      // Pflichtfelder Strafakte
+      if (!requireNonEmpty("st-officer", "Officer")) return;
+      if (!requireNonEmpty("st-tatort", "Tatort und Tatzeit")) return;
+      if (!requireIdent("st")) return;
+      if (!requireNonEmpty("st-abgenommen-von", "Abgenommen von")) return;
+      if (!requireNonEmpty("st-verlesen", "Verlesen")) return;
+      if (!requireNonEmpty("st-beisein", "Beisein")) return;
+      if (!requireSelect("st-rechtsbeistand", "Rechtsbeistand")) return;
+      if (!requireSelect("st-medizin", "Medizinische Versorgung")) return;
+      if (!requireNonEmpty("st-eilverfahren", "Eilverfahren")) return;
+      if (!requireNonEmpty("st-bussgeld", "Bußgelddatum")) return;
+
       const officer = document.getElementById("st-officer").value.trim();
       const tatort = document.getElementById("st-tatort").value.trim();
       const besch = document.getElementById("st-beschuldigte").value.trim();
@@ -990,10 +1057,9 @@
       if (med === "bestand") out += "Der TV bestand auf medizinische Versorgung.\n";
       if (med === "verzichtete") out += "Der TV verzichtete auf medizinische Versorgung.\n";
 
+      out += "Eilverfahren: " + eil + "\n";
       out += "Das Bußgeld ist bis zum " + buss + " zu bezahlen.\n";
       out += "Die dem Tatverdächtigen abgenommenen Gegenstände wurden in seinen persönlichen Spind gelegt.\n";
-
-      if (eil !== "") out += "Das Eilverfahren wurde durch " + eil + " abgelehnt.\n";
 
       out += "\n| Gezeichnet von: |\n";
       out += gezeichnet + "\n\n";
@@ -1004,6 +1070,18 @@
     }
 
     function genSchnellakte() {
+      // Pflichtfelder Schnellakte
+      if (!requireNonEmpty("sc-officer", "Officer")) return;
+      if (!requireNonEmpty("sc-tatort", "Tatort und Tatzeit")) return;
+      if (!requireIdent("sc")) return;
+      if (!requireNonEmpty("sc-abgenommen-von", "Abgenommen von")) return;
+      if (!requireNonEmpty("sc-verlesen", "Verlesen")) return;
+      if (!requireNonEmpty("sc-beisein", "Beisein")) return;
+      if (!requireSelect("sc-rechtsbeistand", "Rechtsbeistand")) return;
+      if (!requireSelect("sc-medizin", "Medizinische Versorgung")) return;
+      if (!requireNonEmpty("sc-eilverfahren", "Eilverfahren")) return;
+      if (!requireNonEmpty("sc-bussgeld", "Bußgelddatum")) return;
+
       const officer = document.getElementById("sc-officer").value.trim();
       const tatort = document.getElementById("sc-tatort").value.trim();
       const besch = document.getElementById("sc-beschuldigte").value.trim();
@@ -1016,6 +1094,7 @@
       const beisein = document.getElementById("sc-beisein").value.trim();
       const rb = document.getElementById("sc-rechtsbeistand").value;
       const med = document.getElementById("sc-medizin").value;
+      const eil = document.getElementById("sc-eilverfahren").value.trim();
       const buss = document.getElementById("sc-bussgeld").value.trim();
       const gezeichnet = document.getElementById("sc-gezeichnet").value.trim();
 
@@ -1051,6 +1130,7 @@
       if (med === "bestand") out += "Der TV bestand auf medizinische Versorgung.\n";
       if (med === "verzichtete") out += "Der TV verzichtete auf medizinische Versorgung.\n";
 
+      out += "Eilverfahren: " + eil + "\n";
       out += "Das Bußgeld ist bis zum " + buss + " zu bezahlen.\n";
       out += "Die dem Tatverdächtigen abgenommenen Gegenstände wurden in seinen persönlichen Spind gelegt.\n\n";
 
@@ -1062,8 +1142,20 @@
       saveAkte("schnell", titel, out);
     }
 
-    // KOLLEKTIVAKTE: ohne Abgenommene Gegenstände / Abgenommen von
     function genKollektivakte() {
+      // Pflichtfelder Kollektivakte
+      if (!requireNonEmpty("ko-officer", "Officer")) return;
+      if (!requireNonEmpty("ko-tatort", "Tatort und Tatzeit")) return;
+      if (!requireNonEmpty("ko-bestaetigt-von", "Bestätigt von")) return;
+      if (!requireNonEmpty("ko-bestaetigt-zeit", "Bestätigt um (Uhrzeit)")) return;
+      if (!requireIdent("ko")) return;
+      if (!requireNonEmpty("ko-verlesen", "Verlesen")) return;
+      if (!requireNonEmpty("ko-beisein", "Beisein")) return;
+      if (!requireSelect("ko-rechtsbeistand", "Rechtsbeistand")) return;
+      if (!requireSelect("ko-medizin", "Medizinische Versorgung")) return;
+      if (!requireNonEmpty("ko-eilverfahren", "Eilverfahren")) return;
+      if (!requireNonEmpty("ko-bussgeld", "Bußgelddatum")) return;
+
       const officer = document.getElementById("ko-officer").value.trim();
       const tatort = document.getElementById("ko-tatort").value.trim();
       const besch = document.getElementById("ko-beschuldigte").value.trim();
@@ -1071,10 +1163,12 @@
       const sach = document.getElementById("ko-sachverhalt").value.trim();
       const idTxt = getIdentitaet("ko");
       const zeugen = document.getElementById("ko-zeugen").value.trim();
+      const geg = document.getElementById("ko-gegenstaende").value.trim();
       const verlesen = document.getElementById("ko-verlesen").value.trim();
       const beisein = document.getElementById("ko-beisein").value.trim();
       const rb = document.getElementById("ko-rechtsbeistand").value;
       const med = document.getElementById("ko-medizin").value;
+      const eil = document.getElementById("ko-eilverfahren").value.trim();
       const buss = document.getElementById("ko-bussgeld").value.trim();
       const bestaetigtVon = document.getElementById("ko-bestaetigt-von").value.trim();
       const bestaetigtZeit = document.getElementById("ko-bestaetigt-zeit").value.trim();
@@ -1103,6 +1197,10 @@
       out += "| Weitere beteiligte Einheiten/Zeugen: |\n";
       out += zeugen + "\n\n";
 
+      out += "| Abgenommene Gegenstände: |\n";
+      out += geg + "\n\n";
+      out += "Hinweis: Bitte bei den Gegenständen selbst eintragen, von wem diese abgenommen wurden.\n\n";
+
       out += "| Bemerkungen: |\n";
       out += "Die Rechte wurden dem Beschuldigten durch " + verlesen + " im Beisein von " + beisein + " verlesen und verstanden.\n";
 
@@ -1112,6 +1210,7 @@
       if (med === "bestand") out += "Die TV´s bestanden auf medizinische Versorgung.\n";
       if (med === "verzichtete") out += "Die TV´s verzichteten auf medizinische Versorgung.\n";
 
+      out += "Eilverfahren: " + eil + "\n";
       out += "Das Bußgeld ist bis zum " + buss + " zu bezahlen.\n\n";
 
       out += "| Gezeichnet von: |\n";
@@ -1172,10 +1271,10 @@
     }
 
     function resetForm() {
+      // Bußgeld NICHT mehr behalten
       const keepIds = new Set([
         "st-officer","sc-officer","ko-officer","fa-officer",
-        "st-gezeichnet","sc-gezeichnet","ko-gezeichnet","fa-gezeichnet",
-        "st-bussgeld","sc-bussgeld","ko-bussgeld"
+        "st-gezeichnet","sc-gezeichnet","ko-gezeichnet","fa-gezeichnet"
       ]);
 
       document.querySelectorAll("input, textarea, select").forEach(el => {
@@ -1207,7 +1306,6 @@
 
     // Init
     initDiscordUser();
-    setDefaultBussgeldDatum();
 
     // Default Tab ist Strafakte => Hinweis aus
     const hintInit = document.getElementById("kollektiv-hinweis");
