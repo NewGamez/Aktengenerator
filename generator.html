@@ -188,7 +188,6 @@
       resize: vertical;
     }
 
-    /* Verzeichnis-Styles */
     #tab-verzeichnis h3 { margin-top: 12px; margin-bottom: 6px; font-size: 0.9rem; font-weight: 600; }
     .verz-hinweis { font-size: 0.78rem; opacity: 0.7; margin-bottom: 10px; }
     .verz-list { margin-bottom: 6px; }
@@ -209,7 +208,6 @@
     .verz-item-date { opacity: 0.6; font-size: 0.74rem; }
     .verz-empty { font-size: 0.78rem; opacity: 0.65; padding: 6px 2px 10px; }
 
-    /* ---------- Validation UI (no alerts) ---------- */
     .label-required::after{
       content:" *";
       color:#ff4d4f;
@@ -596,7 +594,7 @@
         </div>
       </div>
 
-      <!-- FAHNDUNGSAKTE (IN BEARBEITUNG / DEAKTIVIERT) -->
+      <!-- FAHNDUNGSAKTE (IN BEARBEITUNG) -->
       <div id="tab-fahndung" class="hidden">
 
         <div style="
@@ -652,7 +650,6 @@
         </div>
       </div>
 
-      <!-- AKTENVERZEICHNIS -->
       <div id="tab-verzeichnis" class="hidden">
         <p class="verz-hinweis">
           Hier werden alle Akten gespeichert, die mit deinem Discord-Account <br>
@@ -673,7 +670,6 @@
       </div>
     </section>
 
-    <!-- RECHTES PANEL -->
     <section class="panel">
       <div class="panel-header">
         <div>
@@ -910,7 +906,6 @@
       }
     }
 
-    // Tabs + Hinweis nur bei Kollektivakte
     document.querySelectorAll(".tab-btn").forEach(btn => {
       btn.addEventListener("click", () => {
         document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
@@ -927,7 +922,6 @@
         const hint = document.getElementById("kollektiv-hinweis");
         if (hint) hint.style.display = (tab === "kollektivakte") ? "block" : "none";
 
-        // optional: errors beim tabwechsel weg
         clearErrors(document);
       });
     });
@@ -942,7 +936,6 @@
       return "Die Identität wurde mittels " + parts.join(", ") + " festgestellt.";
     }
 
-    /* ---------- Validation UI (no alerts) ---------- */
     function addRequiredMarkerFor(forId) {
       const lbl = document.querySelector(`label[for="${forId}"]`);
       if (lbl) lbl.classList.add("label-required");
@@ -1067,7 +1060,6 @@
       ]);
     }
 
-    /* ---------- Verzeichnis ---------- */
     const verzContainerIds = {
       straf: "verzeichnis-straf",
       schnell: "verzeichnis-schnell",
@@ -1144,7 +1136,6 @@
       ["straf","schnell","kollektiv","fahndung"].forEach(renderVerzeichnisListe);
     }
 
-    // ---------- Generatoren ----------
     function genStrafakte() {
       const root = document.getElementById("tab-strafakte");
       clearErrors(root);
@@ -1402,7 +1393,6 @@
       saveAkte("kollektiv", titel, out);
     }
 
-    // Fahndung ist deaktiviert im UI, aber handler bleibt vorhanden (falls du später aktivierst)
     function genFahndung() {
       const officer    = document.getElementById("fa-officer")?.value?.trim() || "";
       const datum      = document.getElementById("fa-datum")?.value?.trim() || "";
@@ -1492,11 +1482,9 @@
 
     document.getElementById("btn-reset").addEventListener("click", resetForm);
 
-    // Init
     initDiscordUser();
     initRequiredStarsAndAutoclear();
 
-    // Default Tab ist Strafakte => Hinweis aus
     const hintInit = document.getElementById("kollektiv-hinweis");
     if (hintInit) hintInit.style.display = "none";
   </script>
