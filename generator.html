@@ -276,15 +276,14 @@
       <div class="panel-header">
         <div>
           <div class="panel-title">NCPD II Übersicht</div>
-          <div class="panel-subtitle">Strafakte • Schnellakte • Kollektivakte • Fahndungsakte • Verzeichnis</div>
+          <div class="panel-subtitle">Strafakte • Kollektivakte • Ergreifungsakte • Verzeichnis</div>
         </div>
       </div>
 
       <div class="tab-buttons">
         <button class="tab-btn active" data-tab="strafakte">Strafakte</button>
-        <button class="tab-btn" data-tab="schnellakte">Schnellakte</button>
         <button class="tab-btn" data-tab="kollektivakte">Kollektivakte</button>
-        <button class="tab-btn" data-tab="fahndung">Fahndungsakte</button>
+        <button class="tab-btn" data-tab="fahndung">Ergreifungsakte</button>
         <button class="tab-btn" data-tab="verzeichnis">Verzeichnis</button>
       </div>
 
@@ -296,24 +295,30 @@
             <input id="st-officer" type="text" />
           </div>
           <div>
-            <label for="st-tatort">Tatort und Tatzeit</label>
-            <input id="st-tatort" type="text" />
+            <label for="st-tatort">Tatort und Zeitraum</label>
+            <input id="st-tatort" type="text" placeholder="ORT, bei PLZ XXXX | Am ... bis ..." />
           </div>
         </div>
 
         <div class="row">
           <div>
-            <label for="st-beschuldigte">Beschuldigte Personen</label>
-            <textarea id="st-beschuldigte"></textarea>
+            <label for="st-beschuldigte">Beschuldigte Person(en)</label>
+            <textarea id="st-beschuldigte" placeholder="Vorname Nachname, Geb. TT.MM.JJJJ"></textarea>
           </div>
           <div>
-            <label for="st-geschaedigte">Geschädigte Personen</label>
-            <textarea id="st-geschaedigte"></textarea>
+            <label for="st-geschaedigte">Geschädigte Person(en)</label>
+            <textarea id="st-geschaedigte" placeholder="Vorname Nachname, Geb. TT.MM.JJJJ"></textarea>
           </div>
         </div>
 
-        <label for="st-sachverhalt">Sachverhalt aus Sicht des NCPDs</label>
-        <textarea id="st-sachverhalt"></textarea>
+        <label for="st-sachverhalt">Sachverhalt aus Sicht der Behörde</label>
+        <textarea id="st-sachverhalt" placeholder="Straftat pro Satz ..."></textarea>
+        <div class="checkbox-row" style="margin-top:6px;">
+          <label>
+            <input type="checkbox" id="st-sachverhalt-include" />
+            Sachverhalt in Akte übernehmen (nur wenn keine Einigung)
+          </label>
+        </div>
 
         <label id="st-id-label">Identitätsfeststellung</label>
         <div id="st-id-group" class="checkbox-row">
@@ -325,27 +330,23 @@
         <div id="st-id-hint" class="error-hint">Bitte mindestens eine Option auswählen.</div>
 
         <label for="st-zeugen">Weitere beteiligte Einheiten/Zeugen</label>
-        <textarea id="st-zeugen"></textarea>
+        <textarea id="st-zeugen" placeholder="PD-XX&#10;PA-XX&#10;USM-XX ..."></textarea>
 
         <label for="st-gegenstaende">Abgenommene Gegenstände</label>
-        <textarea id="st-gegenstaende"></textarea>
+        <textarea id="st-gegenstaende" placeholder="1x Smartphone"></textarea>
 
         <div class="row">
           <div>
-            <label for="st-abgenommen-von">Abgenommen von</label>
-            <input id="st-abgenommen-von" type="text" />
+            <label for="st-verlesen">Verlesen</label>
+            <input id="st-verlesen" type="text" placeholder="z. B. FIB-XX" />
           </div>
           <div>
-            <label for="st-verlesen">Verlesen</label>
-            <input id="st-verlesen" type="text" />
+            <label for="st-beisein">Beisein</label>
+            <input id="st-beisein" type="text" placeholder="z. B. SD-XX" />
           </div>
         </div>
 
         <div class="row">
-          <div>
-            <label for="st-beisein">Beisein</label>
-            <input id="st-beisein" type="text" />
-          </div>
           <div>
             <label for="st-rechtsbeistand">Rechtsbeistand</label>
             <select id="st-rechtsbeistand">
@@ -354,9 +355,6 @@
               <option value="verzichtete">verzichtete</option>
             </select>
           </div>
-        </div>
-
-        <div class="row">
           <div>
             <label for="st-medizin">Medizinische Versorgung</label>
             <select id="st-medizin">
@@ -365,114 +363,14 @@
               <option value="verzichtete">verzichtete</option>
             </select>
           </div>
-          <div>
-            <label for="st-eilverfahren">Eilverfahren</label>
-            <input id="st-eilverfahren" type="text" placeholder="z. B. abgelehnt durch DOJ-XX" />
-          </div>
         </div>
 
-        <div class="row">
-          <div>
-            <label for="st-bussgeld">Bußgelddatum</label>
-            <input id="st-bussgeld" type="text" placeholder="TT.MM.JJJJ" />
-          </div>
-          <div>
-            <label for="st-gezeichnet">Gezeichnet von</label>
-            <textarea id="st-gezeichnet" rows="2"></textarea>
-          </div>
+        <div>
+          <label for="st-gezeichnet">Gezeichnet von</label>
+          <textarea id="st-gezeichnet" rows="2"></textarea>
         </div>
 
         <button class="btn" id="btn-strafakte">Strafakte generieren</button>
-      </div>
-
-      <!-- SCHNELLAKTE -->
-      <div id="tab-schnellakte" class="hidden">
-        <div class="row">
-          <div>
-            <label for="sc-officer">Officer</label>
-            <input id="sc-officer" type="text" />
-          </div>
-          <div>
-            <label for="sc-tatort">Tatort und Tatzeit</label>
-            <input id="sc-tatort" type="text" />
-          </div>
-        </div>
-
-        <div class="row">
-          <div>
-            <label for="sc-beschuldigte">Beschuldigte Personen</label>
-            <textarea id="sc-beschuldigte"></textarea>
-          </div>
-          <div>
-            <label for="sc-geschaedigte">Geschädigte Personen</label>
-            <textarea id="sc-geschaedigte"></textarea>
-          </div>
-        </div>
-
-        <label id="sc-id-label">Identitätsfeststellung</label>
-        <div id="sc-id-group" class="checkbox-row">
-          <label><input type="checkbox" id="sc-id-pers" /> Personalausweis</label>
-          <label><input type="checkbox" id="sc-id-waffe" /> Waffenschein</label>
-          <label><input type="checkbox" id="sc-id-fs" /> Führerschein</label>
-          <label><input type="checkbox" id="sc-id-finger" /> Fingerabdruckscanner</label>
-        </div>
-        <div id="sc-id-hint" class="error-hint">Bitte mindestens eine Option auswählen.</div>
-
-        <label for="sc-zeugen">Weitere beteiligte Einheiten/Zeugen</label>
-        <textarea id="sc-zeugen"></textarea>
-
-        <label for="sc-gegenstaende">Abgenommene Gegenstände</label>
-        <textarea id="sc-gegenstaende"></textarea>
-
-        <div class="row">
-          <div>
-            <label for="sc-abgenommen-von">Abgenommen von</label>
-            <input id="sc-abgenommen-von" type="text" />
-          </div>
-          <div>
-            <label for="sc-verlesen">Verlesen</label>
-            <input id="sc-verlesen" type="text" />
-          </div>
-        </div>
-
-        <div class="row">
-          <div>
-            <label for="sc-beisein">Beisein</label>
-            <input id="sc-beisein" type="text" />
-          </div>
-          <div>
-            <label for="sc-rechtsbeistand">Rechtsbeistand</label>
-            <select id="sc-rechtsbeistand">
-              <option value="">– bitte wählen –</option>
-              <option value="bestand">bestand</option>
-              <option value="verzichtete">verzichtete</option>
-            </select>
-          </div>
-        </div>
-
-        <div class="row">
-          <div>
-            <label for="sc-medizin">Medizinische Versorgung</label>
-            <select id="sc-medizin">
-              <option value="">– bitte wählen –</option>
-              <option value="bestand">bestand</option>
-              <option value="verzichtete">verzichtete</option>
-            </select>
-          </div>
-        </div>
-
-        <div class="row">
-          <div>
-            <label for="sc-bussgeld">Bußgelddatum</label>
-            <input id="sc-bussgeld" type="text" placeholder="TT.MM.JJJJ" />
-          </div>
-          <div>
-            <label for="sc-gezeichnet">Gezeichnet von</label>
-            <textarea id="sc-gezeichnet" rows="2"></textarea>
-          </div>
-        </div>
-
-        <button class="btn" id="btn-schnellakte">Schnellakte generieren</button>
       </div>
 
       <!-- KOLLEKTIVAKTE -->
@@ -590,9 +488,8 @@
         </div>
       </div>
 
-      <!-- FAHNDUNGSAKTE (IN BEARBEITUNG) -->
+      <!-- ERGREIFUNGSAKTE (IN BEARBEITUNG) -->
       <div id="tab-fahndung" class="hidden">
-
         <div style="
           margin-bottom: 12px;
           padding: 10px 12px;
@@ -604,7 +501,7 @@
           line-height: 1.35;
         ">
           <strong style="color:#ffd3d5;">Hinweis:</strong>
-          Die Fahndungsakte ist aktuell <strong>in Bearbeitung</strong>. Diese Funktion ist derzeit deaktiviert.
+          Die Ergreifungsakte ist aktuell <strong>in Bearbeitung</strong>. Diese Funktion ist derzeit deaktiviert.
         </div>
 
         <div style="opacity:0.45; pointer-events:none;">
@@ -620,13 +517,13 @@
           </div>
 
           <label for="fa-tatort">Tatort und Zeitraum</label>
-          <input id="fa-tatort" type="text" placeholder="z. B. Route 68 Kleidungsladen, Zwischen 5004 und 5000 | 06.12.2025 16:00–16:15 Uhr" />
+          <input id="fa-tatort" type="text" placeholder="z. B. ... | 06.12.2025 16:00–16:15 Uhr" />
 
           <label for="fa-person">Gesuchte Person</label>
           <textarea id="fa-person" placeholder="Name, Geburtsdatum, Beschreibung"></textarea>
 
           <label for="fa-paragrafen">Straftatbestände / Paragraphen</label>
-          <textarea id="fa-paragrafen" placeholder="§1 Abs. 01 BtMG&#10;§4 Abs. 03 StGB"></textarea>
+          <textarea id="fa-paragrafen" placeholder="§..."></textarea>
 
           <label for="fa-sachverhalt">Sachverhalt</label>
           <textarea id="fa-sachverhalt" placeholder="Freitextlicher Sachverhalt, Ermittlungsstand ..."></textarea>
@@ -642,7 +539,7 @@
             <textarea id="fa-gezeichnet" rows="2"></textarea>
           </div>
 
-          <button class="btn" id="btn-fahndung">Fahndungsakte generieren</button>
+          <button class="btn" id="btn-fahndung">Ergreifungsakte generieren</button>
         </div>
       </div>
 
@@ -655,13 +552,10 @@
         <h3>Strafakten</h3>
         <div id="verzeichnis-straf" class="verz-list"></div>
 
-        <h3>Schnellakten</h3>
-        <div id="verzeichnis-schnell" class="verz-list"></div>
-
         <h3>Kollektivakten</h3>
         <div id="verzeichnis-kollektiv" class="verz-list"></div>
 
-        <h3>Fahndungsakten</h3>
+        <h3>Ergreifungsakten</h3>
         <div id="verzeichnis-fahndung" class="verz-list"></div>
       </div>
     </section>
@@ -849,12 +743,12 @@
       const kuerzel = `${vorname.charAt(0)}. ${nachname}`;
       const unterschrift = `${kuerzel}\n${o.name} | ${o.dienstnummer} | ${o.rang}`;
 
-      ["st-officer","sc-officer","ko-officer","fa-officer"].forEach(id => {
+      ["st-officer","ko-officer","fa-officer"].forEach(id => {
         const el = document.getElementById(id);
         if (el) el.value = full;
       });
 
-      ["st-gezeichnet","sc-gezeichnet","ko-gezeichnet","fa-gezeichnet"].forEach(id => {
+      ["st-gezeichnet","ko-gezeichnet","fa-gezeichnet"].forEach(id => {
         const el = document.getElementById(id);
         if (el) el.value = unterschrift;
       });
@@ -909,7 +803,7 @@
 
         const tab = btn.dataset.tab;
 
-        document.querySelectorAll("#tab-strafakte, #tab-schnellakte, #tab-kollektivakte, #tab-fahndung, #tab-verzeichnis")
+        document.querySelectorAll("#tab-strafakte, #tab-kollektivakte, #tab-fahndung, #tab-verzeichnis")
           .forEach(el => el.classList.add("hidden"));
 
         const activeTab = document.getElementById("tab-" + tab);
@@ -1018,27 +912,14 @@
     }
 
     function initRequiredStarsAndAutoclear() {
-      // Sterne Strafakte
+      // Pflichtfelder Strafakte
       addRequiredMarkerById("st-id-label");
-      addRequiredMarkerFor("st-abgenommen-von");
       addRequiredMarkerFor("st-verlesen");
       addRequiredMarkerFor("st-beisein");
       addRequiredMarkerFor("st-rechtsbeistand");
       addRequiredMarkerFor("st-medizin");
-      addRequiredMarkerFor("st-eilverfahren");
-      addRequiredMarkerFor("st-bussgeld");
 
-      // Sterne Schnellakte
-      addRequiredMarkerById("sc-id-label");
-      addRequiredMarkerFor("sc-abgenommen-von");
-      addRequiredMarkerFor("sc-verlesen");
-      addRequiredMarkerFor("sc-beisein");
-      addRequiredMarkerFor("sc-rechtsbeistand");
-      addRequiredMarkerFor("sc-medizin");
-      addRequiredMarkerFor("sc-eilverfahren");
-      addRequiredMarkerFor("sc-bussgeld");
-
-      // Sterne Kollektivakte
+      // Pflichtfelder Kollektivakte
       addRequiredMarkerById("ko-id-label");
       addRequiredMarkerFor("ko-verlesen");
       addRequiredMarkerFor("ko-beisein");
@@ -1050,15 +931,13 @@
       addRequiredMarkerFor("ko-bestaetigt-zeit");
 
       attachAutoClear([
-        "st-abgenommen-von","st-verlesen","st-beisein","st-eilverfahren","st-bussgeld",
-        "sc-abgenommen-von","sc-verlesen","sc-beisein","sc-eilverfahren","sc-bussgeld",
+        "st-verlesen","st-beisein",
         "ko-verlesen","ko-beisein","ko-eilverfahren","ko-bussgeld","ko-bestaetigt-von","ko-bestaetigt-zeit"
       ]);
     }
 
     const verzContainerIds = {
       straf: "verzeichnis-straf",
-      schnell: "verzeichnis-schnell",
       kollektiv: "verzeichnis-kollektiv",
       fahndung: "verzeichnis-fahndung"
     };
@@ -1129,7 +1008,14 @@
     }
 
     function initVerzeichnis() {
-      ["straf","schnell","kollektiv","fahndung"].forEach(renderVerzeichnisListe);
+      ["straf","kollektiv","fahndung"].forEach(renderVerzeichnisListe);
+    }
+
+    // Helper: garantiert genau 1 Leerzeile zwischen Blöcken
+    function addBlock(out, title, content) {
+      out += title + "\n";
+      if (content && content.trim()) out += content.trim() + "\n";
+      return out + "\n";
     }
 
     function genStrafakte() {
@@ -1139,13 +1025,10 @@
       const ok = validateRequiredFields({
         rootEl: root,
         fields: [
-          { id: "st-abgenommen-von", type: "text" },
           { id: "st-verlesen", type: "text" },
           { id: "st-beisein", type: "text" },
           { id: "st-rechtsbeistand", type: "select" },
-          { id: "st-medizin", type: "select" },
-          { id: "st-eilverfahren", type: "text" },
-          { id: "st-bussgeld", type: "text" }
+          { id: "st-medizin", type: "select" }
         ],
         ident: {
           prefix: "st",
@@ -1160,41 +1043,35 @@
       const besch = document.getElementById("st-beschuldigte").value.trim();
       const ges = document.getElementById("st-geschaedigte").value.trim();
       const sach = document.getElementById("st-sachverhalt").value.trim();
+      const includeSach = document.getElementById("st-sachverhalt-include")?.checked;
       const idTxt = getIdentitaet("st");
       const zeugen = document.getElementById("st-zeugen").value.trim();
       const geg = document.getElementById("st-gegenstaende").value.trim();
-      const abn = document.getElementById("st-abgenommen-von").value.trim();
       const verlesen = document.getElementById("st-verlesen").value.trim();
       const beisein = document.getElementById("st-beisein").value.trim();
       const rb = document.getElementById("st-rechtsbeistand").value;
       const med = document.getElementById("st-medizin").value;
-      const eil = document.getElementById("st-eilverfahren").value.trim();
-      const buss = document.getElementById("st-bussgeld").value.trim();
       const gezeichnet = document.getElementById("st-gezeichnet").value.trim();
 
       let out = "";
       out += "| - Strafakte - |\n\n";
       out += "Narco City Police Department\n";
-      out += officer + "\n\n";
+      out += (officer || "—") + "\n\n";
 
-      out += "| Tatort und Zeitraum: |\n";
-      out += tatort + "\n\n";
+      out = addBlock(out, "| Tatort und Zeitraum: |", tatort || "—");
 
-      out += "| Beschuldigte Person(en): |\n";
-      out += besch + "\n\n";
+      out = addBlock(out, "| Beschuldigte Person(en): |", besch || "—");
+      out += (idTxt || "—") + "\n\n";
 
-      out += "| Geschädigte Person(en): |\n";
-      out += ges + "\n\n";
+      out = addBlock(out, "| Geschädigte Person(en): |", ges || "—");
 
-      out += "| Sachverhalt aus Sicht des NCPDs: |\n";
-      out += sach + "\n\n";
-      out += idTxt + "\n\n";
+      out += "|Sachverhalt aus Sicht der Behörde: |\n";
+      if (includeSach && sach) out += sach + "\n";
+      out += "\n";
 
-      out += "| Weitere beteiligte Einheiten/Zeugen: |\n";
-      out += zeugen + "\n\n";
+      out = addBlock(out, "| Weitere beteiligte Einheiten/Zeugen: |", zeugen || "—");
 
-      out += "| Abgenommene Gegenstände: |  Abgenommen von: " + abn + "\n";
-      out += geg + "\n\n";
+      out = addBlock(out, "| Abgenommene Gegenstände: |", geg || "—");
 
       out += "| Bemerkungen: |\n";
       out += "Die Rechte wurden dem Beschuldigten durch " + verlesen + " im Beisein von " + beisein + " verlesen und verstanden.\n";
@@ -1205,99 +1082,15 @@
       if (med === "bestand") out += "Der TV bestand auf medizinische Versorgung.\n";
       if (med === "verzichtete") out += "Der TV verzichtete auf medizinische Versorgung.\n";
 
-      out += "Das Eilverfahren wurde durch " + eil + " abgelehnt.\n";
-      out += "Das Bußgeld ist bis zum " + buss + " zu bezahlen.\n";
-      out += "Die dem Tatverdächtigen abgenommenen Gegenstände wurden in seinen persönlichen Spind gelegt.\n";
+      out += "Das Bußgeld ist in 7 Tagen zu bezahlen.\n";
+      out += "Die dem Tatverdächtigen abgenommenen Gegenstände wurden in seinen persönlichen Spind gelegt.\n\n";
 
-      out += "\n| Gezeichnet von: |\n";
-      out += gezeichnet + "\n\n";
+      out += "| Gezeichnet von: |\n";
+      out += (gezeichnet || "—") + "\n";
 
       document.getElementById("output").value = out;
       const titel = tatort || (besch.split("\n")[0] || "Strafakte ohne Titel");
       saveAkte("straf", titel, out);
-    }
-
-    function genSchnellakte() {
-      const root = document.getElementById("tab-schnellakte");
-      clearErrors(root);
-
-      const ok = validateRequiredFields({
-        rootEl: root,
-        fields: [
-          { id: "sc-abgenommen-von", type: "text" },
-          { id: "sc-verlesen", type: "text" },
-          { id: "sc-beisein", type: "text" },
-          { id: "sc-rechtsbeistand", type: "select" },
-          { id: "sc-medizin", type: "select" },
-          { id: "sc-eilverfahren", type: "text" },
-          { id: "sc-bussgeld", type: "text" }
-        ],
-        ident: {
-          prefix: "sc",
-          groupEl: document.getElementById("sc-id-group"),
-          hintEl: document.getElementById("sc-id-hint")
-        }
-      });
-      if (!ok) return;
-
-      const officer = document.getElementById("sc-officer").value.trim();
-      const tatort = document.getElementById("sc-tatort").value.trim();
-      const besch = document.getElementById("sc-beschuldigte").value.trim();
-      const ges = document.getElementById("sc-geschaedigte").value.trim();
-      const idTxt = getIdentitaet("sc");
-      const zeugen = document.getElementById("sc-zeugen").value.trim();
-      const geg = document.getElementById("sc-gegenstaende").value.trim();
-      const abn = document.getElementById("sc-abgenommen-von").value.trim();
-      const verlesen = document.getElementById("sc-verlesen").value.trim();
-      const beisein = document.getElementById("sc-beisein").value.trim();
-      const rb = document.getElementById("sc-rechtsbeistand").value;
-      const med = document.getElementById("sc-medizin").value;
-      const eil = document.getElementById("sc-eilverfahren").value.trim();
-      const buss = document.getElementById("sc-bussgeld").value.trim();
-      const gezeichnet = document.getElementById("sc-gezeichnet").value.trim();
-
-      let out = "";
-      out += "| - Schnellakte - |\n\n";
-      out += "Narco City Police Department\n";
-      out += officer + "\n\n";
-
-      out += "| Tatort und Zeitraum: |\n";
-      out += tatort + "\n\n";
-
-      out += "| Beschuldigte Person(en): |\n";
-      out += besch + "\n\n";
-
-      out += "| Geschädigte Person(en): |\n";
-      out += ges + "\n\n";
-
-      out += "| Identitätsfeststellung: |\n";
-      out += idTxt + "\n\n";
-
-      out += "| Weitere beteiligte Einheiten/Zeugen: |\n";
-      out += zeugen + "\n\n";
-
-      out += "| Abgenommene Gegenstände: |  Abgenommen von: " + abn + "\n";
-      out += geg + "\n\n";
-
-      out += "| Bemerkungen: |\n";
-      out += "Die Rechte wurden dem Beschuldigten durch " + verlesen + " im Beisein von " + beisein + " verlesen und verstanden.\n";
-
-      if (rb === "bestand") out += "Dieser bestand auf einen Rechtsbeistand.\n";
-      if (rb === "verzichtete") out += "Dieser verzichtete auf einen Rechtsbeistand.\n";
-
-      if (med === "bestand") out += "Der TV bestand auf medizinische Versorgung.\n";
-      if (med === "verzichtete") out += "Der TV verzichtete auf medizinische Versorgung.\n";
-
-      out += "Das Eilverfahren wurde durch " + eil + " abgelehnt.\n";
-      out += "Das Bußgeld ist bis zum " + buss + " zu bezahlen.\n";
-      out += "Die dem Tatverdächtigen abgenommenen Gegenstände wurden in seinen persönlichen Spind gelegt.\n\n";
-
-      out += "| Gezeichnet von: |\n";
-      out += gezeichnet + "\n\n";
-
-      document.getElementById("output").value = out;
-      const titel = tatort || (besch.split("\n")[0] || "Schnellakte ohne Titel");
-      saveAkte("schnell", titel, out);
     }
 
     function genKollektivakte() {
@@ -1345,28 +1138,18 @@
       let out = "";
       out += "| - Kollektivakte - |\n";
       out += "Narco City Police Department\n";
-      out += officer + "\n\n";
+      out += (officer || "—") + "\n\n";
       out += "Kollektivakte wurde von " + bestaetigtVon + " um " + bestaetigtZeit + " genehmigt\n\n";
 
-      out += "| Tatort und Zeitraum: |\n";
-      out += tatort + "\n\n";
+      out = addBlock(out, "| Tatort und Zeitraum: |", tatort || "—");
+      out = addBlock(out, "| Beschuldigte Personen: |", besch || "—");
+      out = addBlock(out, "| Geschädigte Person(en): |", ges || "—");
+      out = addBlock(out, "| Sachverhalt aus Sicht des NCPDs: |", sach || "—");
 
-      out += "| Beschuldigte Personen: |\n";
-      out += besch + "\n\n";
+      out += (idTxt || "—") + "\n\n";
 
-      out += "| Geschädigte Person(en): |\n";
-      out += ges + "\n\n";
-
-      out += "| Sachverhalt aus Sicht des NCPDs: |\n";
-      out += sach + "\n\n";
-
-      out += idTxt + "\n\n";
-
-      out += "| Weitere beteiligte Einheiten/Zeugen: |\n";
-      out += zeugen + "\n\n";
-
-      out += "| Abgenommene Gegenstände: |\n";
-      out += geg + "\n\n";
+      out = addBlock(out, "| Weitere beteiligte Einheiten/Zeugen: |", zeugen || "—");
+      out = addBlock(out, "| Abgenommene Gegenstände: |", geg || "—");
 
       out += "| Bemerkungen: |\n";
       out += "Die Rechte wurden dem Beschuldigten durch " + verlesen + " im Beisein von " + beisein + " verlesen und verstanden.\n";
@@ -1381,7 +1164,7 @@
       out += "Das Bußgeld ist bis zum " + buss + " zu bezahlen.\n\n";
 
       out += "| Gezeichnet von: |\n";
-      out += gezeichnet + "\n\n";
+      out += (gezeichnet || "—") + "\n";
 
       document.getElementById("output").value = out;
       const titel = tatort || "Kollektivakte ohne Titel";
@@ -1400,47 +1183,41 @@
       const gezeichnet = document.getElementById("fa-gezeichnet")?.value?.trim() || "";
 
       let out = "";
-      out += "| - Fahndungsakte - |\n";
+      out += "| - Ergreifungsakte - |\n\n";
       out += "Narco City Police Department\n";
-      out += officer + "\n\n";
+      out += (officer || "—") + "\n\n";
 
       out += "| Tatort und Zeitraum: |\n";
-      out += tatort + "\n";
-      out += "Am " + datum + "\n\n";
+      out += (tatort || "—") + "\n";
+      out += "Am " + (datum || "—") + "\n\n";
 
-      out += "| Beschuldigte Person(en): |\n";
-      out += person + "\n\n";
-
+      out = addBlock(out, "| Beschuldigte Person(en): |", person || "—");
       out += "| Geschädigte Person(en): |\n";
       out += "—-----------------------\n\n";
 
       out += "| Sachverhalt aus Sicht des NCPDs: |\n";
-      if (paragrafen) out += paragrafen + "\n\n";
+      if (paragrafen) out += paragrafen + "\n";
+      out += "\n";
 
-      out += "|Sachverhalt:|\n";
-      out += sach + "\n\n";
-
-      out += "| Weitere beteiligte Einheiten/Zeugen: |\n";
-      out += einheiten + "\n\n";
-
-      out += "| Besondere Hinweise: |\n";
-      out += hinweise + "\n\n";
+      out = addBlock(out, "|Sachverhalt:|", sach || "—");
+      out = addBlock(out, "| Weitere beteiligte Einheiten/Zeugen: |", einheiten || "—");
+      out = addBlock(out, "| Besondere Hinweise: |", hinweise || "—");
 
       out += "| Bemerkungen: |\n";
       out += "Die o.g. Beschuldigte ist flüchtig. Beim Antreffen der Beschuldigten ist diese festzunehmen, ihre Rechte zu belehren und der gerechten Strafe zuzuführen.\n\n";
 
       out += "| Gezeichnet von: |\n";
-      out += gezeichnet + "\n\n";
+      out += (gezeichnet || "—") + "\n";
 
       document.getElementById("output").value = out;
-      const titel = person.split("\n")[0] || "Fahndungsakte ohne Titel";
+      const titel = person.split("\n")[0] || "Ergreifungsakte ohne Titel";
       saveAkte("fahndung", titel, out);
     }
 
     function resetForm() {
       const keepIds = new Set([
-        "st-officer","sc-officer","ko-officer","fa-officer",
-        "st-gezeichnet","sc-gezeichnet","ko-gezeichnet","fa-gezeichnet"
+        "st-officer","ko-officer","fa-officer",
+        "st-gezeichnet","ko-gezeichnet","fa-gezeichnet"
       ]);
 
       document.querySelectorAll("input, textarea, select").forEach(el => {
@@ -1458,7 +1235,6 @@
     }
 
     document.getElementById("btn-strafakte").addEventListener("click", genStrafakte);
-    document.getElementById("btn-schnellakte").addEventListener("click", genSchnellakte);
     document.getElementById("btn-kollektivakte").addEventListener("click", genKollektivakte);
     document.getElementById("btn-fahndung").addEventListener("click", genFahndung);
 
