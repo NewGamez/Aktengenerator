@@ -9,223 +9,270 @@
   <link rel="icon" type="image/png" href="ncpd-logo.png">
 
   <style>
+    :root{
+      --panel: rgba(10, 12, 25, 0.72);
+      --line: rgba(255,255,255,0.08);
+      --text: rgba(255,255,255,0.92);
+      --muted: rgba(255,255,255,0.60);
+      --accent:#5865f2;
+      --accent2:#6a74ff;
+      --danger:#ff4d4f;
+    }
+
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: "Inter", system-ui, sans-serif; }
 
-    body {
+    body{
       min-height: 100vh;
-      background: radial-gradient(circle at top, #252542 0, #050511 55%, #050509 100%);
-      color: #fff;
+      background:
+        radial-gradient(900px 400px at 20% 0%, rgba(88,101,242,0.20), transparent 60%),
+        radial-gradient(700px 420px at 80% 10%, rgba(130,160,255,0.14), transparent 55%),
+        radial-gradient(circle at top, #252542 0, #050511 55%, #050509 100%);
+      color: var(--text);
       display: flex;
       flex-direction: column;
     }
 
-    .topbar {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
+    .topbar{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
       padding: 14px 20px;
       background: rgba(5, 6, 20, 0.92);
-      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      border-bottom: 1px solid rgba(255,255,255,0.07);
       backdrop-filter: blur(10px);
       position: sticky;
       top: 0;
       z-index: 10;
     }
 
-    .topbar-left { display: flex; align-items: center; gap: 10px; }
-
-    .hero-logo {
-      width: 36px; height: 36px; object-fit: cover; border-radius: 50%;
-      display: block; margin-right: 8px; opacity: 0.95;
+    .topbar-left{ display:flex; align-items:center; gap:10px; }
+    .hero-logo{
+      width:36px; height:36px; object-fit:cover; border-radius:50%;
+      display:block; opacity:0.95;
     }
+    .topbar-title-main{ font-size:1rem; font-weight:600; }
+    .topbar-title-sub{ font-size:0.8rem; opacity:0.7; }
 
-    .topbar-title-main { font-size: 1rem; font-weight: 600; }
-    .topbar-title-sub { font-size: 0.8rem; opacity: 0.7; }
-
-    .logout-btn {
-      font-size: 0.8rem;
-      text-decoration: none;
-      color: #d5d7ff;
-      padding: 6px 14px;
-      border-radius: 30px;
-      border: 1px solid rgba(213, 215, 255, 0.25);
+    .logout-btn{
+      font-size:0.8rem;
+      text-decoration:none;
+      color:#d5d7ff;
+      padding:6px 14px;
+      border-radius:30px;
+      border:1px solid rgba(213,215,255,0.25);
       background: rgba(20, 22, 40, 0.8);
       transition: 0.2s;
+      white-space: nowrap;
     }
-    .logout-btn:hover { background: rgba(35, 38, 70, 0.95); }
+    .logout-btn:hover{ background: rgba(35,38,70,0.95); }
 
-    .login-status { text-align: right; font-size: 0.78rem; line-height: 1.25; }
-    .login-status-main { font-weight: 500; }
-    .login-status-sub { opacity: 0.8; }
-    .login-status-officer { opacity: 0.8; margin-top: 2px; font-size: 0.76rem; }
+    .login-status{ text-align:right; font-size:0.78rem; line-height:1.25; }
+    .login-status-main{ font-weight:500; }
+    .login-status-sub{ opacity:0.8; }
+    .login-status-officer{ opacity:0.8; margin-top:2px; font-size:0.76rem; }
 
-    .page {
-      flex: 1;
-      width: 100%;
+    .page{
+      flex:1;
+      width:100%;
       max-width: 1550px;
-      margin: 20px auto;
-      padding: 0 20px 30px;
-      display: grid;
+      margin: 18px auto;
+      padding: 0 18px 26px;
+      display:grid;
       grid-template-columns: minmax(0, 2.1fr) minmax(0, 1.4fr);
-      gap: 18px;
+      gap: 20px;
     }
-    @media (max-width: 1100px) { .page { grid-template-columns: 1fr; } }
+    @media (max-width: 1100px){ .page{ grid-template-columns: 1fr; } }
 
-    .panel {
-      background: rgba(10, 12, 25, 0.8);
-      padding: 18px 18px 20px;
-      border-radius: 14px;
-      border: 1px solid rgba(255, 255, 255, 0.05);
-      box-shadow: 0 10px 25px rgba(0,0,0,0.4);
-    }
-
-    .panel-header { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 12px; }
-    .panel-title { font-size: 0.95rem; font-weight: 600; }
-    .panel-subtitle { font-size: 0.75rem; opacity: 0.7; }
-
-    label { display: block; margin: 8px 0 3px; font-size: 0.8rem; opacity: 0.9; }
-
-    input, textarea, select {
-      width: 100%;
-      background: #0f1122;
-      border: 1px solid #2c2e40;
-      color: #fff;
-      padding: 8px 9px;
-      border-radius: 7px;
-      font-size: 0.82rem;
-      outline: none;
-      transition: border 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
-    }
-    input:focus, textarea:focus, select:focus {
-      border-color: #5865f2;
-      box-shadow: 0 0 0 1px rgba(88, 101, 242, 0.45);
-      background: #10132a;
+    .panel{
+      background: linear-gradient(180deg, rgba(12,14,32,0.78), rgba(8,10,22,0.72));
+      padding: 20px 20px 22px;
+      border-radius: 16px;
+      border: 1px solid var(--line);
+      box-shadow: 0 18px 45px rgba(0,0,0,0.55), inset 0 1px 0 rgba(255,255,255,0.05);
     }
 
-    textarea { min-height: 110px; resize: vertical; }
+    .panel-header{ display:flex; justify-content:space-between; align-items:baseline; margin-bottom: 16px; }
+    .panel-title{ font-size: 1.02rem; font-weight: 600; }
+    .panel-subtitle{ font-size: 0.78rem; color: var(--muted); }
 
-    .row { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
-    @media (max-width: 700px) { .row { grid-template-columns: 1fr; } }
-
-    .checkbox-row {
-      display: flex; flex-wrap: wrap;
-      gap: 8px 12px;
-      margin: 4px 0 8px;
+    label{
+      display:block;
+      margin: 10px 0 4px;
       font-size: 0.78rem;
+      letter-spacing: 0.02em;
+      color: rgba(255,255,255,0.78);
     }
-    .checkbox-row label { margin: 0; display: inline-flex; align-items: center; gap: 5px; }
-    .checkbox-row input[type="checkbox"] { width: 14px; height: 14px; border-radius: 4px; cursor: pointer; padding: 0; }
 
-    .btn {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 6px;
-      border-radius: 8px;
-      padding: 9px 14px;
-      border: none;
-      cursor: pointer;
-      font-size: 0.85rem;
-      font-weight: 500;
-      margin-top: 12px;
-      background: #5865f2;
-      color: #fff;
-      box-shadow: 0 8px 20px rgba(88,101,242,0.45);
-      transition: transform 0.06s ease, box-shadow 0.06s ease, background 0.15s ease;
+    input, textarea, select{
+      width:100%;
+      background: rgba(9,11,25,0.88);
+      border: 1px solid rgba(255,255,255,0.10);
+      color: rgba(255,255,255,0.92);
+      padding: 10px 11px;
+      border-radius: 12px;
+      font-size: 0.86rem;
+      outline:none;
+      transition: border 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.04), 0 10px 24px rgba(0,0,0,0.28);
     }
-    .btn:hover { background: #6a74ff; transform: translateY(-1px); box-shadow: 0 11px 26px rgba(88,101,242,0.55); }
-    .btn:active { transform: translateY(0); box-shadow: 0 7px 16px rgba(88,101,242,0.5); }
-
-    .btn-secondary {
-      background: #1e213b;
-      box-shadow: none;
-      border: 1px solid rgba(255,255,255,0.08);
-      margin-left: 6px;
+    input::placeholder, textarea::placeholder{ color: rgba(255,255,255,0.35); }
+    input:focus, textarea:focus, select:focus{
+      border-color: rgba(88,101,242,0.65);
+      box-shadow: 0 0 0 3px rgba(88,101,242,0.22), 0 16px 36px rgba(0,0,0,0.35);
+      background: rgba(12,15,34,0.92);
     }
-    .btn-secondary:hover { background: #272b4b; box-shadow: 0 8px 20px rgba(0,0,0,0.4); }
 
-    .tab-buttons {
-      display: inline-flex;
-      flex-wrap: wrap;
-      gap: 6px;
-      background: #080a19;
-      padding: 3px;
+    textarea{ min-height: 120px; resize: vertical; line-height: 1.35; margin-bottom: 6px; }
+    #output{
+      min-height: 420px;
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,0.10);
+      background: rgba(5,6,20,0.92);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.04), 0 16px 40px rgba(0,0,0,0.35);
+      font-family: "Consolas", "Fira Code", monospace;
+      font-size: 0.82rem;
+      white-space: pre-wrap;
+    }
+
+    .row{
+      display:grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+      margin-top: 6px;
+    }
+    @media (max-width: 700px){ .row{ grid-template-columns: 1fr; } }
+
+    .tab-buttons{
+      display:inline-flex;
+      flex-wrap:wrap;
+      gap: 8px;
+      background: rgba(5,6,18,0.72);
+      padding: 4px;
       border-radius: 999px;
-      border: 1px solid rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.08);
       margin-bottom: 14px;
     }
-
-    .tab-btn {
+    .tab-btn{
       border-radius: 999px;
       border: none;
-      padding: 4px 10px;
-      font-size: 0.78rem;
+      padding: 6px 12px;
+      font-size: 0.80rem;
       cursor: pointer;
       background: transparent;
-      color: #a4a7d7;
+      color: rgba(255,255,255,0.62);
       transition: 0.15s;
     }
-    .tab-btn.active {
-      background: #5865f2;
+    .tab-btn.active{
+      background: linear-gradient(180deg, var(--accent2), var(--accent));
       color: #fff;
-      box-shadow: 0 6px 15px rgba(88,101,242,0.5);
+      box-shadow: 0 10px 22px rgba(88,101,242,0.42);
     }
-    .tab-btn:not(.active):hover { background: rgba(255,255,255,0.04); }
+    .tab-btn:not(.active):hover{ background: rgba(255,255,255,0.06); }
 
-    .hidden { display: none; }
+    .hidden{ display:none; }
 
-    #output {
-      width: 100%;
-      min-height: 380px;
-      background: #050614;
-      border-radius: 10px;
-      border: 1px solid #282a3e;
-      padding: 10px 12px;
-      color: #f9f9ff;
-      font-family: "Consolas", "Fira Code", monospace;
-      font-size: 0.8rem;
-      white-space: pre-wrap;
-      resize: vertical;
-    }
-
-    #tab-verzeichnis h3 { margin-top: 12px; margin-bottom: 6px; font-size: 0.9rem; font-weight: 600; }
-    .verz-hinweis { font-size: 0.78rem; opacity: 0.7; margin-bottom: 10px; }
-    .verz-list { margin-bottom: 6px; }
-    .verz-item {
-      padding: 7px 9px;
-      background: #0f1122;
-      border: 1px solid #262943;
-      border-radius: 7px;
-      margin-bottom: 4px;
-      cursor: pointer;
+    .checkbox-row{
+      display:flex;
+      flex-wrap:wrap;
+      gap: 10px;
+      margin: 8px 0 6px;
       font-size: 0.78rem;
-      display: flex;
-      justify-content: space-between;
-      gap: 8px;
     }
-    .verz-item:hover { background: #171a33; }
-    .verz-item-title { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 230px; }
-    .verz-item-date { opacity: 0.6; font-size: 0.74rem; }
-    .verz-empty { font-size: 0.78rem; opacity: 0.65; padding: 6px 2px 10px; }
+    .checkbox-row label{
+      margin: 0;
+      padding: 8px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.10);
+      background: rgba(255,255,255,0.04);
+      color: rgba(255,255,255,0.80);
+      display:inline-flex;
+      align-items:center;
+      gap: 8px;
+      cursor:pointer;
+      transition: 0.15s;
+    }
+    .checkbox-row label:hover{
+      background: rgba(255,255,255,0.06);
+      border-color: rgba(255,255,255,0.14);
+    }
+
+    .checkbox-row input[type="checkbox"]{
+      appearance:none;
+      width: 16px; height: 16px;
+      border-radius: 6px;
+      border: 1px solid rgba(255,255,255,0.18);
+      background: rgba(0,0,0,0.25);
+      display:grid;
+      place-items:center;
+      margin: 0;
+    }
+    .checkbox-row input[type="checkbox"]::after{
+      content:"";
+      width: 9px; height: 9px;
+      border-radius: 4px;
+      transform: scale(0);
+      transition: transform 0.12s ease;
+      background: linear-gradient(180deg, var(--accent2), var(--accent));
+      box-shadow: 0 6px 14px rgba(88,101,242,0.45);
+    }
+    .checkbox-row input[type="checkbox"]:checked{
+      border-color: rgba(88,101,242,0.75);
+      background: rgba(88,101,242,0.18);
+    }
+    .checkbox-row input[type="checkbox"]:checked::after{ transform: scale(1); }
+
+    .btn{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      gap: 6px;
+      border-radius: 12px;
+      padding: 10px 14px;
+      border: none;
+      cursor: pointer;
+      font-size: 0.9rem;
+      font-weight: 600;
+      margin-top: 12px;
+      background: linear-gradient(180deg, var(--accent2), var(--accent));
+      color: #fff;
+      box-shadow: 0 10px 22px rgba(88,101,242,0.42);
+      transition: transform 0.06s ease, box-shadow 0.06s ease, filter 0.15s ease;
+      width: 100%;
+    }
+    .btn:hover{ transform: translateY(-1px); filter: brightness(1.05); }
+    .btn:active{ transform: translateY(0); box-shadow: 0 8px 18px rgba(88,101,242,0.35); }
+
+    .btn-secondary{
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.10);
+      box-shadow: none;
+      color: rgba(255,255,255,0.90);
+    }
+    .btn-secondary:hover{ background: rgba(255,255,255,0.07); }
+
+    .label-required::after{
+      content:"  •";
+      color: rgba(255,77,79,0.95);
+      font-weight: 900;
+    }
 
     .field-error{
-      border-color:#ff4d4f !important;
-      box-shadow: 0 0 0 1px rgba(255,77,79,0.55) !important;
+      border-color: rgba(255,77,79,0.75) !important;
+      box-shadow: 0 0 0 3px rgba(255,77,79,0.15) !important;
       background: rgba(255,77,79,0.06) !important;
     }
 
     .group-error{
-      outline: 1px solid rgba(255,77,79,0.65);
-      border-radius: 9px;
-      padding: 8px 10px;
+      outline: 1px solid rgba(255,77,79,0.55);
       background: rgba(255,77,79,0.05);
+      border-radius: 14px;
+      padding: 10px 12px;
     }
 
     .error-hint{
       margin-top: 6px;
       font-size: 0.76rem;
-      color: #ffb3b6;
-      opacity: 0.95;
+      color: rgba(255,200,205,0.95);
       display:none;
     }
     .error-hint.show{ display:block; }
@@ -237,243 +284,51 @@
       border-radius: 12px;
       border: 1px solid rgba(255,77,79,0.35);
       background: rgba(255,77,79,0.08);
-      color: #ffd3d5;
+      color: rgba(255,220,225,0.95);
       font-size: 0.82rem;
     }
     .validation-banner.show{ display:block; }
 
-    /* ========= UI POLISH OVERRIDES (einfach ans ENDE deines <style> packen) ========= */
-:root{
-  --bg1:#050511;
-  --bg2:#0a0c19;
-  --panel: rgba(10, 12, 25, 0.72);
-  --panel2: rgba(12, 14, 30, 0.72);
-  --line: rgba(255,255,255,0.08);
-  --line2: rgba(255,255,255,0.12);
-  --text: rgba(255,255,255,0.92);
-  --muted: rgba(255,255,255,0.62);
-  --muted2: rgba(255,255,255,0.45);
-  --accent:#5865f2;
-  --accent2:#6a74ff;
-  --danger:#ff4d4f;
-}
+    .verz-hinweis{ font-size: 0.78rem; color: var(--muted); margin-bottom: 10px; }
 
-/* Mehr “App”-Look */
-body{
-  background:
-    radial-gradient(900px 400px at 20% 0%, rgba(88,101,242,0.20), transparent 60%),
-    radial-gradient(700px 420px at 80% 10%, rgba(130,160,255,0.14), transparent 55%),
-    radial-gradient(circle at top, #252542 0, #050511 55%, #050509 100%);
-  color: var(--text);
-}
+    .verz-list{ margin-bottom: 6px; }
+    .verz-item{
+      padding: 8px 10px;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 10px;
+      margin-bottom: 6px;
+      cursor:pointer;
+      font-size: 0.78rem;
+      display:flex;
+      justify-content:space-between;
+      gap: 8px;
+    }
+    .verz-item:hover{ background: rgba(255,255,255,0.06); }
+    .verz-item-title{ white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width: 260px; }
+    .verz-item-date{ opacity:0.65; font-size: 0.74rem; }
+    .verz-empty{ font-size:0.78rem; opacity:0.7; padding: 6px 2px 10px; }
 
-.page{
-  gap: 20px;
-  max-width: 1550px; /* weniger “leerraum-wüste” */
-}
+    .section{
+      margin-top: 14px;
+      padding: 12px 14px;
+      border-radius: 14px;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.06);
+    }
+    .section-title{
+      font-size: 0.78rem;
+      font-weight: 700;
+      margin-bottom: 8px;
+      color: rgba(255,255,255,0.78);
+      letter-spacing: 0.02em;
+    }
 
-.panel{
-  padding: 20px 20px 22px;
-  border-radius: 16px;
-  background: linear-gradient(180deg, rgba(12,14,32,0.78), rgba(8,10,22,0.72));
-  border: 1px solid var(--line);
-  box-shadow:
-    0 18px 45px rgba(0,0,0,0.55),
-    inset 0 1px 0 rgba(255,255,255,0.05);
-}
+    textarea#st-gezeichnet, textarea#ko-gezeichnet, textarea#fa-gezeichnet{ min-height: 84px; }
 
-/* Labels: kleiner, cleaner, bessere Hierarchie */
-label{
-  margin: 14px 0 6px;
-  font-size: 0.78rem;
-  letter-spacing: 0.02em;
-  color: rgba(255,255,255,0.78);
-}
-
-.panel-title{
-  font-size: 1.02rem;
-}
-.panel-subtitle{
-  font-size: 0.78rem;
-  color: rgba(255,255,255,0.60);
-}
-
-/* Inputs: mehr “premium”, weniger kastig */
-input, textarea, select{
-  background: rgba(9,11,25,0.88);
-  border: 1px solid rgba(255,255,255,0.10);
-  border-radius: 12px;
-  padding: 10px 11px;
-  font-size: 0.86rem;
-  color: rgba(255,255,255,0.92);
-  box-shadow:
-    inset 0 1px 0 rgba(255,255,255,0.04),
-    0 10px 24px rgba(0,0,0,0.28);
-}
-
-input::placeholder, textarea::placeholder{
-  color: rgba(255,255,255,0.35);
-}
-
-input:focus, textarea:focus, select:focus{
-  border-color: rgba(88,101,242,0.65);
-  box-shadow:
-    0 0 0 3px rgba(88,101,242,0.22),
-    0 16px 36px rgba(0,0,0,0.35);
-  background: rgba(12,15,34,0.92);
-}
-
-/* Textareas: nicer */
-textarea{
-  min-height: 120px;
-  line-height: 1.35;
-}
-#st-sachverhalt{ min-height: 140px; }
-#output{
-  border-radius: 14px;
-  border: 1px solid rgba(255,255,255,0.10);
-  background: rgba(5,6,20,0.92);
-  box-shadow: inset 0 1px 0 rgba(255,255,255,0.04), 0 16px 40px rgba(0,0,0,0.35);
-}
-
-/* Rows: mehr Abstand, weniger “gequetscht” */
-.row{
-  gap: 14px;
-  margin-top: 8px;
-}
-
-/* Checkboxen als Chips */
-.checkbox-row{
-  gap: 10px;
-  margin: 8px 0 10px;
-}
-
-.checkbox-row label{
-  margin: 0;
-  padding: 8px 10px;
-  border-radius: 999px;
-  border: 1px solid rgba(255,255,255,0.10);
-  background: rgba(255,255,255,0.04);
-  color: rgba(255,255,255,0.80);
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  cursor: pointer;
-  transition: 0.15s;
-}
-
-.checkbox-row label:hover{
-  background: rgba(255,255,255,0.06);
-  border-color: rgba(255,255,255,0.14);
-}
-
-/* Custom checkbox */
-.checkbox-row input[type="checkbox"]{
-  appearance: none;
-  width: 16px;
-  height: 16px;
-  border-radius: 6px;
-  border: 1px solid rgba(255,255,255,0.18);
-  background: rgba(0,0,0,0.25);
-  display: grid;
-  place-items: center;
-  margin: 0;
-}
-
-.checkbox-row input[type="checkbox"]::after{
-  content: "";
-  width: 9px;
-  height: 9px;
-  border-radius: 4px;
-  transform: scale(0);
-  transition: transform 0.12s ease;
-  background: linear-gradient(180deg, var(--accent2), var(--accent));
-  box-shadow: 0 6px 14px rgba(88,101,242,0.45);
-}
-
-.checkbox-row input[type="checkbox"]:checked{
-  border-color: rgba(88,101,242,0.75);
-  background: rgba(88,101,242,0.18);
-}
-.checkbox-row input[type="checkbox"]:checked::after{
-  transform: scale(1);
-}
-
-/* Tabs: bisschen mehr “Segmented Control” */
-.tab-buttons{
-  padding: 4px;
-  gap: 8px;
-  background: rgba(5,6,18,0.72);
-  border: 1px solid rgba(255,255,255,0.08);
-}
-.tab-btn{
-  padding: 6px 12px;
-  font-size: 0.80rem;
-  color: rgba(255,255,255,0.62);
-}
-.tab-btn.active{
-  background: linear-gradient(180deg, var(--accent2), var(--accent));
-  box-shadow: 0 10px 22px rgba(88,101,242,0.42);
-}
-
-/* Buttons: etwas fetter */
-.btn{
-  border-radius: 12px;
-  padding: 10px 14px;
-  font-size: 0.9rem;
-}
-.btn-secondary{
-  border-radius: 12px;
-  background: rgba(255,255,255,0.05);
-  border: 1px solid rgba(255,255,255,0.10);
-}
-
-/* Required Stern: sauberer */
-.label-required::after{
-  content:"  •";
-  color: rgba(255,77,79,0.95);
-  font-weight: 900;
-}
-
-/* Error states: etwas “soft”, aber sichtbar */
-.field-error{
-  border-color: rgba(255,77,79,0.75) !important;
-  box-shadow: 0 0 0 3px rgba(255,77,79,0.15) !important;
-  background: rgba(255,77,79,0.06) !important;
-}
-.group-error{
-  outline: 1px solid rgba(255,77,79,0.55);
-  background: rgba(255,77,79,0.05);
-  border-radius: 14px;
-  padding: 10px 12px;
-}
-
-/* Kleine Hinweise wirken grad wie random inline-text -> unify */
-.verz-hinweis,
-.error-hint,
-.panel-subtitle{
-  color: rgba(255,255,255,0.60);
-}
-
-/* Mobile: Panel padding etwas reduzieren */
-@media (max-width: 700px){
-  .panel{ padding: 16px; }
-}
-
-/* Extra polish */
-.btn{ width: 100%; }
-
-textarea#st-gezeichnet, textarea#ko-gezeichnet, textarea#fa-gezeichnet{
-  min-height: 84px;
-}
-
-.panel-header{
-  margin-bottom: 16px;
-}
-
-.topbar{
-  border-bottom: 1px solid rgba(255,255,255,0.07);
-}
+    @media (max-width: 700px){
+      .panel{ padding: 16px; }
+    }
   </style>
 </head>
 
@@ -515,295 +370,325 @@ textarea#st-gezeichnet, textarea#ko-gezeichnet, textarea#fa-gezeichnet{
 
       <!-- STRAFAKTE -->
       <div id="tab-strafakte">
-        <div class="row">
-          <div>
-            <label for="st-officer">Officer</label>
-            <input id="st-officer" type="text" />
+        <div class="section">
+          <div class="section-title">Grunddaten</div>
+
+          <div class="row">
+            <div>
+              <label for="st-officer">Officer</label>
+              <input id="st-officer" type="text" />
+            </div>
+            <div>
+              <label for="st-tatort-ort">Tatort (Ort/PLZ)</label>
+              <input id="st-tatort-ort" type="text" placeholder="z. B. Bank, bei PLZ 5069" />
+            </div>
           </div>
-          <div>
-            <label for="st-tatort-ort">Tatort (Ort/PLZ)</label>
-            <input id="st-tatort-ort" type="text" placeholder="z. B. Bank, bei PLZ 5069" />
+
+          <div class="row">
+            <div>
+              <label for="st-tatort-zeitraum">Zeitraum (Datum/Uhrzeit)</label>
+              <input id="st-tatort-zeitraum" type="text" placeholder="z. B. Am 02.02.2026 von 00:05 Uhr bis 00:54 Uhr" />
+            </div>
+            <div>
+              <label>&nbsp;</label>
+              <input type="text" disabled style="opacity:0; pointer-events:none;" />
+            </div>
+          </div>
+
+          <div class="row">
+            <div>
+              <label for="st-beschuldigte">Beschuldigte Person(en)</label>
+              <textarea id="st-beschuldigte"></textarea>
+            </div>
+            <div>
+              <label for="st-geschaedigte">Geschädigte Person(en)</label>
+              <textarea id="st-geschaedigte"></textarea>
+            </div>
           </div>
         </div>
 
-        <div class="row">
-          <div>
-            <label for="st-tatort-zeitraum">Zeitraum (Datum/Uhrzeit)</label>
-            <input id="st-tatort-zeitraum" type="text" placeholder="z. B. Am 02.02.2026 von 00:05 Uhr bis 00:54 Uhr" />
+        <div class="section" id="st-id-section">
+          <div class="section-title">Identitätsfeststellung</div>
+
+          <label id="st-id-label">Identitätsfeststellung</label>
+          <div id="st-id-group" class="checkbox-row">
+            <label><input type="checkbox" id="st-id-pers" /> Personalausweis</label>
+            <label><input type="checkbox" id="st-id-waffe" /> Waffenschein</label>
+            <label><input type="checkbox" id="st-id-fs" /> Führerschein</label>
+            <label><input type="checkbox" id="st-id-finger" /> Fingerabdruckscanner</label>
           </div>
-          <div>
-            <label>&nbsp;</label>
-            <input type="text" disabled style="opacity:0; pointer-events:none;" />
-          </div>
+          <div id="st-id-hint" class="error-hint">Bitte mindestens eine Option auswählen.</div>
         </div>
 
-        <div class="row">
-          <div>
-            <label for="st-beschuldigte">Beschuldigte Person(en)</label>
-            <textarea id="st-beschuldigte"></textarea>
-          </div>
-          <div>
-            <label for="st-geschaedigte">Geschädigte Person(en)</label>
-            <textarea id="st-geschaedigte"></textarea>
-          </div>
-        </div>
+        <div class="section">
+          <div class="section-title">Sachverhalt</div>
 
-        <label id="st-id-label">Identitätsfeststellung</label>
-        <div id="st-id-group" class="checkbox-row">
-          <label><input type="checkbox" id="st-id-pers" /> Personalausweis</label>
-          <label><input type="checkbox" id="st-id-waffe" /> Waffenschein</label>
-          <label><input type="checkbox" id="st-id-fs" /> Führerschein</label>
-          <label><input type="checkbox" id="st-id-finger" /> Fingerabdruckscanner</label>
-        </div>
-        <div id="st-id-hint" class="error-hint">Bitte mindestens eine Option auswählen.</div>
-
-        <div style="margin-top:10px;">
-          <label style="margin-bottom:4px;">Sachverhalt</label>
-          <div class="checkbox-row" style="margin-bottom:6px;">
+          <div class="checkbox-row">
             <label><input type="checkbox" id="st-sachverhalt-include" /> Sachverhalt hinzufügen</label>
           </div>
-          <textarea id="st-sachverhalt" placeholder="Straftat pro Satz ... (nur wenn Checkbox aktiv)"></textarea>
-          <div style="font-size:0.76rem; opacity:0.7; margin-top:4px;">
+
+          <textarea id="st-sachverhalt" placeholder="Straftat pro Satz … (nur wenn Checkbox aktiv)"></textarea>
+
+          <div class="verz-hinweis">
             Hinweis: Nur bei nicht Einigung mit Rechtsanwalt oder Tatverdächtigen. Sonst weglassen.
           </div>
         </div>
 
-        <label for="st-zeugen">Weitere beteiligte Einheiten/Zeugen</label>
-        <textarea id="st-zeugen"></textarea>
+        <div class="section">
+          <div class="section-title">Beteiligte / Gegenstände</div>
 
-        <div class="row">
-          <div>
-            <label for="st-gegenstaende">Abgenommene Gegenstände</label>
-            <textarea id="st-gegenstaende"></textarea>
-          </div>
-          <div>
-            <label for="st-abgenommen-von">Abgenommen von</label>
-            <input id="st-abgenommen-von" type="text" placeholder="z. B. PD-XX, FIB-XX" />
+          <label for="st-zeugen">Weitere beteiligte Einheiten/Zeugen</label>
+          <textarea id="st-zeugen"></textarea>
+
+          <div class="row">
+            <div>
+              <label for="st-gegenstaende">Abgenommene Gegenstände</label>
+              <textarea id="st-gegenstaende"></textarea>
+            </div>
+            <div>
+              <label for="st-abgenommen-von">Abgenommen von</label>
+              <input id="st-abgenommen-von" type="text" placeholder="z. B. PD-XX, FIB-XX" />
+            </div>
           </div>
         </div>
 
-        <div class="row">
-          <div>
-            <label for="st-verlesen">Verlesen</label>
-            <input id="st-verlesen" type="text" placeholder="z. B. FIB-XX" />
-          </div>
-          <div>
-            <label for="st-beisein">Beisein</label>
-            <input id="st-beisein" type="text" placeholder="z. B. SD-XX" />
-          </div>
-        </div>
+        <div class="section">
+          <div class="section-title">Rechte / Versorgung</div>
 
-        <div class="row">
-          <div>
-            <label for="st-rechtsbeistand">Rechtsbeistand</label>
-            <select id="st-rechtsbeistand">
-              <option value="">– bitte wählen –</option>
-              <option value="bestand">bestand</option>
-              <option value="verzichtete">verzichtete</option>
-            </select>
+          <div class="row">
+            <div>
+              <label for="st-verlesen">Verlesen</label>
+              <input id="st-verlesen" type="text" placeholder="z. B. FIB-XX" />
+            </div>
+            <div>
+              <label for="st-beisein">Beisein</label>
+              <input id="st-beisein" type="text" placeholder="z. B. SD-XX" />
+            </div>
           </div>
-          <div>
-            <label for="st-medizin">Medizinische Versorgung</label>
-            <select id="st-medizin">
-              <option value="">– bitte wählen –</option>
-              <option value="bestand">bestand</option>
-              <option value="verzichtete">verzichtete</option>
-            </select>
-          </div>
-        </div>
 
-        <div>
+          <div class="row">
+            <div>
+              <label for="st-rechtsbeistand">Rechtsbeistand</label>
+              <select id="st-rechtsbeistand">
+                <option value="">– bitte wählen –</option>
+                <option value="bestand">bestand</option>
+                <option value="verzichtete">verzichtete</option>
+              </select>
+            </div>
+            <div>
+              <label for="st-medizin">Medizinische Versorgung</label>
+              <select id="st-medizin">
+                <option value="">– bitte wählen –</option>
+                <option value="bestand">bestand</option>
+                <option value="verzichtete">verzichtete</option>
+              </select>
+            </div>
+          </div>
+
           <label for="st-gezeichnet">Gezeichnet von</label>
           <textarea id="st-gezeichnet" rows="2"></textarea>
-        </div>
 
-        <button class="btn" id="btn-strafakte">Strafakte generieren</button>
+          <button class="btn" id="btn-strafakte">Strafakte generieren</button>
+        </div>
       </div>
 
       <!-- KOLLEKTIVAKTE -->
       <div id="tab-kollektivakte" class="hidden">
-        <div class="row">
-          <div>
-            <label for="ko-officer">Officer</label>
-            <input id="ko-officer" type="text" />
+        <div class="section">
+          <div class="section-title">Grunddaten</div>
+
+          <div class="row">
+            <div>
+              <label for="ko-officer">Officer</label>
+              <input id="ko-officer" type="text" />
+            </div>
+            <div>
+              <label for="ko-tatort">Tatort und Tatzeit</label>
+              <input id="ko-tatort" type="text" />
+            </div>
           </div>
-          <div>
-            <label for="ko-tatort">Tatort und Tatzeit</label>
-            <input id="ko-tatort" type="text" />
+
+          <div class="row">
+            <div>
+              <label for="ko-beschuldigte">Beschuldigte Personen</label>
+              <textarea id="ko-beschuldigte"></textarea>
+            </div>
+            <div>
+              <label for="ko-geschaedigte">Geschädigte Personen</label>
+              <textarea id="ko-geschaedigte"></textarea>
+            </div>
+          </div>
+
+          <label for="ko-sachverhalt">Sachverhalt aus Sicht des NCPDs</label>
+          <textarea id="ko-sachverhalt"></textarea>
+        </div>
+
+        <div class="section" id="ko-id-section">
+          <div class="section-title">Identitätsfeststellung</div>
+
+          <label id="ko-id-label">Identitätsfeststellung</label>
+          <div id="ko-id-group" class="checkbox-row">
+            <label><input type="checkbox" id="ko-id-pers" /> Personalausweis</label>
+            <label><input type="checkbox" id="ko-id-waffe" /> Waffenschein</label>
+            <label><input type="checkbox" id="ko-id-fs" /> Führerschein</label>
+            <label><input type="checkbox" id="ko-id-finger" /> Fingerabdruckscanner</label>
+          </div>
+          <div id="ko-id-hint" class="error-hint">Bitte mindestens eine Option auswählen.</div>
+        </div>
+
+        <div class="section">
+          <div class="section-title">Beteiligte / Gegenstände</div>
+
+          <label for="ko-zeugen">Weitere beteiligte Einheiten/Zeugen</label>
+          <textarea id="ko-zeugen"></textarea>
+
+          <label for="ko-gegenstaende">Abgenommene Gegenstände</label>
+          <textarea id="ko-gegenstaende"></textarea>
+
+          <div class="verz-hinweis">
+            Hinweis: Bitte bei den Gegenständen selbst eintragen, von wem diese abgenommen wurden.
           </div>
         </div>
 
-        <div class="row">
-          <div>
-            <label for="ko-beschuldigte">Beschuldigte Personen</label>
-            <textarea id="ko-beschuldigte"></textarea>
-          </div>
-          <div>
-            <label for="ko-geschaedigte">Geschädigte Personen</label>
-            <textarea id="ko-geschaedigte"></textarea>
-          </div>
-        </div>
+        <div class="section">
+          <div class="section-title">Genehmigung / Rechte</div>
 
-        <label for="ko-sachverhalt">Sachverhalt aus Sicht des NCPDs</label>
-        <textarea id="ko-sachverhalt"></textarea>
+          <div class="row">
+            <div>
+              <label for="ko-verlesen">Verlesen</label>
+              <input id="ko-verlesen" type="text" />
+            </div>
+            <div>
+              <label for="ko-beisein">Beisein</label>
+              <input id="ko-beisein" type="text" />
+            </div>
+          </div>
 
-        <label id="ko-id-label">Identitätsfeststellung</label>
-        <div id="ko-id-group" class="checkbox-row">
-          <label><input type="checkbox" id="ko-id-pers" /> Personalausweis</label>
-          <label><input type="checkbox" id="ko-id-waffe" /> Waffenschein</label>
-          <label><input type="checkbox" id="ko-id-fs" /> Führerschein</label>
-          <label><input type="checkbox" id="ko-id-finger" /> Fingerabdruckscanner</label>
-        </div>
-        <div id="ko-id-hint" class="error-hint">Bitte mindestens eine Option auswählen.</div>
+          <div class="row">
+            <div>
+              <label for="ko-rechtsbeistand">Rechtsbeistand</label>
+              <select id="ko-rechtsbeistand">
+                <option value="">– bitte wählen –</option>
+                <option value="bestand">bestand</option>
+                <option value="verzichtete">verzichtete</option>
+              </select>
+            </div>
+            <div>
+              <label for="ko-medizin">Medizinische Versorgung</label>
+              <select id="ko-medizin">
+                <option value="">– bitte wählen –</option>
+                <option value="bestand">bestand</option>
+                <option value="verzichtete">verzichtete</option>
+              </select>
+            </div>
+          </div>
 
-        <label for="ko-zeugen">Weitere beteiligte Einheiten/Zeugen</label>
-        <textarea id="ko-zeugen"></textarea>
+          <div class="row">
+            <div>
+              <label for="ko-eilverfahren">Eilverfahren</label>
+              <input id="ko-eilverfahren" type="text" placeholder="z. B. abgelehnt durch DOJ-XX" />
+            </div>
+            <div>
+              <label for="ko-bussgeld">Bußgelddatum</label>
+              <input id="ko-bussgeld" type="text" placeholder="TT.MM.JJJJ" />
+            </div>
+          </div>
 
-        <label for="ko-gegenstaende">Abgenommene Gegenstände</label>
-        <textarea id="ko-gegenstaende"></textarea>
-        <div style="font-size:0.76rem; opacity:0.7; margin-top:4px; margin-bottom:6px;">
-          Hinweis: Bitte bei den Gegenständen selbst eintragen, von wem diese abgenommen wurden.
-        </div>
+          <div class="row">
+            <div>
+              <label for="ko-bestaetigt-von">Kollektivakte genehmigt von</label>
+              <input id="ko-bestaetigt-von" type="text" />
+            </div>
+            <div>
+              <label for="ko-bestaetigt-zeit">Genehmigt um (Uhrzeit)</label>
+              <input id="ko-bestaetigt-zeit" type="text" placeholder="z. B. 23:45" />
+            </div>
+          </div>
 
-        <div class="row">
-          <div>
-            <label for="ko-verlesen">Verlesen</label>
-            <input id="ko-verlesen" type="text" />
-          </div>
-          <div>
-            <label>&nbsp;</label>
-            <input type="text" disabled style="opacity:0; pointer-events:none;" />
-          </div>
-        </div>
-
-        <div class="row">
-          <div>
-            <label for="ko-beisein">Beisein</label>
-            <input id="ko-beisein" type="text" />
-          </div>
-          <div>
-            <label for="ko-rechtsbeistand">Rechtsbeistand</label>
-            <select id="ko-rechtsbeistand">
-              <option value="">– bitte wählen –</option>
-              <option value="bestand">bestand</option>
-              <option value="verzichtete">verzichtete</option>
-            </select>
-          </div>
-        </div>
-
-        <div class="row">
-          <div>
-            <label for="ko-medizin">Medizinische Versorgung</label>
-            <select id="ko-medizin">
-              <option value="">– bitte wählen –</option>
-              <option value="bestand">bestand</option>
-              <option value="verzichtete">verzichtete</option>
-            </select>
-          </div>
-          <div>
-            <label for="ko-eilverfahren">Eilverfahren</label>
-            <input id="ko-eilverfahren" type="text" placeholder="z. B. abgelehnt durch DOJ-XX" />
-          </div>
-        </div>
-
-        <div class="row">
-          <div>
-            <label for="ko-bussgeld">Bußgelddatum</label>
-            <input id="ko-bussgeld" type="text" placeholder="TT.MM.JJJJ" />
-          </div>
-          <div>
-            <label>&nbsp;</label>
-            <input type="text" disabled style="opacity:0; pointer-events:none;" />
-          </div>
-        </div>
-
-        <div class="row">
-          <div>
-            <label for="ko-bestaetigt-von">Kollektivakte genehmigt von</label>
-            <input id="ko-bestaetigt-von" type="text" />
-          </div>
-          <div>
-            <label for="ko-bestaetigt-zeit">Genehmigt um (Uhrzeit)</label>
-            <input id="ko-bestaetigt-zeit" type="text" placeholder="z. B. 23:45" />
-          </div>
-        </div>
-
-        <div>
           <label for="ko-gezeichnet">Gezeichnet von</label>
           <textarea id="ko-gezeichnet" rows="2"></textarea>
+
           <button class="btn" id="btn-kollektivakte">Kollektivakte generieren</button>
         </div>
       </div>
 
-      <!-- ERGREIFUNGSAKTE (IN BEARBEITUNG) -->
+      <!-- ERGREIFUNGSAKTE -->
       <div id="tab-fahndung" class="hidden">
-        <div style="
-          margin-bottom: 12px;
-          padding: 10px 12px;
-          border-radius: 12px;
-          border: 1px solid rgba(255,255,255,0.10);
-          background: rgba(255,255,255,0.04);
-          color: rgba(255,255,255,0.85);
-          font-size: 0.82rem;
-          line-height: 1.35;
-        ">
-          <strong style="color:#ffd3d5;">Hinweis:</strong>
-          Die Ergreifungsakte ist aktuell <strong>in Bearbeitung</strong>. Diese Funktion ist derzeit deaktiviert.
-        </div>
+        <div class="section">
+          <div class="section-title">Ergreifungsakte</div>
 
-        <div style="opacity:0.45; pointer-events:none;">
-          <div class="row">
-            <div>
-              <label for="fa-officer">Officer</label>
-              <input id="fa-officer" type="text" />
-            </div>
-            <div>
-              <label for="fa-datum">Datum / Uhrzeit</label>
-              <input id="fa-datum" type="text" placeholder="z. B. 05.12.2025 14:30 Uhr" />
-            </div>
+          <div style="
+            padding: 10px 12px;
+            border-radius: 12px;
+            border: 1px solid rgba(255,255,255,0.10);
+            background: rgba(255,255,255,0.04);
+            color: rgba(255,255,255,0.85);
+            font-size: 0.82rem;
+            line-height: 1.35;
+          ">
+            <strong style="color:rgba(255,220,225,0.95);">Hinweis:</strong>
+            Die Ergreifungsakte ist aktuell <strong>in Bearbeitung</strong>. Diese Funktion ist derzeit deaktiviert.
           </div>
 
-          <label for="fa-tatort">Tatort und Zeitraum</label>
-          <input id="fa-tatort" type="text" placeholder="z. B. Route 68 ... | 06.12.2025 16:00–16:15 Uhr" />
+          <div style="opacity:0.45; pointer-events:none; margin-top: 10px;">
+            <div class="row">
+              <div>
+                <label for="fa-officer">Officer</label>
+                <input id="fa-officer" type="text" />
+              </div>
+              <div>
+                <label for="fa-datum">Datum / Uhrzeit</label>
+                <input id="fa-datum" type="text" placeholder="z. B. 05.12.2025 14:30 Uhr" />
+              </div>
+            </div>
 
-          <label for="fa-person">Gesuchte Person</label>
-          <textarea id="fa-person" placeholder="Name, Geburtsdatum, Beschreibung"></textarea>
+            <label for="fa-tatort">Tatort und Zeitraum</label>
+            <input id="fa-tatort" type="text" placeholder="z. B. Route 68 ... | 06.12.2025 16:00–16:15 Uhr" />
 
-          <label for="fa-paragrafen">Straftatbestände / Paragraphen</label>
-          <textarea id="fa-paragrafen"></textarea>
+            <label for="fa-person">Gesuchte Person</label>
+            <textarea id="fa-person" placeholder="Name, Geburtsdatum, Beschreibung"></textarea>
 
-          <label for="fa-sachverhalt">Sachverhalt</label>
-          <textarea id="fa-sachverhalt"></textarea>
+            <label for="fa-paragrafen">Straftatbestände / Paragraphen</label>
+            <textarea id="fa-paragrafen"></textarea>
 
-          <label for="fa-hinweise">Besondere Hinweise</label>
-          <textarea id="fa-hinweise"></textarea>
+            <label for="fa-sachverhalt">Sachverhalt</label>
+            <textarea id="fa-sachverhalt"></textarea>
 
-          <label for="fa-einheiten">Beteiligte Einheiten</label>
-          <textarea id="fa-einheiten"></textarea>
+            <label for="fa-hinweise">Besondere Hinweise</label>
+            <textarea id="fa-hinweise"></textarea>
 
-          <div>
+            <label for="fa-einheiten">Beteiligte Einheiten</label>
+            <textarea id="fa-einheiten"></textarea>
+
             <label for="fa-gezeichnet">Gezeichnet von</label>
             <textarea id="fa-gezeichnet" rows="2"></textarea>
-          </div>
 
-          <button class="btn" id="btn-fahndung">Ergreifungsakte generieren</button>
+            <button class="btn" id="btn-fahndung">Ergreifungsakte generieren</button>
+          </div>
         </div>
       </div>
 
+      <!-- VERZEICHNIS -->
       <div id="tab-verzeichnis" class="hidden">
         <p class="verz-hinweis">
-          Hier werden alle Akten gespeichert, die mit deinem Discord-Account <br>
-          auf diesem Gerät erstellt wurden. Klick auf einen Eintrag, um ihn rechts zu laden.
+          Hier werden alle Akten gespeichert, die mit deinem Discord-Account auf diesem Gerät erstellt wurden.
+          Klick auf einen Eintrag, um ihn rechts zu laden.
         </p>
 
-        <h3>Strafakten</h3>
-        <div id="verzeichnis-straf" class="verz-list"></div>
+        <div class="section">
+          <div class="section-title">Strafakten</div>
+          <div id="verzeichnis-straf" class="verz-list"></div>
+        </div>
 
-        <h3>Kollektivakten</h3>
-        <div id="verzeichnis-kollektiv" class="verz-list"></div>
+        <div class="section">
+          <div class="section-title">Kollektivakten</div>
+          <div id="verzeichnis-kollektiv" class="verz-list"></div>
+        </div>
 
-        <h3>Ergreifungsakten</h3>
-        <div id="verzeichnis-fahndung" class="verz-list"></div>
+        <div class="section">
+          <div class="section-title">Ergreifungsakten</div>
+          <div id="verzeichnis-fahndung" class="verz-list"></div>
+        </div>
       </div>
     </section>
 
@@ -821,19 +706,18 @@ textarea#st-gezeichnet, textarea#ko-gezeichnet, textarea#fa-gezeichnet{
 
       <textarea id="output" readonly></textarea>
 
-      <div style="margin-top: 12px; display: flex; gap: 8px;">
-        <button class="btn-secondary btn" id="btn-copy">Kopieren</button>
-        <button class="btn-secondary btn" id="btn-reset">Zurücksetzen</button>
+      <div style="margin-top: 12px; display:flex; gap: 10px;">
+        <button class="btn btn-secondary" id="btn-copy">Kopieren</button>
+        <button class="btn btn-secondary" id="btn-reset">Zurücksetzen</button>
       </div>
 
       <div id="kollektiv-hinweis"
            style="
              margin-top: 12px;
              text-align: center;
-             font-size: 1.05rem;
-             font-weight: 600;
-             opacity: 0.9;
-             white-space: nowrap;
+             font-size: 1.0rem;
+             font-weight: 700;
+             opacity: 0.85;
              display: none;
            ">
         Abgenommene Gegenstände müssen selber im Aktentablet vermerkt werden.
@@ -914,68 +798,61 @@ textarea#st-gezeichnet, textarea#ko-gezeichnet, textarea#fa-gezeichnet{
       "530031383007985665": { name: "Michael Johnson", dienstnummer: "PA-79", rang: "Anwärter" }
     };
 
-    function loadOfficerMap() {
-      try {
+    function loadOfficerMap(){
+      try{
         const raw = localStorage.getItem(STORAGE_KEY);
         if (!raw) return JSON.parse(JSON.stringify(defaultOfficerMap));
         const parsed = JSON.parse(raw);
         if (!parsed || typeof parsed !== "object") return JSON.parse(JSON.stringify(defaultOfficerMap));
         return parsed;
-      } catch (e) {
+      }catch(e){
         return JSON.parse(JSON.stringify(defaultOfficerMap));
       }
     }
     const officerMap = loadOfficerMap();
 
-    function setLoginStatus(mainText, subText, isGood = false) {
+    function setLoginStatus(mainText, subText, isGood=false){
       const mainEl = document.getElementById("login-main");
-      const subEl = document.getElementById("login-sub");
+      const subEl  = document.getElementById("login-sub");
       const infoEl = document.getElementById("login-officer-info");
       if (!mainEl || !subEl) return;
 
       mainEl.textContent = mainText || "";
       subEl.textContent = subText || "";
       if (infoEl) infoEl.textContent = "";
-
       mainEl.style.color = isGood ? "#a5ffb5" : "#ffffff";
     }
 
-    function getTeamCircle(dienstnummer) {
+    function getTeamCircle(dienstnummer){
       if (!dienstnummer) return "⚪";
       if (dienstnummer.startsWith("PA-")) return "🟢";
       if (!dienstnummer.startsWith("PD-")) return "⚪";
-
       const num = parseInt(dienstnummer.split("-")[1], 10);
       if (Number.isNaN(num)) return "⚪";
-
       if (num >= 1 && num <= 5) return "🔴";
       if (num >= 7 && num <= 19) return "🔵";
       if (num >= 20 && num <= 39) return "🟡";
       return "⚪";
     }
 
-    function getDiscordAccessToken() {
+    function getDiscordAccessToken(){
       const hash = window.location.hash.substring(1);
       if (!hash) return null;
-
       const params = new URLSearchParams(hash);
       const token = params.get("access_token");
-
-      if (token) {
-        history.replaceState(null, "", window.location.pathname + window.location.search);
-      }
+      if (token) history.replaceState(null, "", window.location.pathname + window.location.search);
       return token;
     }
 
-    function fillOfficerFromDiscord(discordId, userObj) {
+    function fillOfficerFromDiscord(discordId, userObj){
       currentDiscordId = discordId || null;
 
       const o = officerMap[discordId];
       const mainEl = document.getElementById("login-main");
-      const subEl = document.getElementById("login-sub");
+      const subEl  = document.getElementById("login-sub");
       const infoEl = document.getElementById("login-officer-info");
 
-      if (!o) {
+      if (!o){
         const uname = userObj
           ? userObj.username + (userObj.discriminator ? "#" + userObj.discriminator : "")
           : "Unbekannt";
@@ -986,8 +863,10 @@ textarea#st-gezeichnet, textarea#ko-gezeichnet, textarea#fa-gezeichnet{
       }
 
       const full = `${o.name} | ${o.dienstnummer} | ${o.rang}`;
-      const [vorname, nachname] = o.name.split(" ");
-      const kuerzel = `${vorname.charAt(0)}. ${nachname}`;
+      const parts = o.name.split(" ");
+      const vorname = parts[0] || "";
+      const nachname = parts.slice(1).join(" ") || "";
+      const kuerzel = `${vorname.charAt(0)}. ${nachname}`.trim();
       const unterschrift = `${kuerzel}\n${o.name} | ${o.dienstnummer} | ${o.rang}`;
 
       ["st-officer","ko-officer","fa-officer"].forEach(id => {
@@ -1001,8 +880,7 @@ textarea#st-gezeichnet, textarea#ko-gezeichnet, textarea#fa-gezeichnet{
       });
 
       const circle = getTeamCircle(o.dienstnummer);
-
-      if (mainEl && subEl) {
+      if (mainEl && subEl){
         mainEl.textContent = "Eingeloggt als:";
         mainEl.style.color = "#a5ffb5";
         subEl.textContent = `Team ${circle} [${o.dienstnummer}] ${o.name}`;
@@ -1012,22 +890,21 @@ textarea#st-gezeichnet, textarea#ko-gezeichnet, textarea#fa-gezeichnet{
       initVerzeichnis();
     }
 
-    async function initDiscordUser() {
+    async function initDiscordUser(){
       const token = getDiscordAccessToken();
-      if (!token) {
+      if (!token){
         setLoginStatus("Nicht mit Discord verbunden", "Bitte über das Portal einloggen.");
         initVerzeichnis();
         return;
       }
 
-      try {
+      try{
         setLoginStatus("Verbinde mit Discord …", "Bitte einen Moment warten.");
-
         const res = await fetch("https://discord.com/api/users/@me", {
           headers: { Authorization: `Bearer ${token}` }
         });
 
-        if (!res.ok) {
+        if (!res.ok){
           console.error("Discord API Fehler", res.status);
           setLoginStatus("Discord-Fehler", "Benutzerdaten konnten nicht geladen werden.");
           initVerzeichnis();
@@ -1036,13 +913,14 @@ textarea#st-gezeichnet, textarea#ko-gezeichnet, textarea#fa-gezeichnet{
 
         const user = await res.json();
         fillOfficerFromDiscord(user.id, user);
-      } catch (err) {
+      }catch(err){
         console.error("Discord Request fehlgeschlagen:", err);
         setLoginStatus("Verbindungsfehler", "Discord konnte nicht erreicht werden.");
         initVerzeichnis();
       }
     }
 
+    // Tabs
     document.querySelectorAll(".tab-btn").forEach(btn => {
       btn.addEventListener("click", () => {
         document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
@@ -1063,7 +941,8 @@ textarea#st-gezeichnet, textarea#ko-gezeichnet, textarea#fa-gezeichnet{
       });
     });
 
-    function getIdentitaet(prefix) {
+    // Helpers
+    function getIdentitaet(prefix){
       const parts = [];
       if (document.getElementById(prefix + "-id-pers")?.checked)   parts.push("Personalausweis");
       if (document.getElementById(prefix + "-id-waffe")?.checked)  parts.push("Waffenschein");
@@ -1073,30 +952,30 @@ textarea#st-gezeichnet, textarea#ko-gezeichnet, textarea#fa-gezeichnet{
       return "Die Identität wurde mittels " + parts.join(", ") + " festgestellt.";
     }
 
-    function addRequiredMarkerFor(forId) {
+    function addRequiredMarkerFor(forId){
       const lbl = document.querySelector(`label[for="${forId}"]`);
       if (lbl) lbl.classList.add("label-required");
     }
-    function addRequiredMarkerById(labelId) {
+    function addRequiredMarkerById(labelId){
       const lbl = document.getElementById(labelId);
       if (lbl) lbl.classList.add("label-required");
     }
-    function setBanner(show) {
+    function setBanner(show){
       const b = document.getElementById("validation-banner");
       if (!b) return;
       b.classList.toggle("show", !!show);
     }
-    function markError(el, isError) {
+    function markError(el, isError){
       if (!el) return;
       el.classList.toggle("field-error", !!isError);
     }
-    function markGroupError(groupEl, hintEl, isError) {
+    function markGroupError(groupEl, hintEl, isError){
       if (groupEl) groupEl.classList.toggle("group-error", !!isError);
       if (hintEl) hintEl.classList.toggle("show", !!isError);
     }
-    function scrollToFirstError(root) {
+    function scrollToFirstError(root){
       const first = (root || document).querySelector(".field-error, .group-error");
-      if (first) {
+      if (first){
         first.scrollIntoView({ behavior: "smooth", block: "center" });
         const focusEl = first.matches("input, textarea, select")
           ? first
@@ -1104,27 +983,29 @@ textarea#st-gezeichnet, textarea#ko-gezeichnet, textarea#fa-gezeichnet{
         if (focusEl) focusEl.focus({ preventScroll: true });
       }
     }
-    function clearErrors(root) {
+    function clearErrors(root){
       (root || document).querySelectorAll(".field-error").forEach(el => el.classList.remove("field-error"));
       (root || document).querySelectorAll(".group-error").forEach(el => el.classList.remove("group-error"));
       (root || document).querySelectorAll(".error-hint.show").forEach(el => el.classList.remove("show"));
       setBanner(false);
     }
-    function attachAutoClear(ids) {
+
+    function attachAutoClear(ids){
       ids.forEach(id => {
         const el = document.getElementById(id);
         if (!el) return;
         const evt = (el.tagName === "SELECT") ? "change" : "input";
         el.addEventListener(evt, () => {
-          if (el.tagName === "SELECT") {
+          if (el.tagName === "SELECT"){
             if (el.value) markError(el, false);
-          } else {
+          }else{
             if ((el.value || "").trim()) markError(el, false);
           }
         });
       });
     }
-    function validateRequiredFields(spec) {
+
+    function validateRequiredFields(spec){
       let ok = true;
 
       spec.fields.forEach(f => {
@@ -1136,7 +1017,7 @@ textarea#st-gezeichnet, textarea#ko-gezeichnet, textarea#fa-gezeichnet{
         if (!valid) ok = false;
       });
 
-      if (spec.ident) {
+      if (spec.ident){
         const { prefix, groupEl, hintEl } = spec.ident;
         const ids = [prefix + "-id-pers", prefix + "-id-waffe", prefix + "-id-fs", prefix + "-id-finger"];
         const any = ids.some(x => document.getElementById(x)?.checked);
@@ -1158,15 +1039,15 @@ textarea#st-gezeichnet, textarea#ko-gezeichnet, textarea#fa-gezeichnet{
       return ok;
     }
 
-    function initRequiredStarsAndAutoclear() {
-      // Sterne Strafakte
+    function initRequiredStarsAndAutoclear(){
+      // Strafakte required
       addRequiredMarkerById("st-id-label");
       addRequiredMarkerFor("st-verlesen");
       addRequiredMarkerFor("st-beisein");
       addRequiredMarkerFor("st-rechtsbeistand");
       addRequiredMarkerFor("st-medizin");
 
-      // Sterne Kollektivakte
+      // Kollektivakte required
       addRequiredMarkerById("ko-id-label");
       addRequiredMarkerFor("ko-verlesen");
       addRequiredMarkerFor("ko-beisein");
@@ -1183,19 +1064,20 @@ textarea#st-gezeichnet, textarea#ko-gezeichnet, textarea#fa-gezeichnet{
       ]);
     }
 
+    // Verzeichnis (localStorage)
     const verzContainerIds = {
       straf: "verzeichnis-straf",
       kollektiv: "verzeichnis-kollektiv",
       fahndung: "verzeichnis-fahndung"
     };
 
-    function getStorageKey(type) {
+    function getStorageKey(type){
       const id = currentDiscordId || "unknown";
       return "akten_" + id + "_" + type;
     }
 
-    function saveAkte(type, title, text) {
-      try {
+    function saveAkte(type, title, text){
+      try{
         const key = getStorageKey(type);
         const list = JSON.parse(localStorage.getItem(key) || "[]");
         const entry = {
@@ -1207,12 +1089,12 @@ textarea#st-gezeichnet, textarea#ko-gezeichnet, textarea#fa-gezeichnet{
         list.unshift(entry);
         localStorage.setItem(key, JSON.stringify(list));
         renderVerzeichnisListe(type);
-      } catch (e) {
+      }catch(e){
         console.error("Speichern der Akte fehlgeschlagen:", e);
       }
     }
 
-    function renderVerzeichnisListe(type) {
+    function renderVerzeichnisListe(type){
       const containerId = verzContainerIds[type];
       const container = document.getElementById(containerId);
       if (!container) return;
@@ -1222,7 +1104,7 @@ textarea#st-gezeichnet, textarea#ko-gezeichnet, textarea#fa-gezeichnet{
 
       container.innerHTML = "";
 
-      if (!list.length) {
+      if (!list.length){
         const empty = document.createElement("div");
         empty.className = "verz-empty";
         empty.textContent = "Noch keine Akten gespeichert.";
@@ -1254,11 +1136,13 @@ textarea#st-gezeichnet, textarea#ko-gezeichnet, textarea#fa-gezeichnet{
       });
     }
 
-    function initVerzeichnis() {
+    function initVerzeichnis(){
       ["straf","kollektiv","fahndung"].forEach(renderVerzeichnisListe);
     }
 
-    function genStrafakte() {
+    // ===== Generatoren =====
+
+    function genStrafakte(){
       const root = document.getElementById("tab-strafakte");
       clearErrors(root);
 
@@ -1306,32 +1190,39 @@ textarea#st-gezeichnet, textarea#ko-gezeichnet, textarea#fa-gezeichnet{
       // Titelblock: KEINE Leerzeile zwischen Department und Officer
       out += "| - Strafakte - |\n";
       out += "Narco City Police Department\n";
-      out += officer + "\n\n";
+      out += (officer || "—") + "\n\n";
 
+      // Tatort: Ort und Zeitraum auf separaten Zeilen
       out += "| Tatort und Zeitraum: |\n";
       if (tatOrt) out += tatOrt + "\n";
       if (tatZeitraum) out += tatZeitraum + "\n\n";
       else out += "\n";
 
       out += "| Beschuldigte Person(en): |\n";
-      out += besch + "\n\n";
+      out += (besch || "—") + "\n\n";
 
       out += idTxt + "\n\n";
 
       out += "| Geschädigte Person(en): |\n";
-      out += ges + "\n\n";
+      out += (ges || "—") + "\n\n";
 
-      // Sachverhalt: nur wenn Checkbox aktiv -> sonst kompletter Block weg
-      if (includeSach) {
+      // Sachverhalt nur wenn Checkbox aktiv: sonst kompletter Block NICHT drin
+      if (includeSach){
         out += "|Sachverhalt aus Sicht der Behörde: |\n";
-        out += sach + "\n\n";
+        out += (sach || "—") + "\n\n";
       }
 
       out += "| Weitere beteiligte Einheiten/Zeugen: |\n";
-      out += zeugen + "\n\n";
+      out += (zeugen || "—") + "\n\n";
 
-      out += "| Abgenommene Gegenstände: | Abgenommen von: " + abn + "\n";
-      out += geg + "\n\n";
+      // Gegenstände: neue Zeile Kopf soll so aussehen: "| Abgenommene Gegenstände: | Abgenommen von: PD-XX"
+      // Wenn abn leer: dann nur der normale Kopf.
+      if (abn){
+        out += "| Abgenommene Gegenstände: | Abgenommen von: " + abn + "\n";
+      }else{
+        out += "| Abgenommene Gegenstände: |\n";
+      }
+      out += (geg || "—") + "\n\n";
 
       out += "| Bemerkungen: |\n";
       out += "Die Rechte wurden dem Beschuldigten durch " + verlesen + " im Beisein von " + beisein + " verlesen und verstanden.\n";
@@ -1346,15 +1237,15 @@ textarea#st-gezeichnet, textarea#ko-gezeichnet, textarea#fa-gezeichnet{
       out += "Die dem Tatverdächtigen abgenommenen Gegenstände wurden in seinen persönlichen Spind gelegt.\n\n";
 
       out += "| Gezeichnet von: |\n";
-      out += gezeichnet + "\n";
+      out += (gezeichnet || "—") + "\n";
 
       document.getElementById("output").value = out;
+
       const titel = tatOrt || (besch.split("\n")[0] || "Strafakte ohne Titel");
       saveAkte("straf", titel, out);
     }
 
-    // Kollektiv + Fahndung bleiben wie gehabt
-    function genKollektivakte() {
+    function genKollektivakte(){
       const root = document.getElementById("tab-kollektivakte");
       clearErrors(root);
 
@@ -1378,49 +1269,49 @@ textarea#st-gezeichnet, textarea#ko-gezeichnet, textarea#fa-gezeichnet{
       });
       if (!ok) return;
 
-      const officer = document.getElementById("ko-officer").value.trim();
-      const tatort = document.getElementById("ko-tatort").value.trim();
-      const besch = document.getElementById("ko-beschuldigte").value.trim();
-      const ges = document.getElementById("ko-geschaedigte").value.trim();
-      const sach = document.getElementById("ko-sachverhalt").value.trim();
+      const officer = (document.getElementById("ko-officer").value || "").trim();
+      const tatort = (document.getElementById("ko-tatort").value || "").trim();
+      const besch = (document.getElementById("ko-beschuldigte").value || "").trim();
+      const ges = (document.getElementById("ko-geschaedigte").value || "").trim();
+      const sach = (document.getElementById("ko-sachverhalt").value || "").trim();
       const idTxt = getIdentitaet("ko");
-      const zeugen = document.getElementById("ko-zeugen").value.trim();
-      const geg = document.getElementById("ko-gegenstaende").value.trim();
-      const verlesen = document.getElementById("ko-verlesen").value.trim();
-      const beisein = document.getElementById("ko-beisein").value.trim();
+      const zeugen = (document.getElementById("ko-zeugen").value || "").trim();
+      const geg = (document.getElementById("ko-gegenstaende").value || "").trim();
+      const verlesen = (document.getElementById("ko-verlesen").value || "").trim();
+      const beisein = (document.getElementById("ko-beisein").value || "").trim();
       const rb = document.getElementById("ko-rechtsbeistand").value;
       const med = document.getElementById("ko-medizin").value;
-      const eil = document.getElementById("ko-eilverfahren").value.trim();
-      const buss = document.getElementById("ko-bussgeld").value.trim();
-      const bestaetigtVon = document.getElementById("ko-bestaetigt-von").value.trim();
-      const bestaetigtZeit = document.getElementById("ko-bestaetigt-zeit").value.trim();
-      const gezeichnet = document.getElementById("ko-gezeichnet").value.trim();
+      const eil = (document.getElementById("ko-eilverfahren").value || "").trim();
+      const buss = (document.getElementById("ko-bussgeld").value || "").trim();
+      const bestaetigtVon = (document.getElementById("ko-bestaetigt-von").value || "").trim();
+      const bestaetigtZeit = (document.getElementById("ko-bestaetigt-zeit").value || "").trim();
+      const gezeichnet = (document.getElementById("ko-gezeichnet").value || "").trim();
 
       let out = "";
       out += "| - Kollektivakte - |\n";
       out += "Narco City Police Department\n";
-      out += officer + "\n\n";
+      out += (officer || "—") + "\n\n";
       out += "Kollektivakte wurde von " + bestaetigtVon + " um " + bestaetigtZeit + " genehmigt\n\n";
 
       out += "| Tatort und Zeitraum: |\n";
-      out += tatort + "\n\n";
+      out += (tatort || "—") + "\n\n";
 
       out += "| Beschuldigte Personen: |\n";
-      out += besch + "\n\n";
+      out += (besch || "—") + "\n\n";
 
       out += "| Geschädigte Person(en): |\n";
-      out += ges + "\n\n";
+      out += (ges || "—") + "\n\n";
 
       out += "| Sachverhalt aus Sicht des NCPDs: |\n";
-      out += sach + "\n\n";
+      out += (sach || "—") + "\n\n";
 
       out += idTxt + "\n\n";
 
       out += "| Weitere beteiligte Einheiten/Zeugen: |\n";
-      out += zeugen + "\n\n";
+      out += (zeugen || "—") + "\n\n";
 
       out += "| Abgenommene Gegenstände: |\n";
-      out += geg + "\n\n";
+      out += (geg || "—") + "\n\n";
 
       out += "| Bemerkungen: |\n";
       out += "Die Rechte wurden dem Beschuldigten durch " + verlesen + " im Beisein von " + beisein + " verlesen und verstanden.\n";
@@ -1435,63 +1326,20 @@ textarea#st-gezeichnet, textarea#ko-gezeichnet, textarea#fa-gezeichnet{
       out += "Das Bußgeld ist bis zum " + buss + " zu bezahlen.\n\n";
 
       out += "| Gezeichnet von: |\n";
-      out += gezeichnet + "\n\n";
+      out += (gezeichnet || "—") + "\n\n";
 
       document.getElementById("output").value = out;
       const titel = tatort || "Kollektivakte ohne Titel";
       saveAkte("kollektiv", titel, out);
     }
 
-    function genFahndung() {
-      const officer    = document.getElementById("fa-officer")?.value?.trim() || "";
-      const datum      = document.getElementById("fa-datum")?.value?.trim() || "";
-      const tatort     = document.getElementById("fa-tatort")?.value?.trim() || "";
-      const person     = document.getElementById("fa-person")?.value?.trim() || "";
-      const paragrafen = document.getElementById("fa-paragrafen")?.value?.trim() || "";
-      const sach       = document.getElementById("fa-sachverhalt")?.value?.trim() || "";
-      const hinweise   = document.getElementById("fa-hinweise")?.value?.trim() || "";
-      const einheiten  = document.getElementById("fa-einheiten")?.value?.trim() || "";
-      const gezeichnet = document.getElementById("fa-gezeichnet")?.value?.trim() || "";
-
-      let out = "";
-      out += "| - Ergreifungsakte - |\n";
-      out += "Narco City Police Department\n";
-      out += officer + "\n\n";
-
-      out += "| Tatort und Zeitraum: |\n";
-      out += tatort + "\n";
-      out += "Am " + datum + "\n\n";
-
-      out += "| Beschuldigte Person(en): |\n";
-      out += person + "\n\n";
-
-      out += "| Geschädigte Person(en): |\n";
-      out += "—-----------------------\n\n";
-
-      out += "| Sachverhalt aus Sicht des NCPDs: |\n";
-      if (paragrafen) out += paragrafen + "\n\n";
-
-      out += "|Sachverhalt:|\n";
-      out += sach + "\n\n";
-
-      out += "| Weitere beteiligte Einheiten/Zeugen: |\n";
-      out += einheiten + "\n\n";
-
-      out += "| Besondere Hinweise: |\n";
-      out += hinweise + "\n\n";
-
-      out += "| Bemerkungen: |\n";
-      out += "Die o.g. Beschuldigte ist flüchtig. Beim Antreffen der Beschuldigten ist diese festzunehmen, ihre Rechte zu belehren und der gerechten Strafe zuzuführen.\n\n";
-
-      out += "| Gezeichnet von: |\n";
-      out += gezeichnet + "\n\n";
-
-      document.getElementById("output").value = out;
-      const titel = person.split("\n")[0] || "Ergreifungsakte ohne Titel";
-      saveAkte("fahndung", titel, out);
+    // (deaktiviert, aber bleibt da)
+    function genFahndung(){
+      const outEl = document.getElementById("output");
+      if (outEl) outEl.value = "Ergreifungsakte ist aktuell deaktiviert.";
     }
 
-    function resetForm() {
+    function resetForm(){
       const keepIds = new Set([
         "st-officer","ko-officer","fa-officer",
         "st-gezeichnet","ko-gezeichnet","fa-gezeichnet"
@@ -1511,30 +1359,41 @@ textarea#st-gezeichnet, textarea#ko-gezeichnet, textarea#fa-gezeichnet{
       if (out) out.value = "";
     }
 
-    document.getElementById("btn-strafakte").addEventListener("click", genStrafakte);
-    document.getElementById("btn-kollektivakte").addEventListener("click", genKollektivakte);
-    document.getElementById("btn-fahndung").addEventListener("click", genFahndung);
+    // Events
+    document.getElementById("btn-strafakte")?.addEventListener("click", genStrafakte);
+    document.getElementById("btn-kollektivakte")?.addEventListener("click", genKollektivakte);
+    document.getElementById("btn-fahndung")?.addEventListener("click", genFahndung);
 
-    document.getElementById("btn-copy").addEventListener("click", async () => {
+    document.getElementById("btn-copy")?.addEventListener("click", async () => {
       const out = document.getElementById("output");
       const text = out?.value || "";
       if (!text) return;
-      try {
+      try{
         await navigator.clipboard.writeText(text);
-      } catch (e) {
+      }catch(e){
         out.select();
         out.setSelectionRange(0, 99999);
-        try { document.execCommand("copy"); } catch (err) {}
+        try{ document.execCommand("copy"); }catch(err){}
       }
     });
 
-    document.getElementById("btn-reset").addEventListener("click", resetForm);
+    document.getElementById("btn-reset")?.addEventListener("click", resetForm);
 
+    // Init
     initDiscordUser();
     initRequiredStarsAndAutoclear();
 
-    const hintInit = document.getElementById("kollektiv-hinweis");
-    if (hintInit) hintInit.style.display = "none";
+    // Optional: Sachverhalt-Textarea optisch deaktivieren wenn Checkbox aus
+    const sachCb = document.getElementById("st-sachverhalt-include");
+    const sachTa = document.getElementById("st-sachverhalt");
+    function syncSachUI(){
+      const on = !!sachCb?.checked;
+      if (!sachTa) return;
+      sachTa.style.opacity = on ? "1" : "0.55";
+      sachTa.style.pointerEvents = on ? "auto" : "none";
+    }
+    sachCb?.addEventListener("change", syncSachUI);
+    syncSachUI();
   </script>
 </body>
 </html>
