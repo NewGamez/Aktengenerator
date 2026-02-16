@@ -250,6 +250,15 @@
     }
     .btn-secondary:hover{ background: rgba(255,255,255,0.07); }
 
+    .btn-inline{
+      width: auto;
+      margin-top: 0;
+      padding: 8px 10px;
+      border-radius: 10px;
+      font-size: 0.82rem;
+      font-weight: 600;
+    }
+
     .label-required::after{
       content:"  •";
       color: rgba(255,77,79,0.95);
@@ -339,8 +348,83 @@
       resize: vertical;
     }
 
+    /* Sachverhalte UI */
+    .sv-category{
+      margin-top: 10px;
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 14px;
+      overflow: hidden;
+      background: rgba(255,255,255,0.02);
+    }
+    .sv-cat-header{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap: 10px;
+      padding: 10px 12px;
+      cursor:pointer;
+      user-select:none;
+      background: rgba(255,255,255,0.03);
+    }
+    .sv-cat-title{
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: rgba(255,255,255,0.86);
+      letter-spacing: 0.02em;
+    }
+    .sv-cat-sub{
+      font-size: 0.76rem;
+      opacity: 0.7;
+      margin-top: 2px;
+    }
+    .sv-cat-right{
+      opacity: 0.65;
+      font-size: 0.78rem;
+      white-space:nowrap;
+    }
+    .sv-cat-body{
+      padding: 10px 12px 12px;
+      display:none;
+    }
+    .sv-category.open .sv-cat-body{ display:block; }
+
+    .sv-item{
+      border: 1px solid rgba(255,255,255,0.08);
+      background: rgba(0,0,0,0.18);
+      border-radius: 12px;
+      padding: 10px 10px;
+      margin-top: 10px;
+    }
+    .sv-item-top{
+      display:flex;
+      align-items:flex-start;
+      justify-content:space-between;
+      gap: 10px;
+    }
+    .sv-item-title{
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: rgba(255,255,255,0.86);
+      margin-bottom: 6px;
+    }
+    .sv-item-text{
+      font-size: 0.80rem;
+      line-height: 1.35;
+      opacity: 0.86;
+      white-space: pre-wrap;
+      margin-top: 6px;
+    }
+    .sv-actions{
+      display:flex;
+      gap: 8px;
+      flex-wrap:wrap;
+      justify-content:flex-end;
+      min-width: 240px;
+    }
+
     @media (max-width: 700px){
       .panel{ padding: 16px; }
+      .sv-actions{ min-width: 0; justify-content:flex-start; }
     }
   </style>
 </head>
@@ -370,7 +454,7 @@
       <div class="panel-header">
         <div>
           <div class="panel-title">NCPD II Übersicht</div>
-          <div class="panel-subtitle">Strafakte • Kollektivakte • Ergreifungsakte • Verzeichnis</div>
+          <div class="panel-subtitle">Strafakte • Kollektivakte • Ergreifungsakte • Sachverhalte • Verzeichnis</div>
         </div>
       </div>
 
@@ -378,6 +462,7 @@
         <button class="tab-btn active" data-tab="strafakte">Strafakte</button>
         <button class="tab-btn" data-tab="kollektivakte">Kollektivakte</button>
         <button class="tab-btn" data-tab="fahndung">Ergreifungsakte</button>
+        <button class="tab-btn" data-tab="sachverhalte">Sachverhalte</button>
         <button class="tab-btn" data-tab="verzeichnis">Verzeichnis</button>
       </div>
 
@@ -404,7 +489,6 @@
             </div>
             <div>
               <label for="st-beschuldigte">Beschuldigte Person(en)</label>
-              <!-- NUR 1 ZEILE -->
               <input id="st-beschuldigte" type="text" placeholder="Vorname Nachname, Geb. TT.MM.JJJJ" />
             </div>
           </div>
@@ -451,7 +535,6 @@
         <div class="section">
           <div class="section-title">Beteiligte / Gegenstände</div>
 
-          <!-- nebeneinander + kompakter, aber mehrzeilig -->
           <div class="row">
             <div>
               <label for="st-zeugen">Weitere beteiligte Einheiten/Zeugen</label>
@@ -680,6 +763,18 @@
         </div>
       </div>
 
+      <!-- SACHVERHALTE -->
+      <div id="tab-sachverhalte" class="hidden">
+        <p class="verz-hinweis">
+          Fertige Textbausteine. Du kannst sie <strong>kopieren</strong> oder direkt in die passende Akte <strong>einfügen</strong>.
+        </p>
+
+        <div class="section">
+          <div class="section-title">Vorlagen</div>
+          <div id="sv-container"></div>
+        </div>
+      </div>
+
       <!-- VERZEICHNIS -->
       <div id="tab-verzeichnis" class="hidden">
         <p class="verz-hinweis">
@@ -742,13 +837,11 @@
     const STORAGE_KEY = "ncpd_officerMap_v1";
 
     const defaultOfficerMap = {
-      // ===== TEAM RED =====
       "361115973203525633": { dienstnummer: "PD-01", name: "Lukas Lutz", rang: "Chief of Police" },
       "929489098471796756": { dienstnummer: "PD-02", name: "Alev Sunal", rang: "Assistant Chief of Police" },
       "689193377261944853": { dienstnummer: "PD-03", name: "Pau Sunal", rang: "Deputy Chief" },
       "366609124038934528": { dienstnummer: "PD-05", name: "Ben Morisson", rang: "Bureau Chief" },
 
-      // ===== TEAM BLUE =====
       "721476043814207830": { dienstnummer: "PD-08", name: "Dr. Tayo Backa", rang: "Commander" },
       "663782248998502447": { dienstnummer: "PD-09", name: "Walter Waldmeister", rang: "Watch Commander" },
       "750431732607483905": { dienstnummer: "PD-11", name: "Jule Waldmeister", rang: "Captain" },
@@ -756,7 +849,6 @@
       "228380461628391424": { dienstnummer: "PD-13", name: "Zane Blackwood", rang: "Captain" },
       "1217116992616661033": { dienstnummer: "PD-18", name: "Panther Nova", rang: "Deputy Inspector" },
 
-      // ===== TEAM GOLD =====
       "931064598570893343": { dienstnummer: "PD-20", name: "Joey Thompson", rang: "Master Lieutenant" },
       "541633624051679262": { dienstnummer: "PD-21", name: "Harald Hernandez", rang: "Master Lieutenant" },
       "1142017198718730271": { dienstnummer: "PD-22", name: "Blaze Redman", rang: "Master Lieutenant" },
@@ -769,7 +861,6 @@
       "530031383007985665": { dienstnummer: "PD-37", name: "Michael Johnson", rang: "Lieutenant I" },
       "791083793497849866": { dienstnummer: "PD-38", name: "Kurt Hildebrand", rang: "Lieutenant I" },
 
-      // ===== TEAM SILVER =====
       "932591878812102707": { dienstnummer: "PD-40", name: "Ricky Hermanns", rang: "Staff Sergeant" },
       "856260906404282429": { dienstnummer: "PD-41", name: "Markus Graf", rang: "Sergeant I" },
       "827221693935124492": { dienstnummer: "PD-42", name: "Till Schmidt", rang: "Staff Sergeant" },
@@ -809,7 +900,6 @@
       "638048653269008384": { dienstnummer: "PD-77", name: "Mia Rose", rang: "Specialist" },
       "733404524068470885": { dienstnummer: "PD-78", name: "Max Bellington", rang: "Specialist" },
 
-      // ===== ANWÄRTER =====
       "921075155491520532": { dienstnummer: "PA-50", name: "Oswald Dunn", rang: "Rekrut" },
       "748613669297848420": { dienstnummer: "PA-51", name: "John Black", rang: "Rekrut" },
       "299930826941136896": { dienstnummer: "PA-52", name: "Luna King", rang: "Rekrut" },
@@ -950,6 +1040,8 @@
     }
 
     // Tabs
+    const tabPanelsSelector = "#tab-strafakte, #tab-kollektivakte, #tab-fahndung, #tab-sachverhalte, #tab-verzeichnis";
+
     document.querySelectorAll(".tab-btn").forEach(btn => {
       btn.addEventListener("click", () => {
         document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
@@ -957,9 +1049,7 @@
 
         const tab = btn.dataset.tab;
 
-        document.querySelectorAll("#tab-strafakte, #tab-kollektivakte, #tab-fahndung, #tab-verzeichnis")
-          .forEach(el => el.classList.add("hidden"));
-
+        document.querySelectorAll(tabPanelsSelector).forEach(el => el.classList.add("hidden"));
         const activeTab = document.getElementById("tab-" + tab);
         if (activeTab) activeTab.classList.remove("hidden");
 
@@ -1069,14 +1159,12 @@
     }
 
     function initRequiredStarsAndAutoclear(){
-      // Strafakte required
       addRequiredMarkerById("st-id-label");
       addRequiredMarkerFor("st-verlesen");
       addRequiredMarkerFor("st-beisein");
       addRequiredMarkerFor("st-rechtsbeistand");
       addRequiredMarkerFor("st-medizin");
 
-      // Kollektivakte required
       addRequiredMarkerById("ko-id-label");
       addRequiredMarkerFor("ko-verlesen");
       addRequiredMarkerFor("ko-beisein");
@@ -1093,6 +1181,20 @@
       ]);
     }
 
+    // ===== "Abgenommen von" Altlasten entfernen (damit es NICHT wieder auftaucht) =====
+    function sanitizeAkteText(text){
+      let t = String(text || "");
+
+      // häufige alte Header entfernen
+      t = t.replace(/\|\s*Abgenommen von\s*:\s*\|\s*\n[\s\S]*?(?=\n\| |\n\|Bemerkungen:|\n\| Gezeichnet von:|\n$)/gi, "");
+      t = t.replace(/^Abgenommen von:.*\n?/gmi, "");
+
+      // doppelte Leerzeilen aufräumen (optional minimal)
+      t = t.replace(/\n{4,}/g, "\n\n\n");
+
+      return t.trimEnd() + "\n";
+    }
+
     // Verzeichnis (localStorage)
     const verzContainerIds = {
       straf: "verzeichnis-straf",
@@ -1105,6 +1207,23 @@
       return "akten_" + id + "_" + type;
     }
 
+    function migrateListIfNeeded(type){
+      const key = getStorageKey(type);
+      const list = JSON.parse(localStorage.getItem(key) || "[]");
+      let changed = false;
+
+      const migrated = list.map(e => {
+        const newText = sanitizeAkteText(e.text || "");
+        if (newText !== (e.text || "")) changed = true;
+        return { ...e, text: newText };
+      });
+
+      if (changed){
+        localStorage.setItem(key, JSON.stringify(migrated));
+      }
+      return migrated;
+    }
+
     function saveAkte(type, title, text){
       try{
         const key = getStorageKey(type);
@@ -1113,7 +1232,7 @@
           id: Date.now(),
           title: title || "Ohne Titel",
           createdAt: new Date().toLocaleString("de-DE"),
-          text
+          text: sanitizeAkteText(text)
         };
         list.unshift(entry);
         localStorage.setItem(key, JSON.stringify(list));
@@ -1128,8 +1247,7 @@
       const container = document.getElementById(containerId);
       if (!container) return;
 
-      const key = getStorageKey(type);
-      const list = JSON.parse(localStorage.getItem(key) || "[]");
+      const list = migrateListIfNeeded(type);
 
       container.innerHTML = "";
 
@@ -1158,7 +1276,7 @@
 
         div.addEventListener("click", () => {
           const out = document.getElementById("output");
-          if (out) out.value = entry.text;
+          if (out) out.value = sanitizeAkteText(entry.text);
         });
 
         container.appendChild(div);
@@ -1169,8 +1287,221 @@
       ["straf","kollektiv","fahndung"].forEach(renderVerzeichnisListe);
     }
 
-    // ===== Generatoren =====
+    // ===== Sachverhalte Tab =====
+    const sachverhalte = [
+      {
+        category: "Sachverhalte in Kollektiv",
+        subtitle: "Mehrere Tatverdächtige (Kollektivakte)",
+        items: [
+          {
+            title: "Juwelier Standard (Kollektivakte)",
+            target: "ko",
+            text:
+`Die oben genannten Tatverdächtigen haben am oben genannten Tatort und Tatzeitraum versucht, den Juwelier auszurauben. Hierbei kam ein stiller Alarm, seitens einer Mitarbeiterin aus dem Juwelier, beim NCPD an. Zudem befanden sich 5 Geiseln in Gewahrsam, welche von den oben genannten Tatverdächtigen aktiv mit einer Schusswaffe bedroht worden waren. Während der Flucht entzogen sich die Tatverdächtigen der polizeilichen Maßnahme, indem diese nicht den Anweisungen der Beamten, stehen zu bleiben, Folge geleistet haben. Hierbei wurde mehrfach mit Blaulicht und Anweisungen per Megaphone darauf hingewiesen. Bei der Abhandlung der Tatverdächtigen wurden die unten aufgeführten Gegenstände festgestellt. Die Identität wurde mittels Fingerabdruck und Ausweisdokumenten festgestellt.`
+          },
+          {
+            title: "Staatsbank Standard (Kollektivakte)",
+            target: "ko",
+            text:
+`Die oben genannten Tatverdächtigen haben am oben genannten Tatort und Tatzeitraum versucht, die Staatsbank auszurauben. Hierbei kam ein stiller Alarm, seitens einer Mitarbeiterin aus der Staatsbank, beim NCPD an. Zudem befanden sich 5 Geiseln in Gewahrsam, welche von den oben genannten Tatverdächtigen aktiv mit einer Schusswaffe bedroht worden waren. Während der Flucht entzogen sich die Tatverdächtigen der polizeilichen Maßnahme, indem diese nicht den Anweisungen der Beamten, stehen zu bleiben, Folge geleistet haben. Hierbei wurde mehrfach mit Blaulicht und Anweisungen per Megaphone darauf hingewiesen. Bei der Abhandlung der Tatverdächtigen wurden die unten aufgeführten Gegenstände festgestellt. Die Identität wurde mittels Fingerabdruck und Ausweisdokumenten festgestellt.`
+          }
+        ]
+      },
+      {
+        category: "Sachverhalte in Einzelfällen",
+        subtitle: "Ein Tatverdächtiger (Strafakte)",
+        items: [
+          {
+            title: "Juwelier Standard (Strafakte)",
+            target: "st",
+            text:
+`Der oben genannte Tatverdächtige hat am oben genannten Tatort und Tatzeitraum versucht, den Juwelier auszurauben. Hierbei kam ein stiller Alarm, seitens einer Mitarbeiterin aus dem Juwelier, beim NCPD an. Zudem befanden sich 5 Geiseln in Gewahrsam, welche von dem oben genannten Tatverdächtigen aktiv mit einer Schusswaffe bedroht worden waren. Während der Flucht entzog sich der Tatverdächtige der polizeilichen Maßnahme, indem dieser nicht den Anweisungen der Beamten stand zu bleiben, Folge geleistet hat. Hierbei wurde mehrfach mit Blaulicht und Anweisungen per Megaphone darauf hingewiesen. Bei der Abhandlung des Tatverdächtigen wurden die unten aufgeführten Gegenstände festgestellt. Die Identität wurde mittels Fingerabdruck und Ausweisdokumenten festgestellt.`
+          },
+          {
+            title: "Staatsbank Standard (Strafakte)",
+            target: "st",
+            text:
+`Der oben genannte Tatverdächtige hat am oben genannten Tatort und Tatzeitraum versucht, die Staatsbank auszurauben. Hierbei kam ein stiller Alarm, seitens einer Mitarbeiterin aus der Staatsbank, beim NCPD an. Zudem befanden sich 5 Geiseln in Gewahrsam, welche von dem oben genannten Tatverdächtigen aktiv mit einer Schusswaffe bedroht worden waren. Während der Flucht entzog sich der Tatverdächtige der polizeilichen Maßnahme, indem dieser nicht den Anweisungen der Beamten stand zu bleiben, Folge geleistet hat. Hierbei wurde mehrfach mit Blaulicht und Anweisungen per Megaphone darauf hingewiesen. Bei der Abhandlung des Tatverdächtigen wurden die unten aufgeführten Gegenstände festgestellt. Die Identität wurde mittels Fingerabdruck und Ausweisdokumenten festgestellt.`
+          }
+        ]
+      },
+      {
+        category: "Sachverhalte bei einer Grenzkontrolle",
+        subtitle: "Kontroll-Szenarien (Strafakte)",
+        items: [
+          {
+            title: "Gegenstände in den Taschen",
+            target: "st",
+            text:
+`Während einer geplanten Grenzkontrolle, am oben genannten Tatort zur oben genannten Tatzeit, wurden beim oben genannten Tatverdächtigen illegale Gegenstände gefunden. Diese sind im Bereich “Abgenommene Gegenstände” dieser Akte aufgelistet. Aufgrund dessen wurde der oben genannte Tatverdächtige zur Abhandlung in das Staatsgefängnis gebracht.`
+          },
+          {
+            title: "Gegenstände im Auto",
+            target: "st",
+            text:
+`Während einer geplanten Grenzkontrolle, am oben genannten Tatort zur oben genannten Tatzeit, wurden beim oben genannten Tatverdächtigen illegale Gegenstände im Fahrzeug mit dem Kennzeichen XY gefunden. Diese sind im Bereich “Abgenommene Gegenstände” dieser Akte aufgelistet. Aufgrund dessen wurde der oben genannte Tatverdächtige zur Abhandlung in das Staatsgefängnis gebracht.`
+          },
+          {
+            title: "Gegenstände in den Taschen UND im Auto",
+            target: "st",
+            text:
+`Während einer geplanten Grenzkontrolle, am oben genannten Tatort zur oben genannten Tatzeit, wurden beim oben genannten Tatverdächtigen illegale Gegenstände gefunden. Auch wurden illegale Gegenstände in seinem Fahrzeug mit dem Kennzeichen XY gefunden. Diese sind im Bereich “Abgenommene Gegenstände” dieser Akte aufgelistet. Aufgrund dessen wurde der oben genannte Tatverdächtige zur Abhandlung in das Staatsgefängnis gebracht.`
+          },
+          {
+            title: "TV flüchtet vor Grenzkontrolle",
+            target: "st",
+            text:
+`Während einer geplanten Grenzkontrolle, am oben genannten Tatort zur oben genannten Tatzeit, entzog sich der oben genannte Tatverdächtige einer Grenzkontrolle und somit einer polizeilichen Maßnahme. Der oben genannte Tatverdächtige wendete vor der Grenzkontrolle und fuhr mit überhöhter Geschwindigkeit davon. Abfang Einheiten der Grenzkontrolle versuchten unter Einsatz von Blaulicht sowie Megaphon Durchsagen den Tatverdächtigen zum Anhalten zu bewegen, was jedoch ohne Erfolg blieb. Nach einer Verfolgungsfahrt konnte der oben genannte Tatverdächtige gestellt und zur Abhandlung in das Staatsgefängnis gebracht werden`
+          }
+        ]
+      }
+    ];
 
+    async function copyText(text){
+      const t = String(text || "").trim();
+      if (!t) return;
+      try{
+        await navigator.clipboard.writeText(t);
+      }catch(e){
+        const out = document.getElementById("output");
+        if (out){
+          out.value = t;
+          out.select();
+          out.setSelectionRange(0, 99999);
+          try{ document.execCommand("copy"); }catch(err){}
+        }
+      }
+    }
+
+    function openTab(tabName){
+      document.querySelectorAll(".tab-btn").forEach(b => b.classList.toggle("active", b.dataset.tab === tabName));
+      document.querySelectorAll(tabPanelsSelector).forEach(el => el.classList.add("hidden"));
+      document.getElementById("tab-" + tabName)?.classList.remove("hidden");
+
+      const hint = document.getElementById("kollektiv-hinweis");
+      if (hint) hint.style.display = (tabName === "kollektivakte") ? "block" : "none";
+    }
+
+    function insertSachverhalt(target, text){
+      const t = String(text || "").trim();
+      if (!t) return;
+
+      if (target === "st"){
+        const cb = document.getElementById("st-sachverhalt-include");
+        const ta = document.getElementById("st-sachverhalt");
+        if (cb) cb.checked = true;
+        if (ta) ta.value = t;
+        syncSachUI();
+        openTab("strafakte");
+        ta?.focus();
+        return;
+      }
+
+      if (target === "ko"){
+        const ta = document.getElementById("ko-sachverhalt");
+        if (ta) ta.value = t;
+        openTab("kollektivakte");
+        ta?.focus();
+        return;
+      }
+    }
+
+    function renderSachverhalte(){
+      const container = document.getElementById("sv-container");
+      if (!container) return;
+
+      container.innerHTML = "";
+
+      sachverhalte.forEach((cat, idx) => {
+        const wrap = document.createElement("div");
+        wrap.className = "sv-category" + (idx === 0 ? " open" : "");
+
+        const header = document.createElement("div");
+        header.className = "sv-cat-header";
+
+        const left = document.createElement("div");
+        const title = document.createElement("div");
+        title.className = "sv-cat-title";
+        title.textContent = cat.category;
+
+        const sub = document.createElement("div");
+        sub.className = "sv-cat-sub";
+        sub.textContent = cat.subtitle || "";
+
+        left.appendChild(title);
+        left.appendChild(sub);
+
+        const right = document.createElement("div");
+        right.className = "sv-cat-right";
+        right.textContent = "▼";
+
+        header.appendChild(left);
+        header.appendChild(right);
+
+        const body = document.createElement("div");
+        body.className = "sv-cat-body";
+
+        header.addEventListener("click", () => {
+          wrap.classList.toggle("open");
+          right.textContent = wrap.classList.contains("open") ? "▲" : "▼";
+        });
+
+        cat.items.forEach(item => {
+          const card = document.createElement("div");
+          card.className = "sv-item";
+
+          const top = document.createElement("div");
+          top.className = "sv-item-top";
+
+          const twrap = document.createElement("div");
+          const it = document.createElement("div");
+          it.className = "sv-item-title";
+          it.textContent = item.title;
+
+          twrap.appendChild(it);
+
+          const actions = document.createElement("div");
+          actions.className = "sv-actions";
+
+          const btnCopy = document.createElement("button");
+          btnCopy.className = "btn btn-secondary btn-inline";
+          btnCopy.textContent = "Kopieren";
+          btnCopy.addEventListener("click", (e) => {
+            e.stopPropagation();
+            copyText(item.text);
+          });
+
+          const btnInsert = document.createElement("button");
+          btnInsert.className = "btn btn-inline";
+          btnInsert.textContent = (item.target === "ko") ? "In Kollektivakte einfügen" : "In Strafakte einfügen";
+          btnInsert.addEventListener("click", (e) => {
+            e.stopPropagation();
+            insertSachverhalt(item.target, item.text);
+          });
+
+          actions.appendChild(btnCopy);
+          actions.appendChild(btnInsert);
+
+          top.appendChild(twrap);
+          top.appendChild(actions);
+
+          const txt = document.createElement("div");
+          txt.className = "sv-item-text";
+          txt.textContent = item.text;
+
+          card.appendChild(top);
+          card.appendChild(txt);
+
+          body.appendChild(card);
+        });
+
+        wrap.appendChild(header);
+        wrap.appendChild(body);
+        container.appendChild(wrap);
+      });
+    }
+
+    // ===== Generatoren =====
     function genStrafakte(){
       const root = document.getElementById("tab-strafakte");
       clearErrors(root);
@@ -1195,7 +1526,6 @@
       const tatOrt = (document.getElementById("st-tatort-ort")?.value || "").trim();
       const tatZeitraum = (document.getElementById("st-tatort-zeitraum")?.value || "").trim();
 
-      // NUR 1 Person (Input)
       const besch = (document.getElementById("st-beschuldigte")?.value || "").trim();
       const ges = (document.getElementById("st-geschaedigte")?.value || "").trim();
 
@@ -1233,7 +1563,6 @@
       out += "| Geschädigte Person(en): |\n";
       out += (ges || "—") + "\n\n";
 
-      // Header steht immer, Inhalt nur wenn Checkbox aktiv
       out += "|Sachverhalt aus Sicht der Behörde: |\n";
       if (includeSach) out += (sach || "—") + "\n\n";
       else out += "\n\n";
@@ -1241,7 +1570,6 @@
       out += "| Weitere beteiligte Einheiten/Zeugen: |\n";
       out += (zeugen || "—") + "\n\n";
 
-      // Abgenommen von komplett entfernt
       out += "| Abgenommene Gegenstände: |\n";
       out += (geg || "—") + "\n\n";
 
@@ -1257,14 +1585,13 @@
       out += "Das Bußgeld ist in 7 Tagen zu bezahlen.\n";
       out += "Die dem Tatverdächtigen abgenommenen Gegenstände wurden in seinen persönlichen Spind gelegt.\n";
 
-      // U-Haft GANZ UNTEN in Bemerkungen, mit Leerzeile getrennt
       if (uhaft) out += "\n" + uhaft + "\n";
 
       out += "\n| Gezeichnet von: |\n";
       out += (gezeichnet || "—") + "\n";
 
       const outEl = document.getElementById("output");
-      if (outEl) outEl.value = out;
+      if (outEl) outEl.value = sanitizeAkteText(out);
 
       const titel = tatOrt || besch || "Strafakte ohne Titel";
       saveAkte("straf", titel, out);
@@ -1354,13 +1681,12 @@
       out += (gezeichnet || "—") + "\n\n";
 
       const outEl = document.getElementById("output");
-      if (outEl) outEl.value = out;
+      if (outEl) outEl.value = sanitizeAkteText(out);
 
       const titel = tatort || "Kollektivakte ohne Titel";
       saveAkte("kollektiv", titel, out);
     }
 
-    // (deaktiviert, aber bleibt da)
     function genFahndung(){
       const outEl = document.getElementById("output");
       if (outEl) outEl.value = "Ergreifungsakte ist aktuell deaktiviert.";
@@ -1384,6 +1710,7 @@
       clearErrors(document);
       const out = document.getElementById("output");
       if (out) out.value = "";
+      syncSachUI();
     }
 
     // Events
@@ -1393,7 +1720,7 @@
 
     document.getElementById("btn-copy")?.addEventListener("click", async () => {
       const out = document.getElementById("output");
-      const text = out?.value || "";
+      const text = (out?.value || "").trim();
       if (!text) return;
       try{
         await navigator.clipboard.writeText(text);
@@ -1407,6 +1734,7 @@
     document.getElementById("btn-reset")?.addEventListener("click", resetForm);
 
     // Init
+    renderSachverhalte();
     initDiscordUser();
     initRequiredStarsAndAutoclear();
 
