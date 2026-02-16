@@ -123,7 +123,10 @@
     }
 
     textarea{ min-height: 120px; resize: vertical; line-height: 1.35; margin-bottom: 6px; }
+    textarea#st-gezeichnet, textarea#ko-gezeichnet, textarea#fa-gezeichnet{ min-height: 84px; }
+
     #output{
+      width: 100%;
       min-height: 420px;
       border-radius: 14px;
       border: 1px solid rgba(255,255,255,0.10);
@@ -132,6 +135,7 @@
       font-family: "Consolas", "Fira Code", monospace;
       font-size: 0.82rem;
       white-space: pre-wrap;
+      padding: 10px 12px;
     }
 
     .row{
@@ -190,6 +194,7 @@
       gap: 8px;
       cursor:pointer;
       transition: 0.15s;
+      user-select: none;
     }
     .checkbox-row label:hover{
       background: rgba(255,255,255,0.06);
@@ -324,8 +329,6 @@
       letter-spacing: 0.02em;
     }
 
-    textarea#st-gezeichnet, textarea#ko-gezeichnet, textarea#fa-gezeichnet{ min-height: 84px; }
-
     @media (max-width: 700px){
       .panel{ padding: 16px; }
     }
@@ -353,6 +356,7 @@
   </header>
 
   <main class="page">
+    <!-- LINKS: FORMULAR -->
     <section class="panel">
       <div class="panel-header">
         <div>
@@ -380,14 +384,14 @@
             </div>
             <div>
               <label for="st-tatort-ort">Tatort (Ort/PLZ)</label>
-              <input id="st-tatort-ort" type="text" placeholder="z. B. Staatsbank, bei PLZ 5069" />
+              <input id="st-tatort-ort" type="text" placeholder="z. B. Bank, bei PLZ 5069" />
             </div>
           </div>
 
           <div class="row">
             <div>
-              <label for="st-tatort-zeitraum">Zeitraum (Datum, Von/Bis)</label>
-              <input id="st-tatort-zeitraum" type="text" placeholder="z. B. Am 02.02.2026 von 00:05 Uhr bis 00:55 Uhr" />
+              <label for="st-tatort-zeitraum">Zeitraum (Datum/Uhrzeit)</label>
+              <input id="st-tatort-zeitraum" type="text" placeholder="z. B. Am 02.02.2026 von 00:05 Uhr bis 00:54 Uhr" />
             </div>
             <div>
               <label>&nbsp;</label>
@@ -397,12 +401,13 @@
 
           <div class="row">
             <div>
-              <label for="st-beschuldigte">Beschuldigte Person(en)</label>
+              <label for="st-beschuldigte">Beschuldigte Person</label>
+              <!-- ✅ nur eine Person: einzeilig -->
               <input id="st-beschuldigte" type="text" placeholder="Vorname Nachname, Geb. TT.MM.JJJJ" />
             </div>
             <div>
               <label for="st-geschaedigte">Geschädigte Person(en)</label>
-              <textarea id="st-geschaedigte"></textarea>
+              <textarea id="st-geschaedigte" placeholder="Mehrzeilig möglich"></textarea>
             </div>
           </div>
         </div>
@@ -424,13 +429,13 @@
           <div class="section-title">Sachverhalt</div>
 
           <div class="checkbox-row">
-            <label><input type="checkbox" id="st-sachverhalt-include" /> Sachverhalt hinzufügen</label>
+            <label><input type="checkbox" id="st-sachverhalt-include" /> Sachverhalt-Inhalt hinzufügen</label>
           </div>
 
-          <textarea id="st-sachverhalt" placeholder="Straftat pro Satz … (nur wenn Checkbox aktiv)"></textarea>
+          <textarea id="st-sachverhalt" placeholder="Straftat pro Satz … (Inhalt nur wenn Checkbox aktiv)"></textarea>
 
           <div class="verz-hinweis">
-            Hinweis: Nur bei nicht Einigung mit Rechtsanwalt oder Tatverdächtigen. Sonst weglassen.
+            Hinweis: Nur bei nicht Einigung mit Rechtsanwalt oder Tatverdächtigen. Sonst Inhalt leer lassen.
           </div>
         </div>
 
@@ -482,6 +487,21 @@
                 <option value="bestand">bestand</option>
                 <option value="verzichtete">verzichtete</option>
               </select>
+            </div>
+          </div>
+
+          <!-- ✅ U-Haftzeitverlängerung (optional) -->
+          <div style="margin-top:10px;">
+            <div class="checkbox-row">
+              <label><input type="checkbox" id="st-uhaft-include" /> U-Haftzeitverlängerung hinzufügen</label>
+            </div>
+            <input
+              id="st-uhaft-text"
+              type="text"
+              placeholder="z. B. U-Haftzeitverlängerung bis 05.03.2026 (genehmigt durch DOJ-XX)"
+            />
+            <div class="verz-hinweis" style="margin-top:6px;">
+              Hinweis: Wird nur bei aktivierter Checkbox in den Bemerkungen ergänzt.
             </div>
           </div>
 
@@ -692,6 +712,7 @@
       </div>
     </section>
 
+    <!-- RECHTS: OUTPUT -->
     <section class="panel">
       <div class="panel-header">
         <div>
@@ -729,90 +750,91 @@
     let currentDiscordId = null;
     const STORAGE_KEY = "ncpd_officerMap_v1";
 
+    // ✅ Officer Map (wie bei dir)
     const defaultOfficerMap = {
-  // ===== TEAM RED =====
- "361115973203525633": { dienstnummer: "PD-01", name: "Lukas Lutz", rang: "Chief of Police" },
- "929489098471796756": { dienstnummer: "PD-02", name: "Alev Sunal", rang: "Assistant Chief of Police" },
- "689193377261944853": { dienstnummer: "PD-03", name: "Pau Sunal", rang: "Deputy Chief" },
- "366609124038934528": { dienstnummer: "PD-05", name: "Ben Morisson", rang: "Bureau Chief" },
+      // ===== TEAM RED =====
+      "361115973203525633": { dienstnummer: "PD-01", name: "Lukas Lutz", rang: "Chief of Police" },
+      "929489098471796756": { dienstnummer: "PD-02", name: "Alev Sunal", rang: "Assistant Chief of Police" },
+      "689193377261944853": { dienstnummer: "PD-03", name: "Pau Sunal", rang: "Deputy Chief" },
+      "366609124038934528": { dienstnummer: "PD-05", name: "Ben Morisson", rang: "Bureau Chief" },
 
-  // ===== TEAM BLUE =====
- "721476043814207830": { dienstnummer: "PD-08", name: "Dr. Tayo Backa", rang: "Commander" },
- "663782248998502447": { dienstnummer: "PD-09", name: "Walter Waldmeister", rang: "Watch Commander" },
- "750431732607483905": { dienstnummer: "PD-11", name: "Jule Waldmeister", rang: "Captain" },
- "708062101457076228": { dienstnummer: "PD-12", name: "Vito Ramirez", rang: "Captain" },
- "228380461628391424": { dienstnummer: "PD-13", name: "Zane Blackwood", rang: "Captain" },
- "1217116992616661033": { dienstnummer: "PD-18", name: "Panther Nova", rang: "Deputy Inspector" },
+      // ===== TEAM BLUE =====
+      "721476043814207830": { dienstnummer: "PD-08", name: "Dr. Tayo Backa", rang: "Commander" },
+      "663782248998502447": { dienstnummer: "PD-09", name: "Walter Waldmeister", rang: "Watch Commander" },
+      "750431732607483905": { dienstnummer: "PD-11", name: "Jule Waldmeister", rang: "Captain" },
+      "708062101457076228": { dienstnummer: "PD-12", name: "Vito Ramirez", rang: "Captain" },
+      "228380461628391424": { dienstnummer: "PD-13", name: "Zane Blackwood", rang: "Captain" },
+      "1217116992616661033": { dienstnummer: "PD-18", name: "Panther Nova", rang: "Deputy Inspector" },
 
-  // ===== TEAM GOLD =====
- "931064598570893343": { dienstnummer: "PD-20", name: "Joey Thompson", rang: "Master Lieutenant" },
- "541633624051679262": { dienstnummer: "PD-21", name: "Harald Hernandez", rang: "Master Lieutenant" },
- "1142017198718730271": { dienstnummer: "PD-22", name: "Blaze Redman", rang: "Master Lieutenant" },
- "1093573634213285989": { dienstnummer: "PD-24", name: "Lucius Lich", rang: "Lieutenant III" },
- "1261019609818075207": { dienstnummer: "PD-25", name: "Elina Thompson", rang: "Lieutenant III" },
- "481793329328291840": { dienstnummer: "PD-28", name: "Lamar Kasim", rang: "Lieutenant III" },
- "697119782834536520": { dienstnummer: "PD-34", name: "Anton Horvath", rang: "Lieutenant I" },
- "498101850856226839": { dienstnummer: "PD-35", name: "Reiner Hirsch", rang: "Lieutenant I" },
- "447859940598611968": { dienstnummer: "PD-36", name: "Dean Grey", rang: "Lieutenant I" },
- "530031383007985665": { dienstnummer: "PD-37", name: "Michael Johnson", rang: "Lieutenant I" },
- "791083793497849866": { dienstnummer: "PD-38", name: "Kurt Hildebrand", rang: "Lieutenant I" },
+      // ===== TEAM GOLD =====
+      "931064598570893343": { dienstnummer: "PD-20", name: "Joey Thompson", rang: "Master Lieutenant" },
+      "541633624051679262": { dienstnummer: "PD-21", name: "Harald Hernandez", rang: "Master Lieutenant" },
+      "1142017198718730271": { dienstnummer: "PD-22", name: "Blaze Redman", rang: "Master Lieutenant" },
+      "1093573634213285989": { dienstnummer: "PD-24", name: "Lucius Lich", rang: "Lieutenant III" },
+      "1261019609818075207": { dienstnummer: "PD-25", name: "Elina Thompson", rang: "Lieutenant III" },
+      "481793329328291840": { dienstnummer: "PD-28", name: "Lamar Kasim", rang: "Lieutenant III" },
+      "697119782834536520": { dienstnummer: "PD-34", name: "Anton Horvath", rang: "Lieutenant I" },
+      "498101850856226839": { dienstnummer: "PD-35", name: "Reiner Hirsch", rang: "Lieutenant I" },
+      "447859940598611968": { dienstnummer: "PD-36", name: "Dean Grey", rang: "Lieutenant I" },
+      "530031383007985665": { dienstnummer: "PD-37", name: "Michael Johnson", rang: "Lieutenant I" },
+      "791083793497849866": { dienstnummer: "PD-38", name: "Kurt Hildebrand", rang: "Lieutenant I" },
 
-  // ===== TEAM SILVER =====
- "932591878812102707": { dienstnummer: "PD-40", name: "Ricky Hermanns", rang: "Staff Sergeant" }, //---- Hier Ende
- "856260906404282429": { dienstnummer: "PD-41", name: "Markus Graf", rang: "Sergeant I" },
- "827221693935124492": { dienstnummer: "PD-42", name: "Till Schmidt", rang: "Staff Sergeant" },
- "365147907189374976": { dienstnummer: "PD-43", name: "Jonny Millson", rang: "Sergeant III" },
- "1091845737383481374": { dienstnummer: "PD-44", name: "Meli Peep", rang: "Sergeant I" },
- "888010924533903390": { dienstnummer: "PD-45", name: "Leon Smith", rang: "Sergeant I" },
- "693183499657543780": { dienstnummer: "PD-46", name: "Ottmar Zittlau", rang: "Sergeant III" },
- "689834653917511736": { dienstnummer: "PD-47", name: "Stefan Engelmann", rang: "Sergeant III" },
- "475238589803003907": { dienstnummer: "PD-48", name: "Jaques Webster", rang: "Sergeant I" },
- "564208049829576723": { dienstnummer: "PD-49", name: "Andre Holz", rang: "Sergeant I" },
- "1307790847613337743": { dienstnummer: "PD-50", name: "Cano Kamr", rang: "Sergeant I" },
- "1325633859244789831": { dienstnummer: "PD-51", name: "Vincent Engels", rang: "Staff Sergeant" },
- "1437096453058199782": { dienstnummer: "PD-52", name: "Elias Kamr", rang: "Sergeant I" },
- "365855718936412171": { dienstnummer: "PD-53", name: "Alfred Panzer", rang: "Specialist" },
- "711866485651275787": { dienstnummer: "PD-54", name: "David Baum", rang: "Staff Sergeant" },
- "275282308528078848": { dienstnummer: "PD-55", name: "Damon Mendoza", rang: "Sergeant I" },
- "692828806465061005": { dienstnummer: "PD-56", name: "Achim Achinger", rang: "Specialist" },
- "951565659685421076": { dienstnummer: "PD-57", name: "Elmio Demir", rang: "Specialist" },
- "569619520361201686": { dienstnummer: "PD-58", name: "Reiner Thompson", rang: "Sergeant II" },
- "1083016856195059764": { dienstnummer: "PD-59", name: "Eresjo Escobar", rang: "Sergeant II" },
- "1066763070954815638": { dienstnummer: "PD-60", name: "Can Gillow", rang: "Staff Sergeant" },
- "1185575596764446830": { dienstnummer: "PD-61", name: "Till Costello", rang: "Sergeant III" },
- "611483003054587924": { dienstnummer: "PD-62", name: "Jonathan Schmidt", rang: "Specialist" },
- "491276629344256021": { dienstnummer: "PD-63", name: "Maxi Black", rang: "Sergeant I" },
- "1455858265694142485": { dienstnummer: "PD-64", name: "Rookie Doofy", rang: "Sergeant I" },
- "440578784970932226": { dienstnummer: "PD-65", name: "Stefano Meyer", rang: "Specialist" },
- "371911170002518016": { dienstnummer: "PD-66", name: "Jax Alvarez", rang: "Sergeant II" },
- "788866575305408544": { dienstnummer: "PD-67", name: "Jace Carter", rang: "Specialist" },
- "521724050872074241": { dienstnummer: "PD-68", name: "Leon Montana", rang: "Sergeant II" },
- "1457070795699392684": { dienstnummer: "PD-70", name: "Gert Jenkins", rang: "Sergeant III" },
- "788116843255693362": { dienstnummer: "PD-71", name: "Sascha Lukic", rang: "Sergeant III" },
- "1450881232836759653": { dienstnummer: "PD-72", name: "Christopher Layn", rang: "Sergeant III" },
- "806952046052769862": { dienstnummer: "PD-73", name: "Shawty Thompson", rang: "Sergeant II" },
- "921356299990605845": { dienstnummer: "PD-74", name: "Max Bergmann", rang: "Sergeant II" },
- "825821789849387028": { dienstnummer: "PD-75", name: "Pablo Brightwood", rang: "Specialist" },
- "808712195390701618": { dienstnummer: "PD-76", name: "Ali Coban", rang: "Specialist" },
- "638048653269008384": { dienstnummer: "PD-77", name: "Mia Rose", rang: "Specialist" },
- "733404524068470885": { dienstnummer: "PD-78", name: "Max Bellington", rang: "Specialist" },
+      // ===== TEAM SILVER =====
+      "932591878812102707": { dienstnummer: "PD-40", name: "Ricky Hermanns", rang: "Staff Sergeant" },
+      "856260906404282429": { dienstnummer: "PD-41", name: "Markus Graf", rang: "Sergeant I" },
+      "827221693935124492": { dienstnummer: "PD-42", name: "Till Schmidt", rang: "Staff Sergeant" },
+      "365147907189374976": { dienstnummer: "PD-43", name: "Jonny Millson", rang: "Sergeant III" },
+      "1091845737383481374": { dienstnummer: "PD-44", name: "Meli Peep", rang: "Sergeant I" },
+      "888010924533903390": { dienstnummer: "PD-45", name: "Leon Smith", rang: "Sergeant I" },
+      "693183499657543780": { dienstnummer: "PD-46", name: "Ottmar Zittlau", rang: "Sergeant III" },
+      "689834653917511736": { dienstnummer: "PD-47", name: "Stefan Engelmann", rang: "Sergeant III" },
+      "475238589803003907": { dienstnummer: "PD-48", name: "Jaques Webster", rang: "Sergeant I" },
+      "564208049829576723": { dienstnummer: "PD-49", name: "Andre Holz", rang: "Sergeant I" },
+      "1307790847613337743": { dienstnummer: "PD-50", name: "Cano Kamr", rang: "Sergeant I" },
+      "1325633859244789831": { dienstnummer: "PD-51", name: "Vincent Engels", rang: "Staff Sergeant" },
+      "1437096453058199782": { dienstnummer: "PD-52", name: "Elias Kamr", rang: "Sergeant I" },
+      "365855718936412171": { dienstnummer: "PD-53", name: "Alfred Panzer", rang: "Specialist" },
+      "711866485651275787": { dienstnummer: "PD-54", name: "David Baum", rang: "Staff Sergeant" },
+      "275282308528078848": { dienstnummer: "PD-55", name: "Damon Mendoza", rang: "Sergeant I" },
+      "692828806465061005": { dienstnummer: "PD-56", name: "Achim Achinger", rang: "Specialist" },
+      "951565659685421076": { dienstnummer: "PD-57", name: "Elmio Demir", rang: "Specialist" },
+      "569619520361201686": { dienstnummer: "PD-58", name: "Reiner Thompson", rang: "Sergeant II" },
+      "1083016856195059764": { dienstnummer: "PD-59", name: "Eresjo Escobar", rang: "Sergeant II" },
+      "1066763070954815638": { dienstnummer: "PD-60", name: "Can Gillow", rang: "Staff Sergeant" },
+      "1185575596764446830": { dienstnummer: "PD-61", name: "Till Costello", rang: "Sergeant III" },
+      "611483003054587924": { dienstnummer: "PD-62", name: "Jonathan Schmidt", rang: "Specialist" },
+      "491276629344256021": { dienstnummer: "PD-63", name: "Maxi Black", rang: "Sergeant I" },
+      "1455858265694142485": { dienstnummer: "PD-64", name: "Rookie Doofy", rang: "Sergeant I" },
+      "440578784970932226": { dienstnummer: "PD-65", name: "Stefano Meyer", rang: "Specialist" },
+      "371911170002518016": { dienstnummer: "PD-66", name: "Jax Alvarez", rang: "Sergeant II" },
+      "788866575305408544": { dienstnummer: "PD-67", name: "Jace Carter", rang: "Specialist" },
+      "521724050872074241": { dienstnummer: "PD-68", name: "Leon Montana", rang: "Sergeant II" },
+      "1457070795699392684": { dienstnummer: "PD-70", name: "Gert Jenkins", rang: "Sergeant III" },
+      "788116843255693362": { dienstnummer: "PD-71", name: "Sascha Lukic", rang: "Sergeant III" },
+      "1450881232836759653": { dienstnummer: "PD-72", name: "Christopher Layn", rang: "Sergeant III" },
+      "806952046052769862": { dienstnummer: "PD-73", name: "Shawty Thompson", rang: "Sergeant II" },
+      "921356299990605845": { dienstnummer: "PD-74", name: "Max Bergmann", rang: "Sergeant II" },
+      "825821789849387028": { dienstnummer: "PD-75", name: "Pablo Brightwood", rang: "Specialist" },
+      "808712195390701618": { dienstnummer: "PD-76", name: "Ali Coban", rang: "Specialist" },
+      "638048653269008384": { dienstnummer: "PD-77", name: "Mia Rose", rang: "Specialist" },
+      "733404524068470885": { dienstnummer: "PD-78", name: "Max Bellington", rang: "Specialist" },
 
-  // ===== ANWÄRTER =====
- "921075155491520532": { dienstnummer: "PA-50", name: "Oswald Dunn", rang: "Rekrut" },
- "748613669297848420": { dienstnummer: "PA-51", name: "John Black", rang: "Rekrut" },
- "299930826941136896": { dienstnummer: "PA-52", name: "Luna King", rang: "Rekrut" },
- "1088138918492389476": { dienstnummer: "PA-53", name: "Jerry Hackl", rang: "Rekrut" },
- "1300192195478814777": { dienstnummer: "PA-54", name: "Lukas Beni", rang: "Rekrut" },
- "339052270568341514": { dienstnummer: "PA-55", name: "Scotty Scofield", rang: "Rekrut" },
- "1249452111922724874": { dienstnummer: "PA-56", name: "Sergej Makarov", rang: "Rekrut" },
- "1447980536105537687": { dienstnummer: "PA-57", name: "Fabio Plexo", rang: "Rekrut" },
- "222840699777843201": { dienstnummer: "PA-58", name: "Andrew Jonhson", rang: "Rekrut" },
- "302448414770069514": { dienstnummer: "PA-59", name: "Raven Delgado", rang: "Rekrut" },
- "829813941261565992": { dienstnummer: "PA-60", name: "Pedro Malaga", rang: "Rekrut" },
- "969327667499372744": { dienstnummer: "PA-61", name: "James Bellington", rang: "Rekrut" },
- "799213795133227029": { dienstnummer: "PA-62", name: "Sean Williams", rang: "Rekrut" },
- "1410539874750300170": { dienstnummer: "PA-64", name: "Jackson Salvatore", rang: "Rekrut" },
- "201012063550570496": { dienstnummer: "PA-65", name: "Nico Vogel", rang: "Rekrut" }
+      // ===== ANWÄRTER =====
+      "921075155491520532": { dienstnummer: "PA-50", name: "Oswald Dunn", rang: "Rekrut" },
+      "748613669297848420": { dienstnummer: "PA-51", name: "John Black", rang: "Rekrut" },
+      "299930826941136896": { dienstnummer: "PA-52", name: "Luna King", rang: "Rekrut" },
+      "1088138918492389476": { dienstnummer: "PA-53", name: "Jerry Hackl", rang: "Rekrut" },
+      "1300192195478814777": { dienstnummer: "PA-54", name: "Lukas Beni", rang: "Rekrut" },
+      "339052270568341514": { dienstnummer: "PA-55", name: "Scotty Scofield", rang: "Rekrut" },
+      "1249452111922724874": { dienstnummer: "PA-56", name: "Sergej Makarov", rang: "Rekrut" },
+      "1447980536105537687": { dienstnummer: "PA-57", name: "Fabio Plexo", rang: "Rekrut" },
+      "222840699777843201": { dienstnummer: "PA-58", name: "Andrew Jonhson", rang: "Rekrut" },
+      "302448414770069514": { dienstnummer: "PA-59", name: "Raven Delgado", rang: "Rekrut" },
+      "829813941261565992": { dienstnummer: "PA-60", name: "Pedro Malaga", rang: "Rekrut" },
+      "969327667499372744": { dienstnummer: "PA-61", name: "James Bellington", rang: "Rekrut" },
+      "799213795133227029": { dienstnummer: "PA-62", name: "Sean Williams", rang: "Rekrut" },
+      "1410539874750300170": { dienstnummer: "PA-64", name: "Jackson Salvatore", rang: "Rekrut" },
+      "201012063550570496": { dienstnummer: "PA-65", name: "Nico Vogel", rang: "Rekrut" }
     };
 
     function loadOfficerMap(){
@@ -880,7 +902,7 @@
       }
 
       const full = `${o.name} | ${o.dienstnummer} | ${o.rang}`;
-      const parts = o.name.split(" ");
+      const parts = (o.name || "").split(" ");
       const vorname = parts[0] || "";
       const nachname = parts.slice(1).join(" ") || "";
       const kuerzel = `${vorname.charAt(0)}. ${nachname}`.trim();
@@ -1183,9 +1205,11 @@
       const tatOrt = (document.getElementById("st-tatort-ort").value || "").trim();
       const tatZeitraum = (document.getElementById("st-tatort-zeitraum").value || "").trim();
 
+      // ✅ einzeilig
       const besch = (document.getElementById("st-beschuldigte").value || "").trim();
       const ges = (document.getElementById("st-geschaedigte").value || "").trim();
 
+      // ✅ Sachverhalt: Überschrift IMMER, Inhalt nur wenn Checkbox
       const includeSach = !!document.getElementById("st-sachverhalt-include")?.checked;
       const sach = (document.getElementById("st-sachverhalt").value || "").trim();
 
@@ -1200,14 +1224,19 @@
       const rb = document.getElementById("st-rechtsbeistand").value;
       const med = document.getElementById("st-medizin").value;
 
+      const includeUhaft = !!document.getElementById("st-uhaft-include")?.checked;
+      const uhaftText = (document.getElementById("st-uhaft-text").value || "").trim();
+
       const gezeichnet = (document.getElementById("st-gezeichnet").value || "").trim();
 
       let out = "";
 
+      // Titelblock: KEINE Leerzeile zwischen Department und Officer
       out += "| - Strafakte - |\n";
       out += "Narco City Police Department\n";
       out += (officer || "—") + "\n\n";
 
+      // Tatort: Ort und Zeitraum auf separaten Zeilen
       out += "| Tatort und Zeitraum: |\n";
       if (tatOrt) out += tatOrt + "\n";
       if (tatZeitraum) out += tatZeitraum + "\n\n";
@@ -1221,16 +1250,15 @@
       out += "| Geschädigte Person(en): |\n";
       out += (ges || "—") + "\n\n";
 
+      // ✅ Sachverhalt Überschrift IMMER, Inhalt nur bei Checkbox
       out += "|Sachverhalt aus Sicht der Behörde: |\n";
-      if (includeSach) {
-        out += (sach || "—") + "\n\n";
-      } else {
-        out += "\n";
-      }
+      if (includeSach && sach) out += sach + "\n\n";
+      else out += "\n";
 
       out += "| Weitere beteiligte Einheiten/Zeugen: |\n";
       out += (zeugen || "—") + "\n\n";
 
+      // Gegenstände: Header optional mit "Abgenommen von"
       if (abn){
         out += "| Abgenommene Gegenstände: | Abgenommen von: " + abn + "\n";
       }else{
@@ -1247,6 +1275,9 @@
       if (med === "bestand") out += "Der TV bestand auf medizinische Versorgung.\n";
       if (med === "verzichtete") out += "Der TV verzichtete auf medizinische Versorgung.\n";
 
+      // ✅ optional: U-Haftzeitverlängerung
+      if (includeUhaft && uhaftText) out += uhaftText + "\n";
+
       out += "Das Bußgeld ist in 7 Tagen zu bezahlen.\n";
       out += "Die dem Tatverdächtigen abgenommenen Gegenstände wurden in seinen persönlichen Spind gelegt.\n\n";
 
@@ -1255,7 +1286,7 @@
 
       document.getElementById("output").value = out;
 
-      const titel = tatOrt || (besch || "Strafakte ohne Titel");
+      const titel = tatOrt || besch || "Strafakte ohne Titel";
       saveAkte("straf", titel, out);
     }
 
@@ -1347,7 +1378,6 @@
       saveAkte("kollektiv", titel, out);
     }
 
-    // (deaktiviert, aber bleibt da)
     function genFahndung(){
       const outEl = document.getElementById("output");
       if (outEl) outEl.value = "Ergreifungsakte ist aktuell deaktiviert.";
@@ -1397,7 +1427,7 @@
     initDiscordUser();
     initRequiredStarsAndAutoclear();
 
-    // Optional: Sachverhalt-Textarea optisch deaktivieren wenn Checkbox aus
+    // ✅ Sachverhalt-Textarea optisch deaktivieren wenn Checkbox aus
     const sachCb = document.getElementById("st-sachverhalt-include");
     const sachTa = document.getElementById("st-sachverhalt");
     function syncSachUI(){
@@ -1408,6 +1438,18 @@
     }
     sachCb?.addEventListener("change", syncSachUI);
     syncSachUI();
+
+    // ✅ U-Haft Feld optisch deaktivieren wenn Checkbox aus
+    const uCb = document.getElementById("st-uhaft-include");
+    const uIn = document.getElementById("st-uhaft-text");
+    function syncUhaftUI(){
+      const on = !!uCb?.checked;
+      if (!uIn) return;
+      uIn.style.opacity = on ? "1" : "0.55";
+      uIn.style.pointerEvents = on ? "auto" : "none";
+    }
+    uCb?.addEventListener("change", syncUhaftUI);
+    syncUhaftUI();
   </script>
 </body>
 </html>
