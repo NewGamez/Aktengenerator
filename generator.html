@@ -112,7 +112,7 @@
       border-radius: 12px;
       font-size: 0.86rem;
       outline:none;
-      transition: border 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+      transition: border 0.15s ease, box-shadow 0.15s ease, background 0.15s ease, opacity 0.15s ease;
       box-shadow: inset 0 1px 0 rgba(255,255,255,0.04), 0 10px 24px rgba(0,0,0,0.28);
     }
     input::placeholder, textarea::placeholder{ color: rgba(255,255,255,0.35); }
@@ -123,10 +123,7 @@
     }
 
     textarea{ min-height: 120px; resize: vertical; line-height: 1.35; margin-bottom: 6px; }
-    textarea#st-gezeichnet, textarea#ko-gezeichnet, textarea#fa-gezeichnet{ min-height: 84px; }
-
     #output{
-      width: 100%;
       min-height: 420px;
       border-radius: 14px;
       border: 1px solid rgba(255,255,255,0.10);
@@ -135,7 +132,6 @@
       font-family: "Consolas", "Fira Code", monospace;
       font-size: 0.82rem;
       white-space: pre-wrap;
-      padding: 10px 12px;
     }
 
     .row{
@@ -194,7 +190,6 @@
       gap: 8px;
       cursor:pointer;
       transition: 0.15s;
-      user-select: none;
     }
     .checkbox-row label:hover{
       background: rgba(255,255,255,0.06);
@@ -329,6 +324,14 @@
       letter-spacing: 0.02em;
     }
 
+    textarea#st-gezeichnet, textarea#ko-gezeichnet, textarea#fa-gezeichnet{ min-height: 84px; }
+
+    /* Grunddaten “hübscher”: textarea klein halten */
+    #st-geschaedigte{
+      min-height: 86px;
+      max-height: 120px;
+    }
+
     @media (max-width: 700px){
       .panel{ padding: 16px; }
     }
@@ -356,7 +359,6 @@
   </header>
 
   <main class="page">
-    <!-- LINKS: FORMULAR -->
     <section class="panel">
       <div class="panel-header">
         <div>
@@ -384,30 +386,30 @@
             </div>
             <div>
               <label for="st-tatort-ort">Tatort (Ort/PLZ)</label>
-              <input id="st-tatort-ort" type="text" placeholder="z. B. Bank, bei PLZ 5069" />
+              <input id="st-tatort-ort" type="text" placeholder="z. B. Staatsbank, bei PLZ 5069" />
             </div>
           </div>
 
           <div class="row">
             <div>
-              <label for="st-tatort-zeitraum">Zeitraum (Datum/Uhrzeit)</label>
-              <input id="st-tatort-zeitraum" type="text" placeholder="z. B. Am 02.02.2026 von 00:05 Uhr bis 00:54 Uhr" />
+              <label for="st-tatort-zeitraum">Zeitraum (Datum, Von/Bis)</label>
+              <input id="st-tatort-zeitraum" type="text" placeholder="z. B. Am 02.02.2026 von 00:05 Uhr bis 00:55 Uhr" />
             </div>
             <div>
-              <label>&nbsp;</label>
-              <input type="text" disabled style="opacity:0; pointer-events:none;" />
-            </div>
-          </div>
-
-          <div class="row">
-            <div>
-              <label for="st-beschuldigte">Beschuldigte Person</label>
-              <!-- ✅ nur eine Person: einzeilig -->
+              <label for="st-beschuldigte">Beschuldigte Person(en)</label>
+              <!-- NUR 1 ZEILE -->
               <input id="st-beschuldigte" type="text" placeholder="Vorname Nachname, Geb. TT.MM.JJJJ" />
             </div>
+          </div>
+
+          <div class="row">
             <div>
               <label for="st-geschaedigte">Geschädigte Person(en)</label>
-              <textarea id="st-geschaedigte" placeholder="Mehrzeilig möglich"></textarea>
+              <textarea id="st-geschaedigte" placeholder="Optional"></textarea>
+            </div>
+            <div>
+              <label for="st-uhaft">U-Haftzeitverlängerung (optional)</label>
+              <input id="st-uhaft" type="text" placeholder="z. B. U-Haft bis TT.MM.JJJJ HH:MM Uhr verlängert" />
             </div>
           </div>
         </div>
@@ -429,13 +431,13 @@
           <div class="section-title">Sachverhalt</div>
 
           <div class="checkbox-row">
-            <label><input type="checkbox" id="st-sachverhalt-include" /> Sachverhalt-Inhalt hinzufügen</label>
+            <label><input type="checkbox" id="st-sachverhalt-include" /> Inhalt hinzufügen</label>
           </div>
 
           <textarea id="st-sachverhalt" placeholder="Straftat pro Satz … (Inhalt nur wenn Checkbox aktiv)"></textarea>
 
           <div class="verz-hinweis">
-            Hinweis: Nur bei nicht Einigung mit Rechtsanwalt oder Tatverdächtigen. Sonst Inhalt leer lassen.
+            Hinweis: Nur bei nicht Einigung mit Rechtsanwalt oder Tatverdächtigen. Sonst weglassen.
           </div>
         </div>
 
@@ -487,21 +489,6 @@
                 <option value="bestand">bestand</option>
                 <option value="verzichtete">verzichtete</option>
               </select>
-            </div>
-          </div>
-
-          <!-- ✅ U-Haftzeitverlängerung (optional) -->
-          <div style="margin-top:10px;">
-            <div class="checkbox-row">
-              <label><input type="checkbox" id="st-uhaft-include" /> U-Haftzeitverlängerung hinzufügen</label>
-            </div>
-            <input
-              id="st-uhaft-text"
-              type="text"
-              placeholder="z. B. U-Haftzeitverlängerung bis 05.03.2026 (genehmigt durch DOJ-XX)"
-            />
-            <div class="verz-hinweis" style="margin-top:6px;">
-              Hinweis: Wird nur bei aktivierter Checkbox in den Bemerkungen ergänzt.
             </div>
           </div>
 
@@ -712,7 +699,6 @@
       </div>
     </section>
 
-    <!-- RECHTS: OUTPUT -->
     <section class="panel">
       <div class="panel-header">
         <div>
@@ -750,7 +736,6 @@
     let currentDiscordId = null;
     const STORAGE_KEY = "ncpd_officerMap_v1";
 
-    // ✅ Officer Map (wie bei dir)
     const defaultOfficerMap = {
       // ===== TEAM RED =====
       "361115973203525633": { dienstnummer: "PD-01", name: "Lukas Lutz", rang: "Chief of Police" },
@@ -902,7 +887,7 @@
       }
 
       const full = `${o.name} | ${o.dienstnummer} | ${o.rang}`;
-      const parts = (o.name || "").split(" ");
+      const parts = o.name.split(" ");
       const vorname = parts[0] || "";
       const nachname = parts.slice(1).join(" ") || "";
       const kuerzel = `${vorname.charAt(0)}. ${nachname}`.trim();
@@ -1201,33 +1186,30 @@
       });
       if (!ok) return;
 
-      const officer = (document.getElementById("st-officer").value || "").trim();
-      const tatOrt = (document.getElementById("st-tatort-ort").value || "").trim();
-      const tatZeitraum = (document.getElementById("st-tatort-zeitraum").value || "").trim();
+      const officer = (document.getElementById("st-officer")?.value || "").trim();
+      const tatOrt = (document.getElementById("st-tatort-ort")?.value || "").trim();
+      const tatZeitraum = (document.getElementById("st-tatort-zeitraum")?.value || "").trim();
 
-      // ✅ einzeilig
-      const besch = (document.getElementById("st-beschuldigte").value || "").trim();
-      const ges = (document.getElementById("st-geschaedigte").value || "").trim();
+      // NUR 1 Person (Input)
+      const besch = (document.getElementById("st-beschuldigte")?.value || "").trim();
+      const ges = (document.getElementById("st-geschaedigte")?.value || "").trim();
 
-      // ✅ Sachverhalt: Überschrift IMMER, Inhalt nur wenn Checkbox
       const includeSach = !!document.getElementById("st-sachverhalt-include")?.checked;
-      const sach = (document.getElementById("st-sachverhalt").value || "").trim();
+      const sach = (document.getElementById("st-sachverhalt")?.value || "").trim();
 
       const idTxt = getIdentitaet("st");
-      const zeugen = (document.getElementById("st-zeugen").value || "").trim();
+      const zeugen = (document.getElementById("st-zeugen")?.value || "").trim();
 
-      const geg = (document.getElementById("st-gegenstaende").value || "").trim();
-      const abn = (document.getElementById("st-abgenommen-von").value || "").trim();
+      const geg = (document.getElementById("st-gegenstaende")?.value || "").trim();
+      const abn = (document.getElementById("st-abgenommen-von")?.value || "").trim();
 
-      const verlesen = (document.getElementById("st-verlesen").value || "").trim();
-      const beisein = (document.getElementById("st-beisein").value || "").trim();
-      const rb = document.getElementById("st-rechtsbeistand").value;
-      const med = document.getElementById("st-medizin").value;
+      const verlesen = (document.getElementById("st-verlesen")?.value || "").trim();
+      const beisein = (document.getElementById("st-beisein")?.value || "").trim();
+      const rb = document.getElementById("st-rechtsbeistand")?.value || "";
+      const med = document.getElementById("st-medizin")?.value || "";
 
-      const includeUhaft = !!document.getElementById("st-uhaft-include")?.checked;
-      const uhaftText = (document.getElementById("st-uhaft-text").value || "").trim();
-
-      const gezeichnet = (document.getElementById("st-gezeichnet").value || "").trim();
+      const uhaft = (document.getElementById("st-uhaft")?.value || "").trim(); // VARIANTE B
+      const gezeichnet = (document.getElementById("st-gezeichnet")?.value || "").trim();
 
       let out = "";
 
@@ -1250,15 +1232,15 @@
       out += "| Geschädigte Person(en): |\n";
       out += (ges || "—") + "\n\n";
 
-      // ✅ Sachverhalt Überschrift IMMER, Inhalt nur bei Checkbox
+      // Sachverhalt-Überschrift IMMER drin, Inhalt NUR wenn Checkbox aktiv
       out += "|Sachverhalt aus Sicht der Behörde: |\n";
-      if (includeSach && sach) out += sach + "\n\n";
-      else out += "\n";
+      if (includeSach) out += (sach || "—") + "\n\n";
+      else out += "\n\n";
 
       out += "| Weitere beteiligte Einheiten/Zeugen: |\n";
       out += (zeugen || "—") + "\n\n";
 
-      // Gegenstände: Header optional mit "Abgenommen von"
+      // Gegenstände: Kopf + optional "Abgenommen von: ..."
       if (abn){
         out += "| Abgenommene Gegenstände: | Abgenommen von: " + abn + "\n";
       }else{
@@ -1275,16 +1257,19 @@
       if (med === "bestand") out += "Der TV bestand auf medizinische Versorgung.\n";
       if (med === "verzichtete") out += "Der TV verzichtete auf medizinische Versorgung.\n";
 
-      // ✅ optional: U-Haftzeitverlängerung
-      if (includeUhaft && uhaftText) out += uhaftText + "\n";
-
       out += "Das Bußgeld ist in 7 Tagen zu bezahlen.\n";
-      out += "Die dem Tatverdächtigen abgenommenen Gegenstände wurden in seinen persönlichen Spind gelegt.\n\n";
+      out += "Die dem Tatverdächtigen abgenommenen Gegenstände wurden in seinen persönlichen Spind gelegt.\n";
+
+      // VARIANTE B: U-Haft GANZ UNTEN in Bemerkungen, mit Leerzeile getrennt
+      if (uhaft) out += "\n" + uhaft + "\n";
+
+      out += "\n";
 
       out += "| Gezeichnet von: |\n";
       out += (gezeichnet || "—") + "\n";
 
-      document.getElementById("output").value = out;
+      const outEl = document.getElementById("output");
+      if (outEl) outEl.value = out;
 
       const titel = tatOrt || besch || "Strafakte ohne Titel";
       saveAkte("straf", titel, out);
@@ -1314,23 +1299,23 @@
       });
       if (!ok) return;
 
-      const officer = (document.getElementById("ko-officer").value || "").trim();
-      const tatort = (document.getElementById("ko-tatort").value || "").trim();
-      const besch = (document.getElementById("ko-beschuldigte").value || "").trim();
-      const ges = (document.getElementById("ko-geschaedigte").value || "").trim();
-      const sach = (document.getElementById("ko-sachverhalt").value || "").trim();
+      const officer = (document.getElementById("ko-officer")?.value || "").trim();
+      const tatort = (document.getElementById("ko-tatort")?.value || "").trim();
+      const besch = (document.getElementById("ko-beschuldigte")?.value || "").trim();
+      const ges = (document.getElementById("ko-geschaedigte")?.value || "").trim();
+      const sach = (document.getElementById("ko-sachverhalt")?.value || "").trim();
       const idTxt = getIdentitaet("ko");
-      const zeugen = (document.getElementById("ko-zeugen").value || "").trim();
-      const geg = (document.getElementById("ko-gegenstaende").value || "").trim();
-      const verlesen = (document.getElementById("ko-verlesen").value || "").trim();
-      const beisein = (document.getElementById("ko-beisein").value || "").trim();
-      const rb = document.getElementById("ko-rechtsbeistand").value;
-      const med = document.getElementById("ko-medizin").value;
-      const eil = (document.getElementById("ko-eilverfahren").value || "").trim();
-      const buss = (document.getElementById("ko-bussgeld").value || "").trim();
-      const bestaetigtVon = (document.getElementById("ko-bestaetigt-von").value || "").trim();
-      const bestaetigtZeit = (document.getElementById("ko-bestaetigt-zeit").value || "").trim();
-      const gezeichnet = (document.getElementById("ko-gezeichnet").value || "").trim();
+      const zeugen = (document.getElementById("ko-zeugen")?.value || "").trim();
+      const geg = (document.getElementById("ko-gegenstaende")?.value || "").trim();
+      const verlesen = (document.getElementById("ko-verlesen")?.value || "").trim();
+      const beisein = (document.getElementById("ko-beisein")?.value || "").trim();
+      const rb = document.getElementById("ko-rechtsbeistand")?.value || "";
+      const med = document.getElementById("ko-medizin")?.value || "";
+      const eil = (document.getElementById("ko-eilverfahren")?.value || "").trim();
+      const buss = (document.getElementById("ko-bussgeld")?.value || "").trim();
+      const bestaetigtVon = (document.getElementById("ko-bestaetigt-von")?.value || "").trim();
+      const bestaetigtZeit = (document.getElementById("ko-bestaetigt-zeit")?.value || "").trim();
+      const gezeichnet = (document.getElementById("ko-gezeichnet")?.value || "").trim();
 
       let out = "";
       out += "| - Kollektivakte - |\n";
@@ -1373,11 +1358,14 @@
       out += "| Gezeichnet von: |\n";
       out += (gezeichnet || "—") + "\n\n";
 
-      document.getElementById("output").value = out;
+      const outEl = document.getElementById("output");
+      if (outEl) outEl.value = out;
+
       const titel = tatort || "Kollektivakte ohne Titel";
       saveAkte("kollektiv", titel, out);
     }
 
+    // (deaktiviert, aber bleibt da)
     function genFahndung(){
       const outEl = document.getElementById("output");
       if (outEl) outEl.value = "Ergreifungsakte ist aktuell deaktiviert.";
@@ -1427,7 +1415,7 @@
     initDiscordUser();
     initRequiredStarsAndAutoclear();
 
-    // ✅ Sachverhalt-Textarea optisch deaktivieren wenn Checkbox aus
+    // Sachverhalt-Textarea: Inhalt nur wenn Checkbox aktiv (UI)
     const sachCb = document.getElementById("st-sachverhalt-include");
     const sachTa = document.getElementById("st-sachverhalt");
     function syncSachUI(){
@@ -1438,18 +1426,6 @@
     }
     sachCb?.addEventListener("change", syncSachUI);
     syncSachUI();
-
-    // ✅ U-Haft Feld optisch deaktivieren wenn Checkbox aus
-    const uCb = document.getElementById("st-uhaft-include");
-    const uIn = document.getElementById("st-uhaft-text");
-    function syncUhaftUI(){
-      const on = !!uCb?.checked;
-      if (!uIn) return;
-      uIn.style.opacity = on ? "1" : "0.55";
-      uIn.style.pointerEvents = on ? "auto" : "none";
-    }
-    uCb?.addEventListener("change", syncUhaftUI);
-    syncUhaftUI();
   </script>
 </body>
 </html>
