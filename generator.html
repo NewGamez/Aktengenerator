@@ -452,10 +452,6 @@
               <label for="st-gegenstaende">Abgenommene Gegenstände</label>
               <textarea id="st-gegenstaende"></textarea>
             </div>
-            <div>
-              <label for="st-abgenommen-von">Abgenommen von</label>
-              <input id="st-abgenommen-von" type="text" placeholder="z. B. PD-XX, FIB-XX" />
-            </div>
           </div>
         </div>
 
@@ -1201,7 +1197,6 @@
       const zeugen = (document.getElementById("st-zeugen")?.value || "").trim();
 
       const geg = (document.getElementById("st-gegenstaende")?.value || "").trim();
-      const abn = (document.getElementById("st-abgenommen-von")?.value || "").trim();
 
       const verlesen = (document.getElementById("st-verlesen")?.value || "").trim();
       const beisein = (document.getElementById("st-beisein")?.value || "").trim();
@@ -1232,7 +1227,6 @@
       out += "| Geschädigte Person(en): |\n";
       out += (ges || "—") + "\n\n";
 
-      // Sachverhalt-Überschrift IMMER drin, Inhalt NUR wenn Checkbox aktiv
       out += "|Sachverhalt aus Sicht der Behörde: |\n";
       if (includeSach) out += (sach || "—") + "\n\n";
       else out += "\n\n";
@@ -1240,13 +1234,8 @@
       out += "| Weitere beteiligte Einheiten/Zeugen: |\n";
       out += (zeugen || "—") + "\n\n";
 
-      // Gegenstände: Kopf + optional "Abgenommen von: ..."
-      if (abn){
-        out += "| Abgenommene Gegenstände: | Abgenommen von: " + abn + "\n";
-      }else{
         out += "| Abgenommene Gegenstände: |\n";
-      }
-      out += (geg || "—") + "\n\n";
+        out += (geg || "—") + "\n\n";
 
       out += "| Bemerkungen: |\n";
       out += "Die Rechte wurden dem Beschuldigten durch " + verlesen + " im Beisein von " + beisein + " verlesen und verstanden.\n";
