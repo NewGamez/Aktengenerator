@@ -380,14 +380,14 @@
             </div>
             <div>
               <label for="st-tatort-ort">Tatort (Ort/PLZ)</label>
-              <input id="st-tatort-ort" type="text" placeholder="z. B. Bank, bei PLZ 5069" />
+              <input id="st-tatort-ort" type="text" placeholder="z. B. Staatsbank, bei PLZ 5069" />
             </div>
           </div>
 
           <div class="row">
             <div>
-              <label for="st-tatort-zeitraum">Zeitraum (Datum/Uhrzeit)</label>
-              <input id="st-tatort-zeitraum" type="text" placeholder="z. B. Am 02.02.2026 von 00:05 Uhr bis 00:54 Uhr" />
+              <label for="st-tatort-zeitraum">Zeitraum (Datum, Von/Bis)</label>
+              <input id="st-tatort-zeitraum" type="text" placeholder="z. B. Am 02.02.2026 von 00:05 Uhr bis 00:55 Uhr" />
             </div>
             <div>
               <label>&nbsp;</label>
@@ -398,7 +398,7 @@
           <div class="row">
             <div>
               <label for="st-beschuldigte">Beschuldigte Person(en)</label>
-              <textarea id="st-beschuldigte"></textarea>
+              <input id="st-beschuldigte" type="text" placeholder="Vorname Nachname, Geb. TT.MM.JJJJ" />
             </div>
             <div>
               <label for="st-geschaedigte">Geschädigte Person(en)</label>
@@ -1204,12 +1204,10 @@
 
       let out = "";
 
-      // Titelblock: KEINE Leerzeile zwischen Department und Officer
       out += "| - Strafakte - |\n";
       out += "Narco City Police Department\n";
       out += (officer || "—") + "\n\n";
 
-      // Tatort: Ort und Zeitraum auf separaten Zeilen
       out += "| Tatort und Zeitraum: |\n";
       if (tatOrt) out += tatOrt + "\n";
       if (tatZeitraum) out += tatZeitraum + "\n\n";
@@ -1223,17 +1221,16 @@
       out += "| Geschädigte Person(en): |\n";
       out += (ges || "—") + "\n\n";
 
-      // Sachverhalt nur wenn Checkbox aktiv: sonst kompletter Block NICHT drin
-      if (includeSach){
-        out += "|Sachverhalt aus Sicht der Behörde: |\n";
+      out += "|Sachverhalt aus Sicht der Behörde: |\n";
+      if (includeSach) {
         out += (sach || "—") + "\n\n";
+      } else {
+        out += "\n";
       }
 
       out += "| Weitere beteiligte Einheiten/Zeugen: |\n";
       out += (zeugen || "—") + "\n\n";
 
-      // Gegenstände: neue Zeile Kopf soll so aussehen: "| Abgenommene Gegenstände: | Abgenommen von: PD-XX"
-      // Wenn abn leer: dann nur der normale Kopf.
       if (abn){
         out += "| Abgenommene Gegenstände: | Abgenommen von: " + abn + "\n";
       }else{
@@ -1258,7 +1255,7 @@
 
       document.getElementById("output").value = out;
 
-      const titel = tatOrt || (besch.split("\n")[0] || "Strafakte ohne Titel");
+      const titel = tatOrt || (besch || "Strafakte ohne Titel");
       saveAkte("straf", titel, out);
     }
 
