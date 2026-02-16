@@ -332,6 +332,13 @@
       max-height: 120px;
     }
 
+    /* kompakte, aber mehrzeilige Textareas (für nebeneinander) */
+    .ta-compact{
+      min-height: 90px;
+      max-height: 180px;
+      resize: vertical;
+    }
+
     @media (max-width: 700px){
       .panel{ padding: 16px; }
     }
@@ -397,6 +404,7 @@
             </div>
             <div>
               <label for="st-beschuldigte">Beschuldigte Person(en)</label>
+              <!-- NUR 1 ZEILE -->
               <input id="st-beschuldigte" type="text" placeholder="Vorname Nachname, Geb. TT.MM.JJJJ" />
             </div>
           </div>
@@ -443,13 +451,15 @@
         <div class="section">
           <div class="section-title">Beteiligte / Gegenstände</div>
 
-          <label for="st-zeugen">Weitere beteiligte Einheiten/Zeugen</label>
-          <textarea id="st-zeugen"></textarea>
-
+          <!-- nebeneinander + kompakter, aber mehrzeilig -->
           <div class="row">
             <div>
+              <label for="st-zeugen">Weitere beteiligte Einheiten/Zeugen</label>
+              <textarea id="st-zeugen" class="ta-compact"></textarea>
+            </div>
+            <div>
               <label for="st-gegenstaende">Abgenommene Gegenstände</label>
-              <textarea id="st-gegenstaende" placeholder="z. B. 1x Handy ..."></textarea>
+              <textarea id="st-gegenstaende" class="ta-compact" placeholder="z. B. 1x Handy ..."></textarea>
             </div>
           </div>
         </div>
@@ -708,10 +718,9 @@
 
       <textarea id="output" readonly></textarea>
 
-      <div style="margin-top: 12px; display:flex; gap: 10px; flex-wrap: wrap;">
-        <button class="btn btn-secondary" id="btn-copy" style="flex:1;">Kopieren</button>
-        <button class="btn btn-secondary" id="btn-reset" style="flex:1;">Zurücksetzen</button>
-        <button class="btn btn-secondary" id="btn-clear-verzeichnis" style="flex:1;">Verzeichnis leeren</button>
+      <div style="margin-top: 12px; display:flex; gap: 10px;">
+        <button class="btn btn-secondary" id="btn-copy">Kopieren</button>
+        <button class="btn btn-secondary" id="btn-reset">Zurücksetzen</button>
       </div>
 
       <div id="kollektiv-hinweis"
@@ -730,7 +739,6 @@
 
   <script>
     let currentDiscordId = null;
-
     const STORAGE_KEY = "ncpd_officerMap_v1";
 
     const defaultOfficerMap = {
@@ -1161,22 +1169,8 @@
       ["straf","kollektiv","fahndung"].forEach(renderVerzeichnisListe);
     }
 
-    // Button: Verzeichnis leeren (nur aktueller User)
-    function clearVerzeichnisForCurrentUser(){
-      const id = currentDiscordId || "unknown";
-      const prefix = "akten_" + id + "_";
-
-      Object.keys(localStorage)
-        .map(String) // fix für "startsWith is not a function"
-        .filter(k => k.indexOf(prefix) === 0)
-        .forEach(k => localStorage.removeItem(k));
-
-      initVerzeichnis();
-      const out = document.getElementById("output");
-      if (out) out.value = "";
-    }
-
     // ===== Generatoren =====
+
     function genStrafakte(){
       const root = document.getElementById("tab-strafakte");
       clearErrors(root);
@@ -1201,7 +1195,8 @@
       const tatOrt = (document.getElementById("st-tatort-ort")?.value || "").trim();
       const tatZeitraum = (document.getElementById("st-tatort-zeitraum")?.value || "").trim();
 
-      const besch = (document.getElementById("st-beschuldigte")?.value || "").trim(); // nur 1 Zeile
+      // NUR 1 Person (Input)
+      const besch = (document.getElementById("st-beschuldigte")?.value || "").trim();
       const ges = (document.getElementById("st-geschaedigte")?.value || "").trim();
 
       const includeSach = !!document.getElementById("st-sachverhalt-include")?.checked;
@@ -1238,7 +1233,7 @@
       out += "| Geschädigte Person(en): |\n";
       out += (ges || "—") + "\n\n";
 
-      // Sachverhalt-Header IMMER da, Inhalt nur wenn Checkbox aktiv
+      // Header steht immer, Inhalt nur wenn Checkbox aktiv
       out += "|Sachverhalt aus Sicht der Behörde: |\n";
       if (includeSach) out += (sach || "—") + "\n\n";
       else out += "\n\n";
@@ -1246,11 +1241,12 @@
       out += "| Weitere beteiligte Einheiten/Zeugen: |\n";
       out += (zeugen || "—") + "\n\n";
 
+      // Abgenommen von komplett entfernt
       out += "| Abgenommene Gegenstände: |\n";
       out += (geg || "—") + "\n\n";
 
       out += "| Bemerkungen: |\n";
-      out += "Die Rechte wurden dem Beschuldigten durch " + (verlesen || "—") + " im Beisein von " + (beisein || "—") + " verlesen und verstanden.\n";
+      out += "Die Rechte wurden dem Beschuldigten durch " + verlesen + " im Beisein von " + beisein + " verlesen und verstanden.\n";
 
       if (rb === "bestand") out += "Dieser bestand auf einen Rechtsbeistand.\n";
       if (rb === "verzichtete") out += "Dieser verzichtete auf einen Rechtsbeistand.\n";
@@ -1261,7 +1257,7 @@
       out += "Das Bußgeld ist in 7 Tagen zu bezahlen.\n";
       out += "Die dem Tatverdächtigen abgenommenen Gegenstände wurden in seinen persönlichen Spind gelegt.\n";
 
-      // U-Haft ganz unten in Bemerkungen + Leerzeile getrennt
+      // U-Haft GANZ UNTEN in Bemerkungen, mit Leerzeile getrennt
       if (uhaft) out += "\n" + uhaft + "\n";
 
       out += "\n| Gezeichnet von: |\n";
@@ -1320,7 +1316,7 @@
       out += "| - Kollektivakte - |\n";
       out += "Narco City Police Department\n";
       out += (officer || "—") + "\n\n";
-      out += "Kollektivakte wurde von " + (bestaetigtVon || "—") + " um " + (bestaetigtZeit || "—") + " genehmigt\n\n";
+      out += "Kollektivakte wurde von " + bestaetigtVon + " um " + bestaetigtZeit + " genehmigt\n\n";
 
       out += "| Tatort und Zeitraum: |\n";
       out += (tatort || "—") + "\n\n";
@@ -1343,7 +1339,7 @@
       out += (geg || "—") + "\n\n";
 
       out += "| Bemerkungen: |\n";
-      out += "Die Rechte wurden dem Beschuldigten durch " + (verlesen || "—") + " im Beisein von " + (beisein || "—") + " verlesen und verstanden.\n";
+      out += "Die Rechte wurden dem Beschuldigten durch " + verlesen + " im Beisein von " + beisein + " verlesen und verstanden.\n";
 
       if (rb === "bestand") out += "Diese bestand auf einen Rechtsbeistand.\n";
       if (rb === "verzichtete") out += "Diese verzichtete auf einen Rechtsbeistand.\n";
@@ -1351,8 +1347,8 @@
       if (med === "bestand") out += "Die TV´s bestanden auf medizinische Versorgung.\n";
       if (med === "verzichtete") out += "Die TV´s verzichteten auf medizinische Versorgung.\n";
 
-      out += "Das Eilverfahren wurde durch " + (eil || "—") + " abgelehnt.\n";
-      out += "Das Bußgeld ist bis zum " + (buss || "—") + " zu bezahlen.\n\n";
+      out += "Das Eilverfahren wurde durch " + eil + " abgelehnt.\n";
+      out += "Das Bußgeld ist bis zum " + buss + " zu bezahlen.\n\n";
 
       out += "| Gezeichnet von: |\n";
       out += (gezeichnet || "—") + "\n\n";
@@ -1364,6 +1360,7 @@
       saveAkte("kollektiv", titel, out);
     }
 
+    // (deaktiviert, aber bleibt da)
     function genFahndung(){
       const outEl = document.getElementById("output");
       if (outEl) outEl.value = "Ergreifungsakte ist aktuell deaktiviert.";
@@ -1408,12 +1405,6 @@
     });
 
     document.getElementById("btn-reset")?.addEventListener("click", resetForm);
-
-    document.getElementById("btn-clear-verzeichnis")?.addEventListener("click", () => {
-      const ok = confirm("Willst du wirklich alle gespeicherten Akten im Verzeichnis löschen?");
-      if (!ok) return;
-      clearVerzeichnisForCurrentUser();
-    });
 
     // Init
     initDiscordUser();
